@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>深入理解JVM | xxzkid | 逗的8笔</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
+<meta name="keywords" content="java,jvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解JVM">
+<meta property="og:url" content="https://www.uyiplus.com/2019/深入理解JVM/index.html">
+<meta property="og:site_name" content="xxzkid | 逗的8笔">
+<meta property="og:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-06T10:23:24.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解JVM">
+<meta name="twitter:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+    
+    
+
+
+
+<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fe00750430833325b59901d367e6e01a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- google ads -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2328510744730535",
+    enable_page_level_ads: true
+  });
+</script>
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script>
+    $(function(){
+        $("img").each( (i,o) => {
+            var o = $(o);
+            // 判断图片的链接是否包含 sinaimg 关键字
+            if( o.attr("src").indexOf("sinaimg") > 0 ){
+                // 给这个标签加上 referrerPlicy 属性
+                o.attr("referrerpolicy","no-referrer");
+                // 备份图片的 src
+                var link = o.attr("src");
+                // 重新设置 src，让页面重新加载一次图片
+                o.attr("src",link);
+            }
+        });
+    });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-2328510744730535">
+</amp-auto-ads>
+<header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">xxzkid | 逗的8笔</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxzkid | 逗的8笔</h2>
+            <h3 id="title">哈哈，程序员一枚</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/xxzkid">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                50
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                77
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxzkid" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-深入理解JVM" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            深入理解JVM
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2019/深入理解JVM/">
+            <time datetime="2019-06-30T06:40:52.000Z" itemprop="datePublished">2019-06-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/jvm/">jvm</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="类的加载，连接与初始化"><a href="#类的加载，连接与初始化" class="headerlink" title="类的加载，连接与初始化"></a>类的加载，连接与初始化</h1><ul>
+<li><p>加载：查找并加载类的二进制</p>
+</li>
+<li><p>连接</p>
+<ul>
+<li>验证：确保被加载的类的正确性</li>
+<li>准备：为类的静态变量分配内存，并将其初始化为默认值</li>
+<li>解析：把类中的符号引用转为直接引用</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><p>初始化：为类的静态变量赋于正确的初始值</p>
+</li>
+<li><p>Java程序对类的使用方式可以分为两种</p>
+<ul>
+<li>主动使用</li>
+<li>被动使用</li>
+</ul>
+</li>
+<li><p>所有的Java虚拟机实现必须在每个类或接口被Java程序“首次主动使用”时才初始化它们</p>
+</li>
+<li><p>主动使用</p>
+<ul>
+<li>创建类的实例</li>
+<li>访问某个类或接口的静态变量，或者对该静态变量赋值‘</li>
+<li>调用类的静态方法</li>
+<li>反射（如Class.forName(“com.test.Test”)）</li>
+<li>初始化一个类的子类</li>
+<li>Java虚拟机启动时被标明为启动类的类（如执行 java Test）</li>
+<li>JDK1.7开始提供的动态语言支持：java.lang.invoke.MethodHandle实例的解析结果REF_getStatic，REF_putStatic，REF_invokeStatic句柄对应的类没有初始化，则初始化</li>
+</ul>
+<p>除了上述7种情形，其他使用Java类的方式都被看作被动使用，不会导致类的初始化。</p>
+</li>
+</ul>
+<h1 id="类的加载"><a href="#类的加载" class="headerlink" title="类的加载"></a>类的加载</h1><p>类的加载指的是将类的.class文件中的二进制数据读入到内存中，将其放在运行时的数据区内，然后在内存中创建一个java.lang.Class对象（规范并未说明Class对象位于哪里，HotSpot虚拟机将其放在了方法区中）用来防撞类在方法区的数据结构。</p>
+<h1 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h1><ul>
+<li>Java虚拟机自带的类加载器<ul>
+<li>根类加载器（Bootstrap）从系统属性sun.boot.class.path指定的目录加载类(jar, class)，它并没有继承ClassLoader</li>
+<li>扩展类加载器（Extension）它的父加载器为根类加载器，它从系统属性java.ext.dirs指定的目录加载类库，或者从JDK的安装目录的jre/lib/ext目录加载类库（即jar）</li>
+<li>系统（应用）类加载器（System/App）它的父加载器为扩展类加载器，它从环境变量classpath或系统属性java.class.path指定的目录加载类(jar, class)，它是用户自定义加载器的默认父加载器，系统类加载器是纯Java类，是java.lang.ClassLoader类的子类。</li>
+</ul>
+</li>
+<li>用户自定义的类加载器<ul>
+<li>java.lang.ClassLoader的子类</li>
+<li>用户可以定制类的加载方式</li>
+</ul>
+</li>
+</ul>
+<p>类加载器会把类加载到Java虚拟机中，从JDK 1.2版本开始，类的加载过程采用双亲委托机制，这种机制能更好的保证Java平台的安全，在此委托机制中，除了Java虚拟机自带的根类加载器外，其余的加载器都有且只有一个父加载器，当Java程序请求加载器loader1加载Sample类时，loader1首先委托自己的父加载器去加载Sample类，若如加载器能加载，则由父加载器完成加载任务，否则才由加载器loader1本身加载Sample类。</p>
+<h1 id="类的初始化"><a href="#类的初始化" class="headerlink" title="类的初始化"></a>类的初始化</h1><ul>
+<li>步骤<ul>
+<li>假如这个类还没有被加载和连接，那就先进行加载和连接</li>
+<li>假如类存在直接父类，并且这个父类还没有被初始化，那就先初始化直接父类</li>
+<li>假如类中存在初始化语句，那就依次执行这些初始化语句</li>
+</ul>
+</li>
+</ul>
+<h1 id="类的初始化时机"><a href="#类的初始化时机" class="headerlink" title="类的初始化时机"></a>类的初始化时机</h1><ul>
+<li>当Java虚拟机初始化一个实例时，要求它所有的父类都已经初始化，但是这条规则并不适用于接口</li>
+<li>在初始化一个类时，并不会先初始化它所实现的接口</li>
+<li>在初始化一个接口时，并不会先初始化它的父接口</li>
+</ul>
+<p>因此，一个父接口并不会因为它的子接口或者实现类的初始化而初始化，只有当程序首次使用特定接口的静态变量时，才会导致该接口的初始化。</p>
+<p>调用ClassLoader类的loadClass方法加载一个类，并不是对类的主动使用，不会导致类的初始化。</p>
+<h1 id="获取ClassLoader的途径"><a href="#获取ClassLoader的途径" class="headerlink" title="获取ClassLoader的途径"></a>获取ClassLoader的途径</h1><p>获取当前类的ClassLoader</p>
+<p>clazz.getClassLoader()</p>
+<p>获取当前线程上下文的ClassLoader</p>
+<p>Thread.currentThread().getContextClassLoader()</p>
+<p>获取系统的ClassLoader</p>
+<p>ClassLoader.getSystemClassLoader()</p>
+<p>获取调用者的ClassLoader</p>
+<p>sun.reflect.Relection.getCallerClass().getClassLoader()</p>
+<h1 id="类加载器的双亲委托机制"><a href="#类加载器的双亲委托机制" class="headerlink" title="类加载器的双亲委托机制"></a>类加载器的双亲委托机制</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader loader1 = <span class="keyword">new</span> MyClassLoader();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数loader1将作为loader2的父加载器</span></span><br><span class="line">ClassLoader loader2 = <span class="keyword">new</span> MyClassLoader(loader1);</span><br></pre></td></tr></table></figure>
+<p>双亲委托机制的优点是能够提高软件系统的安全性。因此在此机制下，用户自定义的类加载器不可能加载应该由父加载器加载的可靠类，从而防止不可靠甚至恶意的代码替代父加载器加载的可靠代码，例如：java.lang.Object 类总是由根类加载器加载，其他任何用户自定义的类加载器都不可能加载包含有恶意代码的java.lang.Object类</p>
+<h1 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h1><ul>
+<li>每个类加载器都有自己的命名空间，命名空间由该加载器及所有父加载器所加载的类组成</li>
+<li>在同一个命名空间中，不会出现类的完成名字（包括类的包名）相同的两个类</li>
+<li>在不同的命名空间中，有可能会出现类的全限定名（包括类的包名）相同的两个类</li>
+</ul>
+<p>java.lang.ClassCastException: com.test.Test cannot be cast to com.test.Test</p>
+<h1 id="类的卸载"><a href="#类的卸载" class="headerlink" title="类的卸载"></a>类的卸载</h1><p>由用户自定义的类加载器所加载的类是可以被卸载的</p>
+<p>SPI (Service Interface Provider)</p>
+<p>例子：JDBC</p>
+<h1 id="字节码"><a href="#字节码" class="headerlink" title="字节码"></a>字节码</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javap -c com.test.Test1</span><br><span class="line">javap -verbose com.test.Test1</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用javap -verbose命令分析一个字节码时，将会分析字节码文件的魔数，版本号，常量池，类信息，类的构造方法，类中的方法信息，类变量与成员变量等信息。</p>
+</li>
+<li><p>魔数：所有的.class字节码文件的前4个字节都是魔数，魔数值为固定值：0xCAFEBABE</p>
+</li>
+<li><p>魔数之后的4个字节时版本信息，前两个字节时minor version（次版本号），后两个字节时major version（主版本号）这里的版本号为00 00 00 34 换算成十进制，表示次版本号为0，主版本号为52. 所以该文件的版本号为1.8.0，可以通过java -version来验证。</p>
+</li>
+<li>常量池（constant pool）：紧接着主版本号之后就是常量池的入口，一个Java类中定义的很多信息都是常量池来维护和描述的，可以将常量池看作是Class文件的资源仓库，比如说Java类中定义的方法与变量信息，都是存在在常量池中，常量池中主要存储两类常量：字面量与符号引用，字面量如文本字符串，Java中声明为final的常量等，而符号引用和接口的全限定名，字段的名称和描述，方法的名称和描述符等。</li>
+<li>常量池的总体结构：Java类所对应的常量池主要由常量数量和常量池数组这两个部分组成。常量池数量紧跟在主版本号之后，占2个字节；常量池数组紧跟在常量池数量之后。常量池数组与一般的数组不同的是，常量池数组中不同的元素的类型，结构都是不同的。长度当然也就不同；但是，每一种元素的第一个数据都是一个u1类型，该字节是个标志位，占1个字节，JVM在解析常量池时，会根据这个u1类型来获取元素的具体类型。值得注意的是，常量池数组中元素的个数 = 常量池数 - 1（其中0暂时不实用）。目的是满足某些常量池索引值的数据在特定情况下需要表达「不引用任何一个常量池」；根本原因在于，索引值为0也是一个常量（保留常量），只不过它不位于常量表中，这个常量对应null值，常量池的索引从1而非0开始。</li>
+<li>在JVM规范中，每个变量/字段都有描述信息，描述信息主要的作用是描述字段的数据类型，方法的参数列表（包括数量，类型与顺序），根据描述符规则，基本数据类型和代表无返回值的void类型都用一个大写字符来表示，对象类型则使用字符L加对象全限定名称来表示，为了压缩字节码文件的体积，对于基本数据类型，JVM都只使用一个大写字母表示，如下所示：<code>B - byte, C - char, D - double, F - float, I = int, J = long, S - short, Z - boolean, V - void, L - 对象类型，如Ljava/lang/String;</code></li>
+<li>对于数组类型来说，每一个维度使用一个前置[来表示，如<code>int[]</code>被记录为<code>[I,</code> <code>String[][]</code>被记录为<code>[[java/lang/String;</code></li>
+<li>用描述符来描述方法的时候，按照先参数列表，后返回值的顺序来描述，参数列表按照参数的严格顺序放在一组()之内，如方法：<code>String getPersonByIdAndName(int id, String name)</code>的描述符为：<code>([I,Ljava/lang/String;)Ljava/lang/String;</code></li>
+</ul>
+<h1 id="完整的Java字节码结构"><a href="#完整的Java字节码结构" class="headerlink" title="完整的Java字节码结构"></a>完整的Java字节码结构</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ClassFile &#123;</span><br><span class="line">    u4 magic; <span class="comment">// 魔数</span></span><br><span class="line">    u2 minor_version; <span class="comment">// 次版本号</span></span><br><span class="line">    u2 major_version; <span class="comment">// 主版本号</span></span><br><span class="line">    u2 constant_pool_count; <span class="comment">// 常量池个数</span></span><br><span class="line">    constant_pool constant_pool_count - <span class="number">1</span>; <span class="comment">// 常量池表</span></span><br><span class="line">    u2 access_flag; <span class="comment">// 类的访问控制权限</span></span><br><span class="line">    u2 this_class; <span class="comment">// 类名</span></span><br><span class="line">    u2 super_class; <span class="comment">// 父类名</span></span><br><span class="line">    u2 interfaces_count; <span class="comment">// 接口数量</span></span><br><span class="line">    u2 interfaces; <span class="comment">// 接口个数</span></span><br><span class="line">    u2 fields_count; <span class="comment">// 字段个数</span></span><br><span class="line">    field_info fields; <span class="comment">// 字段表</span></span><br><span class="line">    u2 methods_count; <span class="comment">// 方法个数</span></span><br><span class="line">    method_info methods; <span class="comment">// 方法表</span></span><br><span class="line">    u2 attributes_count; <span class="comment">// 附加属性的个数</span></span><br><span class="line">    attribute_info attributes; <span class="comment">// 附加属性表</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>u1, u2, u4, u8 表示1个字节，2个字节，4个字节，8个字节</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">javap -verbose org.xxz.Test1 </span><br><span class="line">Classfile /Users/tt/IdeaProjects/demo/target/classes/org/xxz/Test1.class</span><br><span class="line">  Last modified <span class="number">2019</span>-<span class="number">6</span>-<span class="number">7</span>; size <span class="number">455</span> bytes</span><br><span class="line">  MD5 checksum cb0d025ecc8eb40b573008dd290ac668</span><br><span class="line">  Compiled from <span class="string">"Test1.java"</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">xxz</span>.<span class="title">Test1</span></span></span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: <span class="number">52</span></span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #4.#20         // java/lang/Object."&lt;init&gt;":()V</span><br><span class="line">   #2 = Fieldref           #3.#21         // org/xxz/Test1.a:I</span><br><span class="line">   #3 = Class              #22            // org/xxz/Test1</span><br><span class="line">   #4 = Class              #23            // java/lang/Object</span><br><span class="line">   #5 = Utf8               a</span><br><span class="line">   #6 = Utf8               I</span><br><span class="line">   #7 = Utf8               &lt;init&gt;</span><br><span class="line">   #8 = Utf8               ()V</span><br><span class="line">   #9 = Utf8               Code</span><br><span class="line">  #10 = Utf8               LineNumberTable</span><br><span class="line">  #11 = Utf8               LocalVariableTable</span><br><span class="line">  #12 = Utf8               this</span><br><span class="line">  #13 = Utf8               Lorg/xxz/Test1;</span><br><span class="line">  #14 = Utf8               getA</span><br><span class="line">  #15 = Utf8               ()I</span><br><span class="line">  #16 = Utf8               setA</span><br><span class="line">  #17 = Utf8               (I)V</span><br><span class="line">  #18 = Utf8               SourceFile</span><br><span class="line">  #19 = Utf8               Test1.java</span><br><span class="line">  #20 = NameAndType        #7:#8          // "&lt;init&gt;":()V</span><br><span class="line">  #21 = NameAndType        #5:#6          // a:I</span><br><span class="line">  #22 = Utf8               org/xxz/Test1</span><br><span class="line">  #23 = Utf8               java/lang/Object</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> org.xxz.Test1();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         1: invokespecial #1                  // Method java/lang/Object."&lt;init&gt;":()V</span><br><span class="line">         <span class="number">4</span>: aload_0</span><br><span class="line">         <span class="number">5</span>: iconst_1</span><br><span class="line">         6: putfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">9</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">6</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">4</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">10</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getA</span><span class="params">()</span></span>;</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         1: getfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">4</span>: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">11</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">5</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line">    descriptor: (I)V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">2</span>, args_size=<span class="number">2</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: iload_1</span><br><span class="line">         2: putfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">5</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">15</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">16</span>: <span class="number">5</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">1</span>     a   I</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: <span class="string">"Test1.java"</span></span><br></pre></td></tr></table></figure>
+<p>常量池表，访问控制权限表</p>
+<p>jclasslib</p>
+<p>基于栈的指令集与基于寄存器的指令集之间的关系：</p>
+<ol>
+<li>JVM执行指令时采取的方式是基于栈的指令集</li>
+<li>基于栈的指令集主要的操作由入栈和出栈</li>
+<li>基于栈的指令集的优势在于它可以在不同的平台之间移植，而基于寄存器的指令集是与硬件紧密关联的，无法做到可移植</li>
+<li>基于栈的指令的缺点在于完成相同的操作，指令数量通常要比基于寄存器的指令数量要多，基于栈的指令集是在内存中完成操作的，而基于寄存器的指令集是直接由CPU来执行的，它是在高速缓冲区中执行的，速度要快很多，虽然虚拟机可以采用一些优化手段，但总体来说，基于栈的指令集的执行速度要慢一些。</li>
+</ol>
+<p>JVM 模块</p>
+<p>虚拟机栈：Stack Frame 栈帧</p>
+<p>程序计数器：Program Counter</p>
+<p>本地方法栈：主要用于处理本地方法</p>
+<p>堆（Heap）：JVM管理的最大一块内存空间</p>
+<p>方法区（Method Area）：存储元数据。永久代（Permanent Generation），从JDK1.8开始，已经彻底废弃了永久代，使用元空间（Meta Space）</p>
+<p>运行时常量池：方法区的一部分内容</p>
+<p>直接内存：Direct Memory</p>
+
+			
+			
+				<div id="donate" style="text-align:center">
+					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
+	<div>听说打赏的人都脱单了 ♪(＾∀＾●)ﾉ</div>
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+            <br>
+           
+        </span>
+        <br>
+      </div>  
+    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
+		
+    </div>
+    
+    <script type="text/javascript">
+		var html = ['<div style="/*width:194px; height:194px; float:left; margin: 0% 1%;*/">',
+			'<img src="http://wx3.sinaimg.cn/large/afc434bdly1fklmwz005xj205c05c0ta.jpg" id="weixin" title="支付宝打赏"  alt="支付宝打赏">',
+			'<span>支付宝打赏</span>',
+			'</div>',
+			'<div style="/*width:194px; height:194px; float: left;*/">',
+			'<img src="http://ww1.sinaimg.cn/large/afc434bdly1fki3rxy1t0j205g05gmxo.jpg" title="微信打赏" id="zhifubao"  alt="微信打赏">',
+			'<span>微信打赏</span>',
+			'</div>'].join('');
+        $('#weixin').hover()
+        document.getElementById('btn_donate').onclick = function(){
+            $('#donate_board').addClass('hidden');
+            $('#donate_guide').html(html).removeClass('hidden');
+        }
+      
+    </script>
+</div>
+<style>
+.donate_bar {
+    text-align: center;
+    margin-top: 3%;
+}
+.donate_bar2{
+    z-index: 9999;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 660px;
+    height: 360px;
+    margin: -180px 0 30px -330px;
+    border-radius: 5px;
+    border: solid 2px #666;
+    background-color: #fff;
+    
+    box-shadow: 0 0 10px #666;
+}
+.donate_bar a.btn_donate {
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    margin-left: auto;
+    margin-right: auto;
+    background: url(http://ww1.sinaimg.cn/large/ece90acdjw1fbq75kmh0pg202a06ywee.gif)no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s
+}
+.donate_bar a.btn_donate:hover {
+    background-position: 0 -82px
+}
+.donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei"
+}
+.donate_bar.hidden{
+    display: none
+}
+.post-donate{
+    margin-top: 80px;
+}
+#donate_guide{
+    height: 50%;
+    width: 50%;
+    margin: 3% auto;
+    padding: 5px;
+}
+</style>
+				</div>
+			
+			
+				<div class="alert alert-success">
+	<div class="copyright-left">
+		<i class="fa fa-lightbulb-o"></i>
+		本文由 <a href="/" target="_blank" title="xxzkid | 逗的8笔">xxzkid | 逗的8笔</a>创作，采用
+		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
+		可自由转载、引用，但需署名作者且注明文章出处。<br>
+		本文标题：<a href="/2019/深入理解JVM/" target="_blank" title="深入理解JVM">深入理解JVM</a><br>
+		本文链接：<a href="/2019/深入理解JVM/" target="_blank" title="深入理解JVM">https://www.uyiplus.com/2019/深入理解JVM/</a>
+	</div>
+	<div style="clear:both;height:0px;"></div>
+</div>
+
+
+<style>
+.alert {
+	width: 95%;
+    margin: 0 auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #f5f5f5;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px)
+(index):495
+.copyright-left {
+    float: left;
+    width: 80%;
+}
+</style>
+				<style>
+	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
+</style>
+<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<script>
+	$(function(){
+		$(".article-entry .gallery-item").fancybox();;
+	});
+</script>
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/list-source/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">List接口源码分析</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 17.5px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/linux/" style="font-size: 12.5px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12.5px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12.5px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12.5px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12.5px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+            </ul>
+        </div>
+    </div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- ad -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="6089417000"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 xxzkid | 逗的8笔<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+
+<script src="//cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("O6mJMECJQMze0pmhmIni3boW-gzGzoHsz", "Nfulfg9ReAg1M2VggxX2j9JD");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		var title = $(this).attr('data-flag-title').trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0';
+					$(document.getElementById(url)).text(content);
+					
+					var newcounter = new Counter();
+					newcounter.set("title", title);
+					newcounter.set("url", url);
+					newcounter.set("time", 0);
+					newcounter.save(null, {
+						success: function(newcounter) {
+							var content = newcounter.get('time');
+							$(document.getElementById(url)).text(content);
+						},
+						error: function(newcounter, error) {
+							console.log('Failed to create');
+						}
+					});
+					
+					return ;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+	});
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	}
+	showTime(Counter);
+});
+</script>
+
+        
+    
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var id = window.location.pathname;
+		id = id.substring(1);
+		id = id.substring(id.indexOf('/') + 1, id.length - 1);
+		
+		var gitalk = new Gitalk({
+		  clientID: 'd0cfd49cb3019a36b6cd',
+		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
+		  repo: 'x-comment',
+		  owner: 'jsbxyyx',
+		  admin: ['jsbxyyx'],
+		  id: id,
+		  distractionFreeMode: false
+		});
+		
+		gitalk.render('commentContainer');
+	</script>
+	
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

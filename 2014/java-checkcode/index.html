@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>java验证码 | xxzkid | 逗的8笔</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="这篇文章主要讲解如何用java实现验证码">
+<meta name="keywords" content="java,验证码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java验证码">
+<meta property="og:url" content="https://www.uyiplus.com/2014/java-checkcode/index.html">
+<meta property="og:site_name" content="xxzkid | 逗的8笔">
+<meta property="og:description" content="这篇文章主要讲解如何用java实现验证码">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-14T14:47:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java验证码">
+<meta name="twitter:description" content="这篇文章主要讲解如何用java实现验证码">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+    
+    
+
+
+
+<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fe00750430833325b59901d367e6e01a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- google ads -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2328510744730535",
+    enable_page_level_ads: true
+  });
+</script>
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script>
+    $(function(){
+        $("img").each( (i,o) => {
+            var o = $(o);
+            // 判断图片的链接是否包含 sinaimg 关键字
+            if( o.attr("src").indexOf("sinaimg") > 0 ){
+                // 给这个标签加上 referrerPlicy 属性
+                o.attr("referrerpolicy","no-referrer");
+                // 备份图片的 src
+                var link = o.attr("src");
+                // 重新设置 src，让页面重新加载一次图片
+                o.attr("src",link);
+            }
+        });
+    });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-2328510744730535">
+</amp-auto-ads>
+<header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">xxzkid | 逗的8笔</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxzkid | 逗的8笔</h2>
+            <h3 id="title">哈哈，程序员一枚</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/xxzkid">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                50
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                77
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxzkid" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java-checkcode" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            java验证码
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2014/java-checkcode/">
+            <time datetime="2014-11-17T16:00:00.000Z" itemprop="datePublished">2014-11-18</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/验证码/">验证码</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>这篇文章主要讲解如何用java实现验证码<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line">package org.xxz.checkcode;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.Font;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Graphics2D;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.Random;</span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line">public class CheckCode extends HttpServlet</span><br><span class="line">&#123;</span><br><span class="line">	private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">	private static final int	WIDTH	= 120;</span><br><span class="line">	private static final int	HEIGHT	= 35;</span><br><span class="line"></span><br><span class="line">	public void doGet( HttpServletRequest request, HttpServletResponse response )</span><br><span class="line">	throws ServletException, IOException</span><br><span class="line">	&#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			test( request, response );</span><br><span class="line">		&#125; catch ( Exception e ) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public void doPost( HttpServletRequest request, HttpServletResponse response )</span><br><span class="line">	throws ServletException, IOException</span><br><span class="line">	&#123;</span><br><span class="line">		doGet( request, response );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public void test( HttpServletRequest request, HttpServletResponse response ) throws Exception</span><br><span class="line">	&#123;</span><br><span class="line">		BufferedImage	image	= new BufferedImage( WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB );</span><br><span class="line">		Graphics	g	= image.getGraphics();</span><br><span class="line">/* 设置背景色 */</span><br><span class="line">		setBackGround( g );</span><br><span class="line">/* 设置边框 */</span><br><span class="line">		setBorder( g );</span><br><span class="line">/* 画干扰线 */</span><br><span class="line">		drawRandomLine( g );</span><br><span class="line">/* 写随机数 */</span><br><span class="line">		String random = drawRandomNum( (Graphics2D) g );</span><br><span class="line">		request.getSession().setAttribute( &quot;checkcode&quot;, random );</span><br><span class="line">/* 这三个头是决定所有的浏览器不缓存 */</span><br><span class="line">		response.setDateHeader( &quot;expries&quot;, -1 );</span><br><span class="line">		response.setHeader( &quot;Cache-Control&quot;, &quot;no-cache&quot; );</span><br><span class="line">		response.setHeader( &quot;Pragma&quot;, &quot;no-cache&quot; );</span><br><span class="line">		ImageIO.write( image, &quot;jpg&quot;, response.getOutputStream() );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	private void drawRandomLine( Graphics g )</span><br><span class="line">	&#123;</span><br><span class="line">		g.setColor( Color.GREEN );</span><br><span class="line">		for ( int i = 0; i &lt; 6; i++ )</span><br><span class="line">		&#123;</span><br><span class="line">			int	x1	= new Random().nextInt( WIDTH );</span><br><span class="line">			int	y1	= new Random().nextInt( HEIGHT );</span><br><span class="line"></span><br><span class="line">			int	x2	= new Random().nextInt( WIDTH );</span><br><span class="line">			int	y2	= new Random().nextInt( HEIGHT );</span><br><span class="line"></span><br><span class="line">			g.drawLine( x1, y1, x2, y2 );</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	private String drawRandomNum( Graphics2D g )</span><br><span class="line">	&#123;</span><br><span class="line">		g.setColor( Color.RED );</span><br><span class="line">		g.setFont( new Font( &quot;宋体&quot;, Font.BOLD, 20 ) );</span><br><span class="line"></span><br><span class="line">		String		cnCode	= &quot;\u7684\u4e00\u662f\u4e86\u6211\u4e0d\u4eba\u5728\u4ed6\u6709\u8fd9\u4e2a\u4e0a\u4eec\u6765\u5230\u65f6\u5927\u5730\u4e3a\u5b50\u4e2d\u4f60\u8bf4\u751f\u56fd\u5e74\u7740\u5c31\u90a3\u548c\u8981\u5979\u51fa\u4e5f\u5f97\u91cc\u540e\u81ea\u4ee5\u4f1a\u5bb6\u53ef\u4e0b\u800c\u8fc7\u5929\u53bb\u80fd\u5bf9\u5c0f\u591a\u7136\u4e8e\u5fc3\u5b66\u4e48\u4e4b\u90fd\u597d\u770b\u8d77\u53d1\u5f53\u6ca1\u6210\u53ea\u5982\u4e8b\u628a\u8fd8\u7528\u7b2c\u6837\u9053\u60f3\u4f5c\u79cd\u5f00\u7f8e\u603b\u4ece\u65e0\u60c5\u5df1\u9762\u6700\u5973\u4f46\u73b0\u524d\u4e9b\u6240\u540c\u65e5\u624b\u53c8\u884c\u610f\u52a8\u65b9\u671f\u5b83\u5934\u7ecf\u957f\u513f\u56de\u4f4d\u5206\u7231\u8001\u56e0\u5f88\u7ed9\u540d\u6cd5\u95f4\u65af\u77e5\u4e16\u4ec0\u4e24\u6b21\u4f7f\u8eab\u8005\u88ab\u9ad8\u5df2\u4eb2\u5176\u8fdb\u6b64\u8bdd\u5e38\u4e0e\u6d3b\u6b63\u611f\u89c1\u660e\u95ee\u529b\u7406\u5c14\u70b9\u6587\u51e0\u5b9a\u672c\u516c\u7279\u505a\u5916\u5b69\u76f8\u897f\u679c\u8d70\u5c06\u6708\u5341\u5b9e\u5411\u58f0\u8f66\u5168\u4fe1\u91cd\u4e09\u673a\u5de5\u7269\u6c14\u6bcf\u5e76\u522b\u771f\u6253\u592a\u65b0\u6bd4\u624d\u4fbf\u592b\u518d\u4e66\u90e8\u6c34\u50cf\u773c\u7b49\u4f53\u5374\u52a0\u7535\u4e3b\u754c\u95e8\u5229\u6d77\u53d7\u542c\u8868\u5fb7\u5c11\u514b\u4ee3\u5458\u8bb8\u7a1c\u5148\u53e3\u7531\u6b7b\u5b89\u5199\u6027\u9a6c\u5149\u767d\u6216\u4f4f\u96be\u671b\u6559\u547d\u82b1\u7ed3\u4e50\u8272\u66f4\u62c9\u4e1c\u795e\u8bb0\u5904\u8ba9\u6bcd\u7236\u5e94\u76f4\u5b57\u573a\u5e73\u62a5\u53cb\u5173\u653e\u81f3\u5f20\u8ba4\u63a5\u544a\u5165\u7b11\u5185\u82f1\u519b\u5019\u6c11\u5c81\u5f80\u4f55\u5ea6\u5c71\u89c9\u8def\u5e26\u4e07\u7537\u8fb9\u98ce\u89e3\u53eb\u4efb\u91d1\u5feb\u539f\u5403\u5988\u53d8\u901a\u5e08\u7acb\u8c61\u6570\u56db\u5931\u6ee1\u6218\u8fdc\u683c\u58eb\u97f3\u8f7b\u76ee\u6761\u5462\u75c5\u59cb\u8fbe\u6df1\u5b8c\u4eca\u63d0\u6c42\u6e05\u738b\u5316\u7a7a\u4e1a\u601d\u5207\u600e\u975e\u627e\u7247\u7f57\u94b1\u7d36\u5417\u8bed\u5143\u559c\u66fe\u79bb\u98de\u79d1\u8a00\u5e72\u6d41\u6b22\u7ea6\u5404\u5373\u6307\u5408\u53cd\u9898\u5fc5\u8be5\u8bba\u4ea4\u7ec8\u6797\u8bf7\u533b\u665a\u5236\u7403\u51b3\u7aa2\u4f20\u753b\u4fdd\u8bfb\u8fd0\u53ca\u5219\u623f\u65e9\u9662\u91cf\u82e6\u706b\u5e03\u54c1\u8fd1\u5750\u4ea7\u7b54\u661f\u7cbe\u89c6\u4e94\u8fde\u53f8\u5df4\u5947\u7ba1\u7c7b\u672a\u670b\u4e14\u5a5a\u53f0\u591c\u9752\u5317\u961f\u4e45\u4e4e\u8d8a\u89c2\u843d\u5c3d\u5f62\u5f71\u7ea2\u7238\u767e\u4ee4\u5468\u5427\u8bc6\u6b65\u5e0c\u4e9a\u672f\u7559\u5e02\u534a\u70ed\u9001\u5174\u9020\u8c08\u5bb9\u6781\u968f\u6f14\u6536\u9996\u6839\u8bb2\u6574\u5f0f\u53d6\u7167\u529e\u5f3a\u77f3\u53e4\u534e\u8ae3\u62ff\u8ba1\u60a8\u88c5\u4f3c\u8db3\u53cc\u59bb\u5c3c\u8f6c\u8bc9\u7c73\u79f0\u4e3d\u5ba2\u5357\u9886\u8282\u8863\u7ad9\u9ed1\u523b\u7edf\u65ad\u798f\u57ce\u6545\u5386\u60ca\u8138\u9009\u5305\u7d27\u4e89\u53e6\u5efa\u7ef4\u7edd\u6811\u7cfb\u4f24\u793a\u613f\u6301\u5343\u53f2\u8c01\u51c6\u8054\u5987\u7eaa\u57fa\u4e70\u5fd7\u9759\u963f\u8bd7\u72ec\u590d\u75db\u6d88\u793e\u7b97\u4e49\u7adf\u786e\u9152\u9700\u5355\u6cbb\u5361\u5e78\u5170\u5ff5\u4e3e\u4ec5\u949f\u6015\u5171\u6bdb\u53e5\u606f\u529f\u5b98\u5f85\u7a76\u8ddf\u7a7f\u5ba4\u6613\u6e38\u7a0b\u53f7\u5c45\u8003\u7a81\u76ae\u54ea\u8d39\u5012\u4ef7\u56fe\u5177\u521a\u8111\u6c38\u6b4c\u54cd\u5546\u793c\u7ec6\u4e13\u9ec4\u5757\u811a\u5473\u7075\u6539\u636e\u822c\u7834\u5f15\u98df\u4ecd\u5b58\u4f17\u6ce8\u7b14\u751a\u67d0\u6c89\u8840\u5907\u4e60\u6821\u9ed8\u52a1\u571f\u5fae\u5a18\u987b\u8bd5\u6000\u6599\u8c03\u5e7f\u8716\u82cf\u663e\u8d5b\u67e5\u5bc6\u8bae\u5e95\u5217\u5bcc\u68a6\u9519\u5ea7\u53c2\u516b\u9664\u8dd1\u4eae\u5047\u5370\u8bbe\u7ebf\u6e29\u867d\u6389\u4eac\u521d\u517b\u9999\u505c\u9645\u81f4\u9633\u7eb8\u674e\u7eb3\u9a8c\u52a9\u6fc0\u591f\u4e25\u8bc1\u5e1d\u996d\u5fd8\u8da3\u652f\u6625\u96c6\u4e08\u6728\u7814\u73ed\u666e\u5bfc\u987f\u7761\u5c55\u8df3\u83b7\u827a\u516d\u6ce2\u5bdf\u7fa4\u7687\u6bb5\u6025\u5ead\u521b\u533a\u5965\u5668\u8c22\u5f1f\u5e97\u5426\u5bb3\u8349\u6392\u80cc\u6b62\u7ec4\u5dde\u671d\u5c01\u775b\u677f\u89d2\u51b5\u66f2\u9986\u80b2\u5fd9\u8d28\u6cb3\u7eed\u54e5\u547c\u82e5\u63a8\u5883\u9047\u96e8\u6807\u59d0\u5145\u56f4\u6848\u4f26\u62a4\u51b7\u8b66\u8d1d\u8457\u96ea\u7d22\u5267\u554a\u8239\u9669\u70df\u4f9d\u6597\u503c\u5e2e\u6c49\u6162\u4f5b\u80af\u95fb\u5531\u6c99\u5c40\u4f2f\u65cf\u4f4e\u73a9\u8d44\u5c4b\u51fb\u901f\u987e\u6cea\u6d32\u56e2\u5723\u65c1\u5802\u5175\u4e03\u9732\u56ed\u725b\u54ed\u65c5\u8857\u52b3\u578b\u70c8\u59d1\u9648\u83ab\u9c7c\u5f02\u62b1\u5b9d\u6743\u9c81\u7b80\u6001\u7ea7\u7968\u602a\u5bfb\u6740\u5f8b\u80dc\u4efd\u6c7d\u53f3\u6d0b\u8303\u5e8a\u821e\u79d8\u5348\u767b\u697c\u8d35\u5438\u8d23\u4f8b\u8ffd\u8f83\u804c\u5c5e\u6e10\u5de6\u5f55\u4e1d\u7259\u515a\u7ee7\u6258\u8d76\u7ae0\u667a\u51b2\u53f6\u80e1\u5409\u5356\u575a\u559d\u8089\u9057\u6551\u4fee\u677e\u4e34\u85cf\u62c5\u620f\u5584\u536b\u836f\u60b2\u6562\u9760\u4f0a\u6751\u6234\u8bcd\u68ee\u8033\u5dee\u77ed\u7956\u4e91\u89c4\u7a97\u6563\u8ff7\u6cb9\u65e7\u9002\u4e61\u67b6\u6069\u6295\u5f39\u94c1\u535a\u96f7\u5e9c\u538b\u8d85\u8d1f\u52d2\u6742\u9192\u6d17\u91c7\u6beb\u5634\u6bd5\u4e5d\u51b0\u65e2\u72b6\u4e71\u666f\u5e2d\u73cd\u7ae5\u9876\u6d3e\u7d20\u8131\u519c\u7591\u7ec3\u91ce\u6309\u72af\u62cd\u5f81\u574f\u9aa8\u4f59\u627f\u7f6e\u81d3\u5f69\u706f\u5de8\u7434\u514d\u73af\u59c6\u6697\u6362\u6280\u7ffb\u675f\u589e\u5fcd\u9910\u6d1b\u585e\u7f3a\u5fc6\u5224\u6b27\u5c42\u4ed8\u9635\u739b\u6279\u5c9b\u9879\u72d7\u4f11\u61c2\u6b66\u9769\u826f\u6076\u604b\u59d4\u62e5\u5a1c\u5999\u63a2\u5440\u8425\u9000\u6447\u5f04\u684c\u719f\u8bfa\u5ba3\u94f6\u52bf\u5956\u5bab\u5ffd\u5957\u5eb7\u4f9b\u4f18\u8bfe\u9e1f\u558a\u964d\u590f\u56f0\u5218\u7f6a\u4ea1\u978b\u5065\u6a21\u8d25\u4f34\u5b88\u6325\u9c9c\u8d22\u5b64\u67aa\u7981\u6050\u4f19\u6770\u8ff9\u59b9\u85f8\u904d\u76d6\u526f\u5766\u724c\u6c5f\u987a\u79cb\u8428\u83dc\u5212\u6388\u5f52\u6d6a\u542c\u51e1\u9884\u5976\u96c4\u5347\u7883\u7f16\u5178\u888b\u83b1\u542b\u76db\u6d4e\u8499\u68cb\u7aef\u817f\u62db\u91ca\u4ecb\u70e7\u8bef&quot;;</span><br><span class="line">		StringBuffer	sb	= new StringBuffer();</span><br><span class="line">/* 汉字区间 [\u4e00-\u9fa5] */</span><br><span class="line">		int x = 5;</span><br><span class="line">		for ( int i = 0; i &lt; 4; i++ )</span><br><span class="line">		&#123;</span><br><span class="line">			int	degree	= new Random().nextInt() % 30;</span><br><span class="line">			String	ch	= cnCode.charAt( new Random().nextInt( cnCode.length() ) ) + &quot;&quot;;</span><br><span class="line">			sb.append( ch );</span><br><span class="line">/* 设置旋转的弧度 */</span><br><span class="line">			g.rotate( degree * Math.PI / 180, x, 20 );</span><br><span class="line">			g.drawString( ch, x, 20 );</span><br><span class="line">			g.rotate( -degree * Math.PI / 180, x, 20 );</span><br><span class="line">			x += 30;</span><br><span class="line">		&#125;</span><br><span class="line">		return(sb.toString() );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	private void setBackGround( Graphics g )</span><br><span class="line">	&#123;</span><br><span class="line">		g.setColor( Color.WHITE );</span><br><span class="line">		g.fillRect( 0, 0, WIDTH, HEIGHT );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	private void setBorder( Graphics g )</span><br><span class="line">	&#123;</span><br><span class="line">		g.setColor( Color.BLUE );</span><br><span class="line">		g.drawRect( 1, 1, WIDTH - 2, HEIGHT - 2 );</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>显 示 4 个 中文字 符</p>
+
+			
+			
+				<div id="donate" style="text-align:center">
+					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
+	<div>听说打赏的人都脱单了 ♪(＾∀＾●)ﾉ</div>
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+            <br>
+           
+        </span>
+        <br>
+      </div>  
+    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
+		
+    </div>
+    
+    <script type="text/javascript">
+		var html = ['<div style="/*width:194px; height:194px; float:left; margin: 0% 1%;*/">',
+			'<img src="http://wx3.sinaimg.cn/large/afc434bdly1fklmwz005xj205c05c0ta.jpg" id="weixin" title="支付宝打赏"  alt="支付宝打赏">',
+			'<span>支付宝打赏</span>',
+			'</div>',
+			'<div style="/*width:194px; height:194px; float: left;*/">',
+			'<img src="http://ww1.sinaimg.cn/large/afc434bdly1fki3rxy1t0j205g05gmxo.jpg" title="微信打赏" id="zhifubao"  alt="微信打赏">',
+			'<span>微信打赏</span>',
+			'</div>'].join('');
+        $('#weixin').hover()
+        document.getElementById('btn_donate').onclick = function(){
+            $('#donate_board').addClass('hidden');
+            $('#donate_guide').html(html).removeClass('hidden');
+        }
+      
+    </script>
+</div>
+<style>
+.donate_bar {
+    text-align: center;
+    margin-top: 3%;
+}
+.donate_bar2{
+    z-index: 9999;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 660px;
+    height: 360px;
+    margin: -180px 0 30px -330px;
+    border-radius: 5px;
+    border: solid 2px #666;
+    background-color: #fff;
+    
+    box-shadow: 0 0 10px #666;
+}
+.donate_bar a.btn_donate {
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    margin-left: auto;
+    margin-right: auto;
+    background: url(http://ww1.sinaimg.cn/large/ece90acdjw1fbq75kmh0pg202a06ywee.gif)no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s
+}
+.donate_bar a.btn_donate:hover {
+    background-position: 0 -82px
+}
+.donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei"
+}
+.donate_bar.hidden{
+    display: none
+}
+.post-donate{
+    margin-top: 80px;
+}
+#donate_guide{
+    height: 50%;
+    width: 50%;
+    margin: 3% auto;
+    padding: 5px;
+}
+</style>
+				</div>
+			
+			
+				<div class="alert alert-success">
+	<div class="copyright-left">
+		<i class="fa fa-lightbulb-o"></i>
+		本文由 <a href="/" target="_blank" title="xxzkid | 逗的8笔">xxzkid | 逗的8笔</a>创作，采用
+		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
+		可自由转载、引用，但需署名作者且注明文章出处。<br>
+		本文标题：<a href="/2014/java-checkcode/" target="_blank" title="java验证码">java验证码</a><br>
+		本文链接：<a href="/2014/java-checkcode/" target="_blank" title="java验证码">https://www.uyiplus.com/2014/java-checkcode/</a>
+	</div>
+	<div style="clear:both;height:0px;"></div>
+</div>
+
+
+<style>
+.alert {
+	width: 95%;
+    margin: 0 auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #f5f5f5;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px)
+(index):495
+.copyright-left {
+    float: left;
+    width: 80%;
+}
+</style>
+				<style>
+	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
+</style>
+<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<script>
+	$(function(){
+		$(".article-entry .gallery-item").fancybox();;
+	});
+</script>
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2014/html5-audio-file-stream-play/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    html5 audio读取文件流播放音频
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2014/ueditor-use-and-config/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">UEditor的使用</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 17.5px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/linux/" style="font-size: 12.5px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12.5px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12.5px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12.5px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12.5px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+            </ul>
+        </div>
+    </div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- ad -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="6089417000"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2020 xxzkid | 逗的8笔<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+
+<script src="//cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("O6mJMECJQMze0pmhmIni3boW-gzGzoHsz", "Nfulfg9ReAg1M2VggxX2j9JD");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		var title = $(this).attr('data-flag-title').trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0';
+					$(document.getElementById(url)).text(content);
+					
+					var newcounter = new Counter();
+					newcounter.set("title", title);
+					newcounter.set("url", url);
+					newcounter.set("time", 0);
+					newcounter.save(null, {
+						success: function(newcounter) {
+							var content = newcounter.get('time');
+							$(document.getElementById(url)).text(content);
+						},
+						error: function(newcounter, error) {
+							console.log('Failed to create');
+						}
+					});
+					
+					return ;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+	});
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	}
+	showTime(Counter);
+});
+</script>
+
+        
+    
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var id = window.location.pathname;
+		id = id.substring(1);
+		id = id.substring(id.indexOf('/') + 1, id.length - 1);
+		
+		var gitalk = new Gitalk({
+		  clientID: 'd0cfd49cb3019a36b6cd',
+		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
+		  repo: 'x-comment',
+		  owner: 'jsbxyyx',
+		  admin: ['jsbxyyx'],
+		  id: id,
+		  distractionFreeMode: false
+		});
+		
+		gitalk.render('commentContainer');
+	</script>
+	
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
