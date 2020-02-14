@@ -3,6 +3,38 @@
   
     
     <entry>
+      <title><![CDATA[leetcode 0001 两数之和]]></title>
+      <url>/2020/leetcode-0001/</url>
+      <content type="html"><![CDATA[<p>给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。</p>
+<p>你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。</p>
+<a id="more"></a>
+<p>示例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">给定 nums = [2, 7, 11, 15], target = 9</span><br><span class="line"></span><br><span class="line">因为 nums[0] + nums[1] = 2 + 7 = 9</span><br><span class="line">所以返回 [0, 1]</span><br></pre></td></tr></table></figure>
+<p>解题：</p>
+<p>这道题目只能暴力破解，匹配两个数相加，然后得出索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int[] twoSum(int[] nums, int target) &#123;</span><br><span class="line">        int len = nums.length;</span><br><span class="line">        for (int i = 0; i &lt; len; i++) &#123;</span><br><span class="line">            for (int j = i + 1; j &lt; len; j++) &#123;</span><br><span class="line">                if (nums[i] + nums[j] == target) &#123;</span><br><span class="line">                    return new int[]&#123;i, j&#125;;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return new int[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+            <category> leetcode </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> leetcode </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[PC微信助手]]></title>
       <url>/2020/pcwechat_helper/</url>
       <content type="html"><![CDATA[<h2 id="注入dll到微信"><a href="#注入dll到微信" class="headerlink" title="注入dll到微信"></a>注入dll到微信</h2><h3 id="0x0-首先要打开微信进程"><a href="#0x0-首先要打开微信进程" class="headerlink" title="0x0 首先要打开微信进程"></a>0x0 首先要打开微信进程</h3><a id="more"></a>
@@ -1401,6 +1433,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[mysql-5.7.x安装]]></title>
       <url>/2016/mysql-5-7-x-install/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 mysql-5.7.x安装</p>
@@ -1422,29 +1477,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> mysql-5.7.x </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
             
         </tags>
         
