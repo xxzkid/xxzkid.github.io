@@ -35,7 +35,7 @@
     </entry>
     
     <entry>
-      <title><![CDATA[leetcode 0003 两数之和]]></title>
+      <title><![CDATA[leetcode 0003 无重复字符的最长子串]]></title>
       <url>/2020/leetcode-0003/</url>
       <content type="html"><![CDATA[<p>给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。<br><a id="more"></a><br>示例 1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3 </span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br></pre></td></tr></table></figure></p>
 <p>示例 2:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span><br></pre></td></tr></table></figure></p>
