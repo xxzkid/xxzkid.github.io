@@ -3,18 +3,20 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>归档: 2013 | xxzkid | 逗的8笔</title>
+    <title>leetcode 0003 两数之和 | xxzkid | 逗的8笔</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="喜欢写一点代码，喜欢折腾 --xxzkid | 逗的8笔">
-<meta property="og:type" content="website">
-<meta property="og:title" content="xxzkid | 逗的8笔">
-<meta property="og:url" content="https://www.uyiplus.com/archives/2013/index.html">
+    <meta name="description" content="给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。">
+<meta name="keywords" content="java,leetcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode 0003 两数之和">
+<meta property="og:url" content="https://www.uyiplus.com/2020/leetcode-0003/index.html">
 <meta property="og:site_name" content="xxzkid | 逗的8笔">
-<meta property="og:description" content="喜欢写一点代码，喜欢折腾 --xxzkid | 逗的8笔">
+<meta property="og:description" content="给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-02-14T07:03:02.525Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xxzkid | 逗的8笔">
-<meta name="twitter:description" content="喜欢写一点代码，喜欢折腾 --xxzkid | 逗的8笔">
+<meta name="twitter:title" content="leetcode 0003 两数之和">
+<meta name="twitter:description" content="给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。">
     
 
     
@@ -226,158 +228,249 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><div class="timeline timeline-wrap">
-    
-            <div class="timeline-row timeline-row-major">
-                <span class="node"><i class="fa fa-calendar"></i></span>
-                <h1 class="title">2013</h1>
-            </div>
+            <section id="main"><article id="post-leetcode-0003" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2013/javascript-jiujiuchengfabiao/">javascript写九九乘法表</a>
+        <h1 class="article-title" itemprop="name">
+            leetcode 0003 两数之和
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2013/javascript-jiujiuchengfabiao/">
-            <time datetime="2013-03-10T00:00:00.000Z" itemprop="datePublished">2013-03-10</time>
+        <a href="/2020/leetcode-0003/">
+            <time datetime="2020-02-14T00:00:00.000Z" itemprop="datePublished">2020-02-14</time>
         </a>
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/javascript/">javascript</a>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/leetcode/">leetcode</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/javascript/">javascript</a>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/leetcode/">leetcode</a>
     </div>
 
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+						
+                    </div>
                 
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2013/first-virus/">第一个病毒</a>
-        </h1>
-    
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。<br><a id="more"></a><br>示例 1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3 </span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br></pre></td></tr></table></figure></p>
+<p>示例 2:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span><br></pre></td></tr></table></figure></p>
+<p>示例 3:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;pwwkew&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。</span><br><span class="line">     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。</span><br></pre></td></tr></table></figure></p>
+<p>解题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int lengthOfLongestSubstring(String s) &#123;</span><br><span class="line">        int len = s.length();</span><br><span class="line">        int index = 0;</span><br><span class="line">        int max = 0;</span><br><span class="line">        while (index &lt; len) &#123;</span><br><span class="line">            Map&lt;Character, Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">            int currMax = 0;</span><br><span class="line">            for (int i = index; i &lt; len; i++) &#123;</span><br><span class="line">                char c = s.charAt(i);</span><br><span class="line">                if (map.containsKey(c)) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    map.put(c, null);</span><br><span class="line">                    currMax++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (currMax &gt; max) &#123;</span><br><span class="line">                max = currMax;</span><br><span class="line">            &#125;</span><br><span class="line">            index++;</span><br><span class="line">        &#125;</span><br><span class="line">        return max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2013/first-virus/">
-            <time datetime="2013-03-10T00:00:00.000Z" itemprop="datePublished">2013-03-10</time>
-        </a>
+			
+			
+				<div id="donate" style="text-align:center">
+					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
+	<div>听说打赏的人都脱单了 ♪(＾∀＾●)ﾉ</div>
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+            <br>
+           
+        </span>
+        <br>
+      </div>  
+    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
+		
     </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/c/">c</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/c/">c</a>, <a class="tag-link" href="/tags/病毒/">病毒</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
     
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2013/java-any-hex-convert/">任意进制的转换</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2013/java-any-hex-convert/">
-            <time datetime="2013-03-10T00:00:00.000Z" itemprop="datePublished">2013-03-10</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/10进制/">10进制</a>, <a class="tag-link" href="/tags/36进制/">36进制</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2013/2012-lqb-java/">2012蓝桥杯java高职题目分析</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2013/2012-lqb-java/">
-            <time datetime="2013-01-27T00:00:00.000Z" itemprop="datePublished">2013-01-27</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/蓝桥杯/">蓝桥杯</a>
-    </div>
-
-                </div>
-            </div>
-        </div>
-    
+    <script type="text/javascript">
+		var html = ['<div style="/*width:194px; height:194px; float:left; margin: 0% 1%;*/">',
+			'<img src="http://wx3.sinaimg.cn/large/afc434bdly1fklmwz005xj205c05c0ta.jpg" id="weixin" title="支付宝打赏"  alt="支付宝打赏">',
+			'<span>支付宝打赏</span>',
+			'</div>',
+			'<div style="/*width:194px; height:194px; float: left;*/">',
+			'<img src="http://ww1.sinaimg.cn/large/afc434bdly1fki3rxy1t0j205g05gmxo.jpg" title="微信打赏" id="zhifubao"  alt="微信打赏">',
+			'<span>微信打赏</span>',
+			'</div>'].join('');
+        $('#weixin').hover()
+        document.getElementById('btn_donate').onclick = function(){
+            $('#donate_board').addClass('hidden');
+            $('#donate_guide').html(html).removeClass('hidden');
+        }
+      
+    </script>
 </div>
+<style>
+.donate_bar {
+    text-align: center;
+    margin-top: 3%;
+}
+.donate_bar2{
+    z-index: 9999;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 660px;
+    height: 360px;
+    margin: -180px 0 30px -330px;
+    border-radius: 5px;
+    border: solid 2px #666;
+    background-color: #fff;
+    
+    box-shadow: 0 0 10px #666;
+}
+.donate_bar a.btn_donate {
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    margin-left: auto;
+    margin-right: auto;
+    background: url(http://ww1.sinaimg.cn/large/ece90acdjw1fbq75kmh0pg202a06ywee.gif)no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s
+}
+.donate_bar a.btn_donate:hover {
+    background-position: 0 -82px
+}
+.donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei"
+}
+.donate_bar.hidden{
+    display: none
+}
+.post-donate{
+    margin-top: 80px;
+}
+#donate_guide{
+    height: 50%;
+    width: 50%;
+    margin: 3% auto;
+    padding: 5px;
+}
+</style>
+				</div>
+			
+			
+				<div class="alert alert-success">
+	<div class="copyright-left">
+		<i class="fa fa-lightbulb-o"></i>
+		本文由 <a href="/" target="_blank" title="xxzkid | 逗的8笔">xxzkid | 逗的8笔</a>创作，采用
+		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
+		可自由转载、引用，但需署名作者且注明文章出处。<br>
+		本文标题：<a href="/2020/leetcode-0003/" target="_blank" title="leetcode 0003 两数之和">leetcode 0003 两数之和</a><br>
+		本文链接：<a href="/2020/leetcode-0003/" target="_blank" title="leetcode 0003 两数之和">https://www.uyiplus.com/2020/leetcode-0003/</a>
+	</div>
+	<div style="clear:both;height:0px;"></div>
+</div>
+
+
+<style>
+.alert {
+	width: 95%;
+    margin: 0 auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #f5f5f5;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px)
+(index):495
+.copyright-left {
+    float: left;
+    width: 80%;
+}
+</style>
+				<style>
+	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
+</style>
+<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<script>
+	$(function(){
+		$(".article-entry .gallery-item").fancybox();;
+	});
+</script>
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2020/leetcode-0001/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    leetcode 0001 两数之和
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2020/pcwechat_helper/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">PC微信助手</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
 </section>
             
                 
