@@ -13,13 +13,13 @@
 <meta property="og:site_name" content="xxzkid | 逗的8笔">
 <meta property="og:description" content="一、案发现场此问题的案发现场是测试环境，为了减少不必要的类，我们这里用一个简单的例子进行模拟。 lombok version:1.16.14 jdk version:1.8 上代码：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ws3.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg">
-<meta property="og:image" content="http://ws3.sinaimg.cn/large/afc434bdgy1fq0hwgjfeqj20em0cimxo.jpg">
-<meta property="og:updated_time" content="2020-02-20T02:48:03.127Z">
+<meta property="og:image" content="http://wx1.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg">
+<meta property="og:image" content="http://wx1.sinaimg.cn/large/afc434bdgy1fq0hwgjfeqj20em0cimxo.jpg">
+<meta property="og:updated_time" content="2020-02-20T03:03:10.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次lombok的问题">
 <meta name="twitter:description" content="一、案发现场此问题的案发现场是测试环境，为了减少不必要的类，我们这里用一个简单的例子进行模拟。 lombok version:1.16.14 jdk version:1.8 上代码：">
-<meta name="twitter:image" content="http://ws3.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg">
+<meta name="twitter:image" content="http://wx1.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg">
     
 
     
@@ -290,9 +290,9 @@ var _hmt = _hmt || [];
 <p>问题的关键在于lombok生成getter，setter的时候没有按照JavaBean的规范来生成。导致testA就红了。</p>
 <p>直接看反编译代码：</p>
 <p>A.class</p>
-<p><img src="http://ws3.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg" alt="lombok a class"></p>
+<p><img src="http://wx1.sinaimg.cn/large/afc434bdgy1fq0hu1j13vj20ki0dyt96.jpg" alt="lombok a class"></p>
 <p>我们再看看eclipse或者idea生成getter，setter是怎么样的</p>
-<p><img src="http://ws3.sinaimg.cn/large/afc434bdgy1fq0hwgjfeqj20em0cimxo.jpg" alt="idea a class"></p>
+<p><img src="http://wx1.sinaimg.cn/large/afc434bdgy1fq0hwgjfeqj20em0cimxo.jpg" alt="idea a class"></p>
 <p>到了这里，我们发现问题了，lombok的getter，setter方法生成的不对。</p>
 <h2 id="三、案件处理"><a href="#三、案件处理" class="headerlink" title="三、案件处理"></a>三、案件处理</h2><p>解决办法，去掉@Getter @Setter注解，用IDE生成，获取覆盖相应的getter/setter</p>
 <h2 id="四、案件原理追溯"><a href="#四、案件原理追溯" class="headerlink" title="四、案件原理追溯"></a>四、案件原理追溯</h2><p>那么我们来分析一下，标准JavaBean是如何生成的。</p>
