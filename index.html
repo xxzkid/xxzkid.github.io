@@ -186,11 +186,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                56
+                57
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                82
+                83
                 <span>标签</span>
             </div>
         </div>
@@ -227,6 +227,118 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-mybatis-source-01" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2020/mybatis-source-01/">mybatis3.5.x源码系列（1）</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2020/mybatis-source-01/">
+            <time datetime="2020-03-20T10:00:00.000Z" itemprop="datePublished">2020-03-20</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/mybatis/">mybatis</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="mybatis3-5-x源码系列（1）"><a href="#mybatis3-5-x源码系列（1）" class="headerlink" title="mybatis3.5.x源码系列（1）"></a>mybatis3.5.x源码系列（1）</h1><ol>
+<li>首先我们了解一下mybatis中的几个核心概念</li>
+</ol>
+<ul>
+<li>Configuration 配置，可以理解为mybatis的大管家，管理一切</li>
+<li>Environment 环境，这个主要负责数据源，事务管理器</li>
+<li>MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性</li>
+<li>MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml</li>
+<li>InterceptorChain 拦截器链，管理所有拦截器，也就是我们常用的mybatis插件</li>
+<li>SqlSessionFactory SQL会话管理工厂类</li>
+<li>SqlSession SQL会话，定义了增，删，改，查，提交，回滚，获取java.sql.Connection，获取mapper</li>
+<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
+<li>MapperProxy mapper代理类，生成接口代理对象</li>
+</ul>
+<p>带着上面的概念，我们开始我们的源码分析入门之旅</p>
+<ol>
+<li>首先我们要看看官方demo 打开<a href="https://mybatis.org/mybatis-3/zh/getting-started.html" target="_blank" rel="noopener">mybatis-3-getting-started</a></li>
+</ol>
+<p>例子：</p>
+<p>代码结构:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">  main</span><br><span class="line">    test</span><br><span class="line">      java</span><br><span class="line">        io.jsbxyyx</span><br><span class="line">          mapper</span><br><span class="line">            Blog.java</span><br><span class="line">            BlogMapper.java</span><br><span class="line">            BlogMapper.xml</span><br><span class="line">          Demo.java</span><br><span class="line">          mybatis-config.xml</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws IOException &#123;</span><br><span class="line">    String resource = &quot;io/jsbxyyx/mybatis-config.xml&quot;;</span><br><span class="line">    InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">    BlogMapper blogMapper = sqlSessionFactory.openSession().getMapper(BlogMapper.class);</span><br><span class="line">    Blog blog = blogMapper.selectBlog(1L);</span><br><span class="line">    System.out.println(blog);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="XML创建SqlSessionFactory"><a href="#XML创建SqlSessionFactory" class="headerlink" title="XML创建SqlSessionFactory"></a>XML创建SqlSessionFactory</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.SqlSessionFactoryBuilder#build(java.io.InputStream, java.lang.String, java.util.Properties)</span><br><span class="line">  》org.apache.ibatis.builder.xml.XMLConfigBuilder#parse()</span><br><span class="line">    》org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration(org.apache.ibatis.parsing.XNode root)</span><br><span class="line">  》org.apache.ibatis.session.SqlSessionFactoryBuilder#build(org.apache.ibatis.session.Configuration)</span><br></pre></td></tr></table></figure>
+<h3 id="核心方法org-apache-ibatis-builder-xml-XMLConfigBuilder-parseConfiguration"><a href="#核心方法org-apache-ibatis-builder-xml-XMLConfigBuilder-parseConfiguration" class="headerlink" title="核心方法org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration"></a>核心方法org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration</h3><p>该方法会解析出properties，settings，typeAliases，plugins，objectFactory，objectWrapperFactory，reflectorFactory，environments，databaseIdProvider，typeHandlers，mappers</p>
+<h3 id="解析mappers"><a href="#解析mappers" class="headerlink" title="解析mappers"></a>解析mappers</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 这里解析mappers下的package标签，也就是包扫描，以及mapper标签</span><br><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#mapperElement(org.apache.ibatis.parsing.XNode parent)</span><br><span class="line">  》org.apache.ibatis.builder.xml.XMLStatementBuilder#parseStatementNode</span><br><span class="line">    》org.apache.ibatis.builder.MapperBuilderAssistant#addMappedStatement</span><br></pre></td></tr></table></figure>
+<p>解析mappers，创建MappedStatement并缓存到内存</p>
+<h2 id="打开session"><a href="#打开session" class="headerlink" title="打开session"></a>打开session</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSession()</span><br><span class="line">  》org.apache.ibatis.session.Configuration#getDefaultExecutorType()</span><br><span class="line">  》org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSessionFromDataSource(org.apache.ibatis.session.ExecutorType execType, org.apache.ibatis.session.TransactionIsolationLevel level, boolean autoCommit)</span><br><span class="line">    》org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#getTransactionFactoryFromEnvironment(org.apache.ibatis.mapping.Environment)</span><br><span class="line">  》org.apache.ibatis.transaction.TransactionFactory#newTransaction(javax.sql.DataSource, org.apache.ibatis.session.TransactionIsolationLevel, boolean)</span><br><span class="line">    》org.apache.ibatis.transaction.jdbc.JdbcTransaction#JdbcTransaction(javax.sql.DataSource, org.apache.ibatis.session.TransactionIsolationLevel, boolean)</span><br><span class="line">  》org.apache.ibatis.session.Configuration#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)</span><br><span class="line">  》org.apache.ibatis.session.defaults.DefaultSqlSession#DefaultSqlSession(org.apache.ibatis.session.Configuration, org.apache.ibatis.executor.Executor, boolean)</span><br></pre></td></tr></table></figure>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>获取数据源 =》开启事务 =》获取执行器 =》创建SqlSession</p>
+<h2 id="获取Mapper"><a href="#获取Mapper" class="headerlink" title="获取Mapper"></a>获取Mapper</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.Configuration#getMapper(java.lang.Class&lt;T&gt;, org.apache.ibatis.session.SqlSession)</span><br><span class="line">    》org.apache.ibatis.binding.MapperRegistry#getMapper(java.lang.Class&lt;T&gt;, org.apache.ibatis.session.SqlSession)</span><br><span class="line">      》org.apache.ibatis.binding.MapperProxyFactory#newInstance(org.apache.ibatis.session.SqlSession)</span><br><span class="line">        》java.lang.reflect.Proxy#newProxyInstance(java.lang.ClassLoader loader, java.lang.Class&lt;?&gt;[] interfaces, java.lang.reflect.InvocationHandler h)</span><br></pre></td></tr></table></figure>
+<h3 id="流程-1"><a href="#流程-1" class="headerlink" title="流程"></a>流程</h3><p>根据接口class =》创建JDK动态代理对象org.apache.ibatis.binding.MapperProxy（这就是为啥mybatis的mapper定义是接口的原因）</p>
+<h2 id="执行方法"><a href="#执行方法" class="headerlink" title="执行方法"></a>执行方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">io.jsbxyyx.mapper.BlogMapper#selectBlog</span><br><span class="line">  》org.apache.ibatis.binding.MapperProxy#invoke</span><br><span class="line">    》org.apache.ibatis.binding.MapperProxy#cachedInvoker</span><br><span class="line">      》org.apache.ibatis.binding.MapperMethod#MapperMethod(java.lang.Class&lt;?&gt; mapperInterface, java.lang.reflect.Method method, org.apache.ibatis.session.Configuration config)</span><br><span class="line">      》org.apache.ibatis.binding.MapperProxy.PlainMethodInvoker#invoke</span><br><span class="line">        》org.apache.ibatis.binding.MapperMethod#execute(org.apache.ibatis.session.SqlSession, java.lang.Object[] args)</span><br><span class="line">          》org.apache.ibatis.session.Configuration#getMappedStatement(java.lang.String statement)</span><br><span class="line">          》org.apache.ibatis.executor.Executor#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)</span><br><span class="line">            》org.apache.ibatis.executor.CachingExecutor#createCacheKey(org.apache.ibatis.mapping.MappedStatement, java.lang.Object parameterObject, org.apache.ibatis.session.RowBounds, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">              》org.apache.ibatis.executor.BaseExecutor#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                》org.apache.ibatis.executor.BaseExecutor#queryFromDatabase(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                  》org.apache.ibatis.executor.SimpleExecutor#doQuery(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                    》org.apache.ibatis.executor.statement.RoutingStatementHandler#RoutingStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                      》org.apache.ibatis.session.Configuration#newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                        》org.apache.ibatis.scripting.LanguageDriver#createParameterHandler</span><br><span class="line">                        》org.apache.ibatis.plugin.InterceptorChain#pluginAll(parameterHandler)</span><br><span class="line">                      》org.apache.ibatis.session.Configuration#newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                        》org.apache.ibatis.executor.resultset.DefaultResultSetHandler</span><br><span class="line">                        》org.apache.ibatis.plugin.InterceptorChain#pluginAll(resultSetHandler)</span><br><span class="line">                      》org.apache.ibatis.plugin.InterceptorChain#pluginAll(statementHandler)</span><br><span class="line">                    》org.apache.ibatis.executor.SimpleExecutor#prepareStatement(org.apache.ibatis.executor.statement.StatementHandler, org.apache.ibatis.logging.Log)</span><br><span class="line">                      》org.apache.ibatis.transaction.Transaction#getConnection</span><br><span class="line">                        》org.apache.ibatis.transaction.jdbc.JdbcTransaction#openConnection</span><br><span class="line">                    》org.apache.ibatis.executor.statement.StatementHandler#query(java.sql.Statement, org.apache.ibatis.session.ResultHandler)</span><br><span class="line">                      》java.sql.PreparedStatement#execute</span><br><span class="line">                      》org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleResultSets(java.sql.Statement)</span><br></pre></td></tr></table></figure>
+<h3 id="流程-2"><a href="#流程-2" class="headerlink" title="流程"></a>流程</h3><p>动态代理MapperProxy =》创建MappedStatement缓存key =》获取Executor =》分别加载parameter，resultSet，statement插件 =》 获取java.sql.Connection =》获取java.sql.Statement =》执行sql =》处理结果集</p>
+<p>流程结束。</p>
+<p>期待下次更新咯。:-D</p>
+
+			
+			
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-leetcode-0005" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -945,83 +1057,6 @@ var _hmt = _hmt || [];
 
 
 
-    <article id="post-decision_tree" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2019/decision_tree/">决策树</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2019/decision_tree/">
-            <time datetime="2019-02-14T20:27:07.000Z" itemprop="datePublished">2019-02-14</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/ml/">ml</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/ml/">ml</a>, <a class="tag-link" href="/tags/xgboost/">xgboost</a>, <a class="tag-link" href="/tags/决策树/">决策树</a>, <a class="tag-link" href="/tags/机器学习/">机器学习</a>
-    </div>
-
-						
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1></p>
-            <p class="article-more-link">
-                <a href="/2019/decision_tree/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="9780609372"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
@@ -1034,7 +1069,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信助手/" style="font-size: 10px;">PC微信助手</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/c-c/" style="font-size: 10px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12px;">jvm</a> <a href="/tags/leetcode/" style="font-size: 16px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/微信/" style="font-size: 10px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 10px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信助手/" style="font-size: 10px;">PC微信助手</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/c-c/" style="font-size: 10px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12px;">jvm</a> <a href="/tags/leetcode/" style="font-size: 16px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/微信/" style="font-size: 10px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 10px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
         </div>
     </div>
 
