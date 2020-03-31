@@ -239,6 +239,186 @@
     </entry>
     
     <entry>
+      <title><![CDATA[Seata 0.8.1~1.0.0客户端启动过程分析]]></title>
+      <url>/2019/seata-client-bootstrap/</url>
+      <content type="html"><![CDATA[<p>Seata 0.8.1~1.0.0客户端启动过程分析</p>
+<h2 id="1-加载registry配置"><a href="#1-加载registry配置" class="headerlink" title="1. 加载registry配置"></a>1. 加载registry配置</h2><p>transactionServiceGroup默认为${spring.application.name}-fescar-service-group<br>可以通过spring.cloud.alibaba.seata.txServiceGroup指定<br><a id="more"></a></p>
+<ol>
+<li><p>加载registry(环境隔离)</p>
+<ul>
+<li><p>先从System.getProperty读取seata.config.name的value{seataConfigName}</p>
+</li>
+<li><p>如果seataConfigName为null再从System.getenv获取SEATA_CONFIG_NAME的value{seataConfigName}</p>
+</li>
+<li><p>如果{seataConfigName}为null，则{seataConfigName}为默认值registry</p>
+</li>
+<li><p>先从System.getProperty读取seataEnv的value{seataEnv}</p>
+</li>
+<li><p>如果{seataEnv}为null，再从System.getenv获取SEATA_ENV的value{seataEnv}</p>
+</li>
+<li><p>如果{seataEnv}为null读取{seataConfigName}.conf，否则读取{seataConfigName}-{seataEnv}.conf</p>
+</li>
+<li><p>得到{registryConfiguration}</p>
+</li>
+<li><p>加载registry后，读取config.type的value{configType}</p>
+</li>
+<li><p>configType为file时，加载file-{seataEnv}.conf(FileConfiguration)，否则创建对应类型的Configuration(NacosConfiguration, ApolloConfiguration, ConsulConfiguration, EtcdConfiguration, ZookeeperConfiguration)</p>
+</li>
+<li><p>得到{configConfiguration}</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>PS：使用nacos做配置中心时，如果namespace是public应该这么配置namespace = “”</p>
+<h2 id="2-TM启动"><a href="#2-TM启动" class="headerlink" title="2. TM启动"></a>2. TM启动</h2><ol>
+<li><p>获取TmRpcClient实例</p>
+<ol>
+<li><p>初始化NettyClientConfig</p>
+<ol>
+<li><p>从{configConfiguration}中获取与NettyClientConfig类相关的配置有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">transport.thread-factory.client-selector-thread-size</span><br><span class="line">transport.thread-factory.client-selector-thread-prefix</span><br><span class="line">transport.thread-factory.client-worker-thread-prefix</span><br><span class="line"></span><br><span class="line">transport.thread-factory.worker-thread-size</span><br><span class="line"></span><br><span class="line">transport.type</span><br><span class="line">transport.server</span><br><span class="line">transport.heartbeat</span><br><span class="line"></span><br><span class="line"># rpc通讯配置</span><br><span class="line">transport.serialization</span><br><span class="line">transport.compressor</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li><p>启动客户端与相关定时器</p>
+<ol>
+<li><p>获取是否降级配置service.enableDegrade</p>
+</li>
+<li><p>初始化netty的bootstrap</p>
+</li>
+<li><p>启动定时重连定时器(<a href="#连接seata-server">连接seata-server</a>)</p>
+</li>
+<li><p>启动合并消息定时器，并运行合并消息任务()</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="连接seata-server"><a href="#连接seata-server" class="headerlink" title="连接seata-server"></a>连接seata-server</h3><ol>
+<li><p>先从{registryConfiguration}对象中registry.type的value</p>
+<ul>
+<li><h4 id="file模式"><a href="#file模式" class="headerlink" title="file模式"></a>file模式</h4></li>
+</ul>
+<ol>
+<li>从{configConfiguration} 对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>通过service.{clusterName}.grouplist查找ip:port列表用;分隔</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+<ul>
+<li><h4 id="nacos模式"><a href="#nacos模式" class="headerlink" title="nacos模式"></a>nacos模式</h4></li>
+</ul>
+<ol>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>如果本地缓存{CLUSTER_ADDRESS_MAP}中存在{clusterName}对应的ip:port列表，直接进行3.3步</li>
+<li>不存在<ol>
+<li>创建nacos的NamingInstance<ol>
+<li>读取nacos serverAddr, 先从System.getProperty的value{nacosServerAddr} 为null则从{configConfiguration}对象中读取registry.nacos.serverAddr的value{nacosServerAddr}</li>
+<li>读取namespce, 先从System.getProperty的value{namespace} 为null则从{configConfiguration}对象中读取registry.nacos.namespace的value{namespace}</li>
+</ol>
+</li>
+<li>获取所有的server实例<ol>
+<li>根据serverAddr(这里就是一个字符串)和{clusterName}请求nacos server获取所有的seata-server ip:port列表，并缓存到本地</li>
+<li>开启nacos的subscribe监听，刷新{CLUSTER_ADDRESS_MAP}</li>
+</ol>
+</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li><h4 id="Eureka模式"><a href="#Eureka模式" class="headerlink" title="Eureka模式"></a>Eureka模式</h4><ol>
+<li>根据registry.eureka.serviceUrl, registry.eureka.weight创建eurekaClient实例</li>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>获取eureka上所有注册的application</li>
+<li>返回名称为{clusterName}的ip:port列表</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+<li><h4 id="Consul模式"><a href="#Consul模式" class="headerlink" title="Consul模式"></a>Consul模式</h4><ol>
+<li>根据registry.consul.serverAddr创建ConsulClient实例</li>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>ConsulClient实例根据registry.consul.cluster获取说有的ip:port列表</li>
+<li>返回名称为{clusterName}的ip:port列表</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+<li><h4 id="Etcd模式"><a href="#Etcd模式" class="headerlink" title="Etcd模式"></a>Etcd模式</h4><ol>
+<li>根据registry.etcd3.serverAddr创建Etcd实例</li>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>Etcd实例根据registry-seata-{registry.etcd3.cluster}获取说有的ip:port列表</li>
+<li>返回名称为{clusterName}的ip:port列表</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+<li><h4 id="Redis模式-目前只有单机模式"><a href="#Redis模式-目前只有单机模式" class="headerlink" title="Redis模式(目前只有单机模式)"></a>Redis模式(目前只有单机模式)</h4><ol>
+<li><p>根据registry.redis.serverAddr, registry.redis.db创建JedisPool实例</p>
+<p>(可选配置registry.redis.password, registry.redis.test.on.borrow, registry.redis.test.on.return, registry.redis.test.while.idle, registry.redis.max.idle, registry.redis.min.idle, registry.redis.max.active, registry.redis.max.total, registry.redis.max.wait, registry.redis.timeout, registry.redis.num.tests.per.eviction.run, registry.redis.time.between.eviction.runs.millis, registry.redis.min.evictable.idle.time.millis)</p>
+</li>
+<li><p>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</p>
+</li>
+<li><p>从JedisPool实例中回去Jedis对象，从jedis对象中hgetAll({registry.redis.cluster})拿到所有的ip:port列表</p>
+</li>
+<li><p>返回名称为{clusterName}的ip:port列表</p>
+</li>
+<li><p>通过ip:port连接seata-server</p>
+</li>
+</ol>
+</li>
+<li><h4 id="Zookeeper模式"><a href="#Zookeeper模式" class="headerlink" title="Zookeeper模式"></a>Zookeeper模式</h4><ol>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>根据registry.zk.serverAddr, registry.zk.session.timeout, registry.zk.connect.timeout创建zkClient实例</li>
+<li>从/registry/zk/{clusterName}获取所有的ip:port列表</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+<li><h4 id="sofa模式"><a href="#sofa模式" class="headerlink" title="sofa模式"></a>sofa模式</h4><ol>
+<li>初始化sofa配置, 优先从System.getProperty中获取registry.sofa.serverAddr, registry.sofa.region, registry.sofa.datacenter, registry.sofa.group, registry.sofa.cluster, registry.sofa.addressWaitTime, 获取不到从{configConfiguration}中获取相应的配置</li>
+<li>从{configConfiguration}对象中，读取service.vgroup_mapping.{transactionServiceGroup}的value{clusterName}</li>
+<li>获取sofaRegistry实例并注册监听器，监听器根据{clusterName}获取ip:port列表</li>
+<li>通过ip:port连接seata-server</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p>PS：当获取不到ip:port列表时，会报no available server to connect，此时需要检查一下配置中心上是否配置了service.vgroup_mapping.{transactionServiceGroup}</p>
+<p>优先从System.getProperty中读取，读取不到再从对应的配置类中读取。</p>
+<p>FileConfiguration: 读取file-{seataEnv}.conf中service.vgroup_mapping.{transactionServiceGroup}</p>
+<p>NacosConfiguration: 读取对应namespace中service.vgroup_mapping.{transactionServiceGroup}的值</p>
+<p>ApolloConfiguration: 读取service.vgroup_mapping.{transactionServiceGroup}的值</p>
+<p>ConsulConfiguration: 读取service.vgroup_mapping.{transactionServiceGroup}的值</p>
+<p>EtcdConfiguration: 读取service.vgroup_mapping.{transactionServiceGroup}的值</p>
+<p>ZookeeperConfiguration: 会从zookeeper的/config/service.vgroup_mapping.{transactionServiceGroup}读取</p>
+<h2 id="3-RM启动"><a href="#3-RM启动" class="headerlink" title="3. RM启动"></a>3. RM启动</h2><ol>
+<li>获取RmRpcClient实例</li>
+<li>设置资源管理器(ResourceManager)</li>
+<li>设置客户端消息监听器</li>
+<li><a href="#连接seata-server">连接seata-server</a>(与TM相同)</li>
+</ol>
+<p>PS:如有错误，请留言纠正</p>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> seata </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[深入理解JVM]]></title>
       <url>/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/</url>
       <content type="html"><![CDATA[<h1 id="类的加载，连接与初始化"><a href="#类的加载，连接与初始化" class="headerlink" title="类的加载，连接与初始化"></a>类的加载，连接与初始化</h1><ul>
@@ -1604,56 +1784,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[mysql-5.7.x安装]]></title>
-      <url>/2016/mysql-5-7-x-install/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 mysql-5.7.x安装</p>
-<p>这里讲解的是mysql-5.7 window版本的安装，linux类似<br>首先上mysql官方网站下载mysql，下载地址：<a href="http://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/mysql/</a><br>我这里选择的是(mysql-5.7.15-winx64.zip)<br><a id="more"></a><br>下面开始进行安装：<br>1.首先解压mysql-5.7.15-winx64.zip到D盘根目录<br>2.重命名mysql-5.7.15-winx64为mysql-5.7.15<br>3.目录结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">│  COPYING</span><br><span class="line">│  my-default.ini</span><br><span class="line">│  README</span><br><span class="line">│</span><br><span class="line">├─bin</span><br><span class="line">│</span><br><span class="line">├─docs</span><br><span class="line">│      ChangeLog</span><br><span class="line">│      INFO_BIN</span><br><span class="line">│      INFO_SRC</span><br><span class="line">│</span><br><span class="line">├─include</span><br><span class="line">│  │</span><br><span class="line">│  └─mysql</span><br><span class="line">│      │</span><br><span class="line">│      └─psi</span><br><span class="line">│</span><br><span class="line">├─lib</span><br><span class="line">│  │</span><br><span class="line">│  ├─mecab</span><br><span class="line">│  │  ├─dic</span><br><span class="line">│  │  │  ├─ipadic_euc-jp</span><br><span class="line">│  │  │  │</span><br><span class="line">│  │  │  ├─ipadic_sjis</span><br><span class="line">│  │  │  │</span><br><span class="line">│  │  │  └─ipadic_utf-8</span><br><span class="line">│  │  │</span><br><span class="line">│  │  └─etc</span><br><span class="line">│  │          mecabrc</span><br><span class="line">│  │</span><br><span class="line">│  └─plugin</span><br><span class="line">│      │</span><br><span class="line">│      └─debug</span><br><span class="line">│</span><br><span class="line">└─share</span><br><span class="line">│</span><br><span class="line">├─bulgarian</span><br><span class="line">│</span><br><span class="line">├─charsets</span><br><span class="line">│</span><br><span class="line">├─czech</span><br><span class="line">│</span><br><span class="line">├─danish</span><br><span class="line">│</span><br><span class="line">├─dutch</span><br><span class="line">│</span><br><span class="line">├─english</span><br><span class="line">│</span><br><span class="line">├─estonian</span><br><span class="line">│</span><br><span class="line">├─french</span><br><span class="line">│</span><br><span class="line">├─german</span><br><span class="line">│      errmsg.sys</span><br><span class="line">│</span><br><span class="line">├─greek</span><br><span class="line">│</span><br><span class="line">├─hungarian</span><br><span class="line">│</span><br><span class="line">├─italian</span><br><span class="line">│</span><br><span class="line">├─japanese</span><br><span class="line">│</span><br><span class="line">├─korean</span><br><span class="line">│</span><br><span class="line">├─norwegian</span><br><span class="line">│</span><br><span class="line">├─norwegian-ny</span><br><span class="line">│</span><br><span class="line">├─polish</span><br><span class="line">│</span><br><span class="line">├─portuguese</span><br><span class="line">│</span><br><span class="line">├─romanian</span><br><span class="line">│</span><br><span class="line">├─russian</span><br><span class="line">│      errmsg.sys</span><br><span class="line">│</span><br><span class="line">├─serbian</span><br><span class="line">│</span><br><span class="line">├─slovak</span><br><span class="line">│</span><br><span class="line">├─spanish</span><br><span class="line">│</span><br><span class="line">├─swedish</span><br><span class="line">│</span><br><span class="line">└─ukrainian</span><br></pre></td></tr></table></figure></p>
-<p>4.复制mysql-default.ini ====&gt; mysql-default.ini.bak<br>5.在d:\mysql-5.7.15下创建data目录<br>6.修改mysql-default.ini<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">innodb_buffer_pool_size = 128M</span><br><span class="line">basedir = D:/mysql-5.7.15</span><br><span class="line">datadir = ./data</span><br><span class="line">port = 3306</span><br><span class="line">server_id = mysqljoin_buffer_size = 128M</span><br><span class="line">sort_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 2M</span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br></pre></td></tr></table></figure></p>
-<p>7.打开cmd窗口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysqld --initialize-insecure</span><br></pre></td></tr></table></figure></p>
-<p>8.再打开一个cmd窗口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysql -uroot -p #回车两下</span><br><span class="line"></span><br><span class="line">mysql&gt;UPDATE mysql.user SET authentication_string=PASSWORD(&apos;root&apos;) WHERE User=&apos;root&apos;;</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES;</span><br><span class="line">mysql&gt;quit;</span><br></pre></td></tr></table></figure></p>
-<p>9.新建mysql-start.bat文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo off</span><br><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysqld</span><br></pre></td></tr></table></figure></p>
-<p>10.把mysql-start.bat放入到开始-所有程序-启动目录下。这样就可以开机启动了（如有杀毒软件报，请允许）<br>linux安装请下载对应的linux压缩包 (mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz)（未实践过）<br>比如说安装在/usr/local/目录下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">#useradd mysql</span><br><span class="line">#su mysql</span><br><span class="line">先把mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz上传至/usr/local目录下</span><br><span class="line">$cd /usr/local</span><br><span class="line">$tar -zxvf mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz</span><br><span class="line">$mv mysql-5.7.15-linux-glibc2.5-x86_64 mysql-5.7.15</span><br><span class="line">$cd mysql-5.7.15</span><br><span class="line">$mkdir data</span><br><span class="line">$cp my-default.cnf my-default.cnf.bak</span><br><span class="line">$vi mysql-default.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">innodb_buffer_pool_size = 128M</span><br><span class="line"></span><br><span class="line">basedir = /usr/local/mysql-5.7.15</span><br><span class="line">datadir = ./data</span><br><span class="line">port = 3306</span><br><span class="line">server_id = mysql</span><br><span class="line"></span><br><span class="line">join_buffer_size = 128M</span><br><span class="line">sort_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 2M</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line"></span><br><span class="line">$cd bin</span><br><span class="line">$mysqld --initialize-insecure</span><br><span class="line"></span><br><span class="line">#再打开一个命令行窗口</span><br><span class="line"></span><br><span class="line">$cd /usr/local/mysql-5.7.15/bin</span><br><span class="line">$mysql -uroot -p #回车两下</span><br><span class="line"></span><br><span class="line">mysql&gt;UPDATE mysql.user SET authentication_string=PASSWORD(&apos;root&apos;) WHERE User=&apos;root&apos;;</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES;</span><br><span class="line">mysql&gt;quit;</span><br><span class="line">$su root</span><br><span class="line"></span><br><span class="line">#vi /etc/rc.d/rc.local</span><br><span class="line">#在最后添加</span><br><span class="line">su mysql -c &quot;/usr/local/mysql-5.7.15/bin/mysqld&quot;</span><br><span class="line">:wq</span><br><span class="line"></span><br><span class="line">#cd /usr/local/</span><br><span class="line">#chown -R mysql:mysql mysql-5.7.15</span><br><span class="line">#su mysql</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> mysql </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> mysql-5.7.x </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[秒杀系统架构与实战]]></title>
       <url>/2016/miaosha-system/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 秒杀系统架构与实战</p>
@@ -1836,6 +1966,56 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> 乐观锁 </tag>
             
             <tag> redis </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[mysql-5.7.x安装]]></title>
+      <url>/2016/mysql-5-7-x-install/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 mysql-5.7.x安装</p>
+<p>这里讲解的是mysql-5.7 window版本的安装，linux类似<br>首先上mysql官方网站下载mysql，下载地址：<a href="http://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/mysql/</a><br>我这里选择的是(mysql-5.7.15-winx64.zip)<br><a id="more"></a><br>下面开始进行安装：<br>1.首先解压mysql-5.7.15-winx64.zip到D盘根目录<br>2.重命名mysql-5.7.15-winx64为mysql-5.7.15<br>3.目录结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">│  COPYING</span><br><span class="line">│  my-default.ini</span><br><span class="line">│  README</span><br><span class="line">│</span><br><span class="line">├─bin</span><br><span class="line">│</span><br><span class="line">├─docs</span><br><span class="line">│      ChangeLog</span><br><span class="line">│      INFO_BIN</span><br><span class="line">│      INFO_SRC</span><br><span class="line">│</span><br><span class="line">├─include</span><br><span class="line">│  │</span><br><span class="line">│  └─mysql</span><br><span class="line">│      │</span><br><span class="line">│      └─psi</span><br><span class="line">│</span><br><span class="line">├─lib</span><br><span class="line">│  │</span><br><span class="line">│  ├─mecab</span><br><span class="line">│  │  ├─dic</span><br><span class="line">│  │  │  ├─ipadic_euc-jp</span><br><span class="line">│  │  │  │</span><br><span class="line">│  │  │  ├─ipadic_sjis</span><br><span class="line">│  │  │  │</span><br><span class="line">│  │  │  └─ipadic_utf-8</span><br><span class="line">│  │  │</span><br><span class="line">│  │  └─etc</span><br><span class="line">│  │          mecabrc</span><br><span class="line">│  │</span><br><span class="line">│  └─plugin</span><br><span class="line">│      │</span><br><span class="line">│      └─debug</span><br><span class="line">│</span><br><span class="line">└─share</span><br><span class="line">│</span><br><span class="line">├─bulgarian</span><br><span class="line">│</span><br><span class="line">├─charsets</span><br><span class="line">│</span><br><span class="line">├─czech</span><br><span class="line">│</span><br><span class="line">├─danish</span><br><span class="line">│</span><br><span class="line">├─dutch</span><br><span class="line">│</span><br><span class="line">├─english</span><br><span class="line">│</span><br><span class="line">├─estonian</span><br><span class="line">│</span><br><span class="line">├─french</span><br><span class="line">│</span><br><span class="line">├─german</span><br><span class="line">│      errmsg.sys</span><br><span class="line">│</span><br><span class="line">├─greek</span><br><span class="line">│</span><br><span class="line">├─hungarian</span><br><span class="line">│</span><br><span class="line">├─italian</span><br><span class="line">│</span><br><span class="line">├─japanese</span><br><span class="line">│</span><br><span class="line">├─korean</span><br><span class="line">│</span><br><span class="line">├─norwegian</span><br><span class="line">│</span><br><span class="line">├─norwegian-ny</span><br><span class="line">│</span><br><span class="line">├─polish</span><br><span class="line">│</span><br><span class="line">├─portuguese</span><br><span class="line">│</span><br><span class="line">├─romanian</span><br><span class="line">│</span><br><span class="line">├─russian</span><br><span class="line">│      errmsg.sys</span><br><span class="line">│</span><br><span class="line">├─serbian</span><br><span class="line">│</span><br><span class="line">├─slovak</span><br><span class="line">│</span><br><span class="line">├─spanish</span><br><span class="line">│</span><br><span class="line">├─swedish</span><br><span class="line">│</span><br><span class="line">└─ukrainian</span><br></pre></td></tr></table></figure></p>
+<p>4.复制mysql-default.ini ====&gt; mysql-default.ini.bak<br>5.在d:\mysql-5.7.15下创建data目录<br>6.修改mysql-default.ini<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">innodb_buffer_pool_size = 128M</span><br><span class="line">basedir = D:/mysql-5.7.15</span><br><span class="line">datadir = ./data</span><br><span class="line">port = 3306</span><br><span class="line">server_id = mysqljoin_buffer_size = 128M</span><br><span class="line">sort_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 2M</span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br></pre></td></tr></table></figure></p>
+<p>7.打开cmd窗口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysqld --initialize-insecure</span><br></pre></td></tr></table></figure></p>
+<p>8.再打开一个cmd窗口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysql -uroot -p #回车两下</span><br><span class="line"></span><br><span class="line">mysql&gt;UPDATE mysql.user SET authentication_string=PASSWORD(&apos;root&apos;) WHERE User=&apos;root&apos;;</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES;</span><br><span class="line">mysql&gt;quit;</span><br></pre></td></tr></table></figure></p>
+<p>9.新建mysql-start.bat文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo off</span><br><span class="line">d:</span><br><span class="line">cd d:\mysql-5.7.15\bin</span><br><span class="line">mysqld</span><br></pre></td></tr></table></figure></p>
+<p>10.把mysql-start.bat放入到开始-所有程序-启动目录下。这样就可以开机启动了（如有杀毒软件报，请允许）<br>linux安装请下载对应的linux压缩包 (mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz)（未实践过）<br>比如说安装在/usr/local/目录下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">#useradd mysql</span><br><span class="line">#su mysql</span><br><span class="line">先把mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz上传至/usr/local目录下</span><br><span class="line">$cd /usr/local</span><br><span class="line">$tar -zxvf mysql-5.7.15-linux-glibc2.5-x86_64.tar.gz</span><br><span class="line">$mv mysql-5.7.15-linux-glibc2.5-x86_64 mysql-5.7.15</span><br><span class="line">$cd mysql-5.7.15</span><br><span class="line">$mkdir data</span><br><span class="line">$cp my-default.cnf my-default.cnf.bak</span><br><span class="line">$vi mysql-default.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">innodb_buffer_pool_size = 128M</span><br><span class="line"></span><br><span class="line">basedir = /usr/local/mysql-5.7.15</span><br><span class="line">datadir = ./data</span><br><span class="line">port = 3306</span><br><span class="line">server_id = mysql</span><br><span class="line"></span><br><span class="line">join_buffer_size = 128M</span><br><span class="line">sort_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 2M</span><br><span class="line"></span><br><span class="line">:wq</span><br><span class="line"></span><br><span class="line">$cd bin</span><br><span class="line">$mysqld --initialize-insecure</span><br><span class="line"></span><br><span class="line">#再打开一个命令行窗口</span><br><span class="line"></span><br><span class="line">$cd /usr/local/mysql-5.7.15/bin</span><br><span class="line">$mysql -uroot -p #回车两下</span><br><span class="line"></span><br><span class="line">mysql&gt;UPDATE mysql.user SET authentication_string=PASSWORD(&apos;root&apos;) WHERE User=&apos;root&apos;;</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES;</span><br><span class="line">mysql&gt;quit;</span><br><span class="line">$su root</span><br><span class="line"></span><br><span class="line">#vi /etc/rc.d/rc.local</span><br><span class="line">#在最后添加</span><br><span class="line">su mysql -c &quot;/usr/local/mysql-5.7.15/bin/mysqld&quot;</span><br><span class="line">:wq</span><br><span class="line"></span><br><span class="line">#cd /usr/local/</span><br><span class="line">#chown -R mysql:mysql mysql-5.7.15</span><br><span class="line">#su mysql</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> mysql </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> mysql-5.7.x </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
             
         </tags>
         
@@ -2576,6 +2756,27 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> javascript </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[任意进制的转换]]></title>
       <url>/2013/java-any-hex-convert/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
@@ -2594,27 +2795,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> 10进制 </tag>
             
             <tag> 36进制 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> javascript </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
             
         </tags>
         
