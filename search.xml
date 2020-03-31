@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[mybatis3.5.x源码系列（1）]]></title>
       <url>/2020/mybatis-source-01/</url>
-      <content type="html"><![CDATA[<h1 id="mybatis3-5-x源码系列（1）"><a href="#mybatis3-5-x源码系列（1）" class="headerlink" title="mybatis3.5.x源码系列（1）"></a>mybatis3.5.x源码系列（1）</h1><ol>
+      <content type="html"><![CDATA[<ol>
 <li>首先我们了解一下mybatis中的几个核心概念</li>
 </ol>
 <ul>

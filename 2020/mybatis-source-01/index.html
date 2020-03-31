@@ -5,18 +5,18 @@
     
     <title>mybatis3.5.x源码系列（1） | xxzkid | 逗的8笔</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="mybatis3.5.x源码系列（1） 首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的map">
+    <meta name="description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
 <meta name="keywords" content="java,mybatis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mybatis3.5.x源码系列（1）">
 <meta property="og:url" content="https://www.uyiplus.com/2020/mybatis-source-01/index.html">
 <meta property="og:site_name" content="xxzkid | 逗的8笔">
-<meta property="og:description" content="mybatis3.5.x源码系列（1） 首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的map">
+<meta property="og:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-31T08:33:49.037Z">
+<meta property="og:updated_time" content="2020-03-31T08:37:39.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mybatis3.5.x源码系列（1）">
-<meta name="twitter:description" content="mybatis3.5.x源码系列（1） 首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的map">
+<meta name="twitter:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
     
 
     
@@ -272,7 +272,7 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="mybatis3-5-x源码系列（1）"><a href="#mybatis3-5-x源码系列（1）" class="headerlink" title="mybatis3.5.x源码系列（1）"></a>mybatis3.5.x源码系列（1）</h1><ol>
+            <ol>
 <li>首先我们了解一下mybatis中的几个核心概念</li>
 </ol>
 <ul>
