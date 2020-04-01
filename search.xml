@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[mybatis 3.5.x源码系列（2）]]></title>
       <url>/2020/mybatis-source-02/</url>
-      <content type="html"><![CDATA[<p>接着上一篇<a href="mybatis-source-01">mybatis 3.5.x源码系列（1）</a> 我们继续研究一下mybatis的配置读取<br><a id="more"></a></p>
+      <content type="html"><![CDATA[<p>接着上一篇<a href="/2020/mybatis-source-01">mybatis 3.5.x源码系列（1）</a> 我们继续研究一下mybatis的配置读取<br><a id="more"></a></p>
 <h1 id="properties"><a href="#properties" class="headerlink" title="properties"></a>properties</h1><p>上一篇我们讲到了xml解析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration(org.apache.ibatis.parsing.XNode root)</span><br></pre></td></tr></table></figure></p>
 <p>这里我们来看看这个方法中的第一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#propertiesElement(org.apache.ibatis.parsing.XNode context)</span><br></pre></td></tr></table></figure></p>
 <p>可以看到propertiesElement接收的参数是root.evalNode(“properties”)</p>
