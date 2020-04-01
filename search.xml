@@ -3,6 +3,42 @@
   
     
     <entry>
+      <title><![CDATA[mybatis 3.5.x源码系列（2）]]></title>
+      <url>/2020/mybatis-source-02/</url>
+      <content type="html"><![CDATA[<p>接着上一篇<a href="mybatis-source-01">mybatis 3.5.x源码系列（1）</a> 我们继续研究一下mybatis的配置读取<br><a id="more"></a></p>
+<h1 id="properties"><a href="#properties" class="headerlink" title="properties"></a>properties</h1><p>上一篇我们讲到了xml解析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration(org.apache.ibatis.parsing.XNode root)</span><br></pre></td></tr></table></figure></p>
+<p>这里我们来看看这个方法中的第一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#propertiesElement(org.apache.ibatis.parsing.XNode context)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到propertiesElement接收的参数是root.evalNode(“properties”)</p>
+<p>那么我们看看properties是如何编写？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;properties resource=&quot;org/mybatis/example/config.properties&quot;&gt;</span><br><span class="line">  &lt;property name=&quot;username&quot; value=&quot;dev_user&quot;/&gt;</span><br><span class="line">  &lt;property name=&quot;password&quot; value=&quot;F2Fa3!33TYyg&quot;/&gt;</span><br><span class="line">&lt;/properties&gt;</span><br></pre></td></tr></table></figure></p>
+<p>实际上在properties上有两个属性 resource和url，但是这两个属性不能同时使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String resource = context.getStringAttribute(&quot;resource&quot;);</span><br><span class="line">String url = context.getStringAttribute(&quot;url&quot;);</span><br><span class="line">if (resource != null &amp;&amp; url != null) &#123;</span><br><span class="line">    throw new BuilderException(&quot;The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="resource"><a href="#resource" class="headerlink" title="resource"></a>resource</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.io.Resources#getResourceAsProperties(java.lang.String)</span><br><span class="line">  》org.apache.ibatis.io.ClassLoaderWrapper#getResourceAsStream(java.lang.String, java.lang.ClassLoader)</span><br><span class="line">    》org.apache.ibatis.io.ClassLoaderWrapper#getClassLoaders(java.lang.ClassLoader)</span><br><span class="line">    》org.apache.ibatis.io.ClassLoaderWrapper#getResourceAsStream(java.lang.String, java.lang.ClassLoader[])</span><br></pre></td></tr></table></figure>
+<p>这里会分别从<code>classLoader</code>, <code>defaultClassLoader</code>, <code>Thread.currentThread().getContextClassLoader()</code>, <code>getClass().getClassLoader()</code>, <code>ClassLoader.getSystemClassLoader()</code>加载resource指定的properties文件</p>
+<p>一般情况下：<code>Thread.currentThread().getContextClassLoader()</code>，<code>getClass().getClassLoader()</code>，<code>ClassLoader.getSystemClassLoader()</code>都是<code>Launcher$AppClassLoader</code></p>
+<h2 id="url"><a href="#url" class="headerlink" title="url"></a>url</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.io.Resources#getUrlAsProperties(java.lang.String)</span><br><span class="line">  》org.apache.ibatis.io.Resources#getUrlAsStream(java.lang.String)</span><br></pre></td></tr></table></figure>
+<p>url的加载就比较简单了，采用的java.net.URL#openConnection()的方式加载配置文件<br>jdk的URL有这些：http(s), jar, file, ftp等等，具体的就是java.net.URLConnection的实现类</p>
+<p>无论是resource加载还是url加载，最终加载到配置文件后，把所有解析到的值存放到mybatis默认的defaults properties中</p>
+<h1 id="settings-typeAliases-typeHandlers-objectFactory"><a href="#settings-typeAliases-typeHandlers-objectFactory" class="headerlink" title="settings, typeAliases, typeHandlers, objectFactory"></a>settings, typeAliases, typeHandlers, objectFactory</h1><p>如何使用，大家可以看看<a href="https://mybatis.org/mybatis-3/zh/configuration.html#settings" target="_blank">settings</a><br><a href="https://mybatis.org/mybatis-3/zh/configuration.html#typeAliases" target="_blank">typeAliases</a><br><a href="https://mybatis.org/mybatis-3/zh/configuration.html#typeHandlers" target="_blank">typeHandlers</a><br><a href="https://mybatis.org/mybatis-3/zh/configuration.html#objectFactory" target="_blank">objectFactory</a></p>
+<p>好了，下次见。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> mybatis </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[mybatis3.5.x源码系列（1）]]></title>
       <url>/2020/mybatis-source-01/</url>
       <content type="html"><![CDATA[<ol>
