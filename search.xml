@@ -48,12 +48,14 @@
 <li>Configuration 配置，可以理解为mybatis的大管家，管理一切</li>
 <li>Environment 环境，这个主要负责数据源，事务管理器</li>
 <li>MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性</li>
-<li>MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml</li>
-<li>InterceptorChain 拦截器链，管理所有拦截器，也就是我们常用的mybatis插件</li>
+<li>Interceptor 拦截器，可以拦截Executor，ParameterHandler，ResultSetHandler，StatementHandler</li>
 <li>SqlSessionFactory SQL会话管理工厂类</li>
 <li>SqlSession SQL会话，定义了增，删，改，查，提交，回滚，获取java.sql.Connection，获取mapper</li>
-<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
 <li>MapperProxy mapper代理类，生成接口代理对象</li>
+<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
+<li>ParameterHandler 参数处理器，主要负责参数设置</li>
+<li>ResultSetHandler 查询结果集处理器，用来封装ResultSet对应的结果</li>
+<li>StatementHandler Statement处理器，用来执行Statement相应的操作</li>
 </ul>
 <a id="more"></a>
 <p>带着上面的概念，我们开始我们的源码分析入门之旅</p>
@@ -1820,6 +1822,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[秒杀系统架构与实战]]></title>
       <url>/2016/miaosha-system/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 秒杀系统架构与实战</p>
@@ -2029,29 +2054,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> mysql-5.7.x </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
             
         </tags>
         

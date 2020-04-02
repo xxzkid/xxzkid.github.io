@@ -5,18 +5,18 @@
     
     <title>mybatis3.5.x源码系列（1） | xxzkid | 逗的8笔</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
+    <meta name="description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
 <meta name="keywords" content="java,mybatis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mybatis3.5.x源码系列（1）">
 <meta property="og:url" content="https://www.uyiplus.com/2020/mybatis-source-01/index.html">
 <meta property="og:site_name" content="xxzkid | 逗的8笔">
-<meta property="og:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
+<meta property="og:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-01T04:23:58.462Z">
+<meta property="og:updated_time" content="2020-04-02T03:55:25.606Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mybatis3.5.x源码系列（1）">
-<meta name="twitter:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml Int">
+<meta name="twitter:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
     
 
     
@@ -279,12 +279,14 @@ var _hmt = _hmt || [];
 <li>Configuration 配置，可以理解为mybatis的大管家，管理一切</li>
 <li>Environment 环境，这个主要负责数据源，事务管理器</li>
 <li>MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性</li>
-<li>MapperRegistry Mapper注册器，管理编写的mapper类和mapper.xml</li>
-<li>InterceptorChain 拦截器链，管理所有拦截器，也就是我们常用的mybatis插件</li>
+<li>Interceptor 拦截器，可以拦截Executor，ParameterHandler，ResultSetHandler，StatementHandler</li>
 <li>SqlSessionFactory SQL会话管理工厂类</li>
 <li>SqlSession SQL会话，定义了增，删，改，查，提交，回滚，获取java.sql.Connection，获取mapper</li>
-<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
 <li>MapperProxy mapper代理类，生成接口代理对象</li>
+<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
+<li>ParameterHandler 参数处理器，主要负责参数设置</li>
+<li>ResultSetHandler 查询结果集处理器，用来封装ResultSet对应的结果</li>
+<li>StatementHandler Statement处理器，用来执行Statement相应的操作</li>
 </ul>
 <a id="more"></a>
 <p>带着上面的概念，我们开始我们的源码分析入门之旅</p>
