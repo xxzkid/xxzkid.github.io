@@ -279,8 +279,9 @@
     <entry>
       <title><![CDATA[Seata 0.8.1~1.0.0客户端启动过程分析]]></title>
       <url>/2019/seata-client-bootstrap/</url>
-      <content type="html"><![CDATA[<p>Seata 0.8.1~1.0.0客户端启动过程分析</p>
-<h2 id="1-加载registry配置"><a href="#1-加载registry配置" class="headerlink" title="1. 加载registry配置"></a>1. 加载registry配置</h2><p>transactionServiceGroup默认为${spring.application.name}-fescar-service-group<br>可以通过spring.cloud.alibaba.seata.txServiceGroup指定<br><a id="more"></a></p>
+      <content type="html"><![CDATA[<h1 id="Seata-0-8-1-1-0-0客户端启动过程分析"><a href="#Seata-0-8-1-1-0-0客户端启动过程分析" class="headerlink" title="Seata 0.8.1~1.0.0客户端启动过程分析"></a>Seata 0.8.1~1.0.0客户端启动过程分析</h1><h2 id="1-加载registry配置"><a href="#1-加载registry配置" class="headerlink" title="1. 加载registry配置"></a>1. 加载registry配置</h2><p>transactionServiceGroup默认为${spring.application.name}-fescar-service-group<br>可以通过spring.cloud.alibaba.seata.txServiceGroup指定</p>
+<a id="more"></a>
+<p>核心类：<code>io.seata.config.ConfigurationFactory static {}</code> 初始化CURRENT_FILE_INSTANCE</p>
 <ol>
 <li><p>加载registry(环境隔离)</p>
 <ul>
@@ -335,7 +336,8 @@
 </ol>
 </li>
 </ol>
-<h3 id="连接seata-server"><a href="#连接seata-server" class="headerlink" title="连接seata-server"></a>连接seata-server</h3><ol>
+<h3 id="连接seata-server"><a href="#连接seata-server" class="headerlink" title="连接seata-server"></a>连接seata-server</h3><p>核心类：<code>io.seata.discovery.registry.RegistryFactory#getInstance()</code> 获取注册中心实例</p>
+<ol>
 <li><p>先从{registryConfiguration}对象中registry.type的value</p>
 <ul>
 <li><h4 id="file模式"><a href="#file模式" class="headerlink" title="file模式"></a>file模式</h4></li>
@@ -1822,29 +1824,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[秒杀系统架构与实战]]></title>
       <url>/2016/miaosha-system/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 秒杀系统架构与实战</p>
@@ -2054,6 +2033,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> mysql-5.7.x </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
             
         </tags>
         

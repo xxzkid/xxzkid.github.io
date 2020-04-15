@@ -5,18 +5,18 @@
     
     <title>Seata 0.8.1~1.0.0客户端启动过程分析 | xxzkid | 逗的8笔</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Seata 0.8.1~1.0.0客户端启动过程分析 1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
+    <meta name="description" content="Seata 0.8.1~1.0.0客户端启动过程分析1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
 <meta name="keywords" content="java,seata">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Seata 0.8.1~1.0.0客户端启动过程分析">
 <meta property="og:url" content="https://www.uyiplus.com/2019/seata-client-bootstrap/index.html">
 <meta property="og:site_name" content="xxzkid | 逗的8笔">
-<meta property="og:description" content="Seata 0.8.1~1.0.0客户端启动过程分析 1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
+<meta property="og:description" content="Seata 0.8.1~1.0.0客户端启动过程分析1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-02T03:55:25.606Z">
+<meta property="og:updated_time" content="2020-04-15T09:40:43.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Seata 0.8.1~1.0.0客户端启动过程分析">
-<meta name="twitter:description" content="Seata 0.8.1~1.0.0客户端启动过程分析 1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
+<meta name="twitter:description" content="Seata 0.8.1~1.0.0客户端启动过程分析1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定">
     
 
     
@@ -272,8 +272,9 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>Seata 0.8.1~1.0.0客户端启动过程分析</p>
-<h2 id="1-加载registry配置"><a href="#1-加载registry配置" class="headerlink" title="1. 加载registry配置"></a>1. 加载registry配置</h2><p>transactionServiceGroup默认为${spring.application.name}-fescar-service-group<br>可以通过spring.cloud.alibaba.seata.txServiceGroup指定<br><a id="more"></a></p>
+            <h1 id="Seata-0-8-1-1-0-0客户端启动过程分析"><a href="#Seata-0-8-1-1-0-0客户端启动过程分析" class="headerlink" title="Seata 0.8.1~1.0.0客户端启动过程分析"></a>Seata 0.8.1~1.0.0客户端启动过程分析</h1><h2 id="1-加载registry配置"><a href="#1-加载registry配置" class="headerlink" title="1. 加载registry配置"></a>1. 加载registry配置</h2><p>transactionServiceGroup默认为${spring.application.name}-fescar-service-group<br>可以通过spring.cloud.alibaba.seata.txServiceGroup指定</p>
+<a id="more"></a>
+<p>核心类：<code>io.seata.config.ConfigurationFactory static {}</code> 初始化CURRENT_FILE_INSTANCE</p>
 <ol>
 <li><p>加载registry(环境隔离)</p>
 <ul>
@@ -328,7 +329,8 @@ var _hmt = _hmt || [];
 </ol>
 </li>
 </ol>
-<h3 id="连接seata-server"><a href="#连接seata-server" class="headerlink" title="连接seata-server"></a>连接seata-server</h3><ol>
+<h3 id="连接seata-server"><a href="#连接seata-server" class="headerlink" title="连接seata-server"></a>连接seata-server</h3><p>核心类：<code>io.seata.discovery.registry.RegistryFactory#getInstance()</code> 获取注册中心实例</p>
+<ol>
 <li><p>先从{registryConfiguration}对象中registry.type的value</p>
 <ul>
 <li><h4 id="file模式"><a href="#file模式" class="headerlink" title="file模式"></a>file模式</h4></li>
