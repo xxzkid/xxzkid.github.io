@@ -14,8 +14,8 @@
 <meta property="og:description" content="1234567Thread t = new Thread(new Runnable() &amp;#123;    @Override    public void run() &amp;#123;            &amp;#125;&amp;#125;);t.start(); 上面这段代码在JVM中是如何实现的呢？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/afc434bdgy1geyttoog76j20oy09nt9a.jpg">
-<meta property="og:image" content="https://tva1.sinaimg.cn/large/afc434bdgy1geytkudhdlj20mo0nz41j.jpg">
-<meta property="og:updated_time" content="2020-05-20T05:08:47.459Z">
+<meta property="og:image" content="https://tva2.sinaimg.cn/large/afc434bdgy1gf1aul792kj20nv0o4whm.jpg">
+<meta property="og:updated_time" content="2020-05-22T08:19:47.497Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM如何创建线程">
 <meta name="twitter:description" content="1234567Thread t = new Thread(new Runnable() &amp;#123;    @Override    public void run() &amp;#123;            &amp;#125;&amp;#125;);t.start(); 上面这段代码在JVM中是如何实现的呢？">
@@ -299,7 +299,7 @@ var _hmt = _hmt || [];
 <p>在C/C++中.h .hpp文件为头文件，可以理解为啥呢，Java中的接口文件（类似哈，请不要较真）</p>
 <p>.c .cpp为具体的实现文件。</p>
 <p>在jvm.cpp找到JVM_ENTRY(void, JVM_StartThread(JNIEnv* env, jobject jthread))创建线程的入口。</p>
-<p><img src="https://tva1.sinaimg.cn/large/afc434bdgy1geytkudhdlj20mo0nz41j.jpg" alt="image"></p>
+<p><img src="https://tva2.sinaimg.cn/large/afc434bdgy1gf1aul792kj20nv0o4whm.jpg" alt="image"></p>
 <p>其中第6步的new JavaThread在<code>openjdk-jdk8u-jdk8u\hotspot\src\share\vm\runtime\thread.cpp</code></p>
 <p><code>JavaThread::JavaThread(ThreadFunction entry_point, size_t stack_sz)</code></p>
 <p>在调用pthread_create的时候，这里涉及到具体的操作系统</p>
