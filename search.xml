@@ -54,6 +54,71 @@
     </entry>
     
     <entry>
+      <title><![CDATA[AbstractQueuedSynchronizer详解]]></title>
+      <url>/2020/aqs-01/</url>
+      <content type="html"><![CDATA[<p>AbstractQueuedSynchronizer提供一个框架，用于实现依赖于先进先出（FIFO）等待队列的阻塞锁和相关的同步器（semaphores(信号量)，events(事件)等）。</p>
+<a id="more"></a>
+<p>这个类旨在为大多数依赖单个原子int值表示state的同步器提供有用的基础。子类必须定义更改此state的protected方法，并定义该state对于获取或释放此对象而言意味着什么。鉴于这些，此类中的其他方法将执行所有排队和阻塞机制。子类可以维护其他状态字段，但仅跟踪使用getState，setState，compareAndSetState方法进行原子更新的int值的同步性。</p>
+<p>子类应该定义为用于实现其封闭类的同步属性的非public内部帮助器类。类AbstractQueuedSynchronizer没有实现任何同步接口。相反，它定义了acquireInterruptible之类的方法，可以通过具体的锁和相关的同步器适当地调用这些方法来实现其public方法。</p>
+<p>此类支持默认exclusive（互斥）模式和shared（共享）模式之一或两者。当以exclusive方式进行获取时，其他线程尝试进行的获取将无法成功。由多个线程获取的shared模式可能（但不一定）成功。该类不理解这些差异，只是从机械意义上说，当成功获取shared模式时，下一个等待线程（如果存在）也必须确定它是否也可以获取。在不同模式下等待的线程共享相同的FIFO队列。通常，实现子类仅支持这些模式之一，但在ReadWriteLock中两者（exclusive和shared）都发挥了作用。仅支持exclusive模式或仅支持shared模式的子类无需定义支持未使用模式的方法。</p>
+<p>此类定义了一个嵌套的ConditionObject类，该类可以被支持exclusive模式的子类用作Condition实现，为此方法isHeldExclusively报告是否针对当前线程专有地保持同步，使用getState当前值调用的方法release会完全释放此对象，并且给定已保存的状态值，acquire最终会将此对象恢复为先前的获取状态。否则，没有AbstractQueuedSynchronizer方法会创建这样的条件，因此，如果无法满足此约束，请不要使用它。 ConditionObject的行为当然取决于其同步器实现的语义。</p>
+<p>此类提供了内部队列的检查，检测和监视方法，以及条件对象的类似方法。可以根据需要使用AbstractQueuedSynchronizer将它们导出到类中以实现其同步机制。</p>
+<p>此类的序列化仅存储基础原子整数维护状态，因此反序列化的对象具有空线程队列。需要可序列化的典型子类将定义一个readObject方法，该方法可在反序列化时将其恢复为已知的初始状态。</p>
+<p>用法</p>
+<p>要将此类用作同步器的基础，请使用getState，setState，compareAndSetState重新定义以下方法：</p>
+<p>tryAcquire</p>
+<p>tryRelease</p>
+<p>tryAcquireShared</p>
+<p>tryReleaseShared</p>
+<p>isHeldExclusively</p>
+<p>默认情况下，这些方法中的每一个都会引发UnsupportedOperationException。这些方法的实现必须在内部是线程安全的，并且通常应简短且不阻塞。定义这些方法是<strong>仅仅</strong>支持的使用此类的方法。所有其他方法都声明为final，因为它们不能独立变化。</p>
+<p>您可能还会发现从AbstractOwnableSynchronizer继承的方法对于跟踪拥有独占同步器的线程很有用。鼓励您使用它们<br>-这使监视和诊断工具可以帮助用户确定哪些线程持有锁。</p>
+<p>即使此类基于内部FIFO队列，它也不会自动执行FIFO获取策略。exclusive同步的核心采取以下形式：</p>
+<p>Acquire:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!tryAcquire(arg)) &#123;</span><br><span class="line"> <span class="comment">// 排队线程（如果尚未排队）</span></span><br><span class="line"> <span class="comment">// 可能阻止当前线程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Release:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (tryRelease(arg)) &#123;</span><br><span class="line"> <span class="comment">// 释放阻止第一个排队的线程</span></span><br><span class="line"> <span class="comment">// 共享模式相似，但可能涉及级联信号。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为获取队列中的获取检查是在排队之前被调用的，所以新获取线程可能会在被阻塞和排队的其他线程之前<strong>插入</strong>。但是，如果需要，您可以定义tryAcquire和/或tryAcquireShared以通过内部调用一种或多种检查方法来禁用插入，从而提供一个<strong>fair(公平)</strong> FIFO获取顺序。特别是，如果hasQueuedPredecessors（一种专门为公平同步器设计的方法）返回true，则大多数公平同步器都可以定义tryAcquire以返回false。其他变化也是可能的。</p>
+<p>吞吐量和可扩展性通常是<br>默认插入（也称为<strong>greedy(贪心) </strong>，<strong>renouncement(放弃)</strong>和<strong>convoy-avoidance(避免车队)</strong>）策略。尽管不能保证这是公平的，也可以避免饥饿，但允许在较早排队的线程在较晚排队的线程之前进行重新竞争，并且每个重新争用都可以毫无偏向地成功抵御传入线程。同样，尽管获取不是通常意义上的旋转，但它们可能会在阻塞之前执行tryAcquire的多次调用，并插入其他计算。当仅短暂地保持排他同步时，这将提供旋转的大部分好处，而在不进行排他同步时，则不会带来很多负担。如果需要的话，您可以通过在调用之前对获取方法进行“快速路径”检查来增强此功能，可能会预先检查hasContended和/或hasQueuedThreads以仅在同步器可能不这样做的情况下这样做争辩。</p>
+<p>此类为同步提供了有效且可扩展的基础，部分原因是通过将其使用范围专门用于可以依靠int状态，获取和释放参数以及内部FIFO等待队列的同步器。如果不足够，则可以使用java.util.concurrent.atomic atomic类，您自己的自定义java.util.Queue类和LockSupport阻止从较低级别构建同步器支持。</p>
+<p>使用范例</p>
+<p>这是一个不可重入的互斥锁定类，使用值0表示解锁状态，使用值1表示锁定状态。 尽管不可重入锁并不严格要求记录当前所有者线程，但是无论如何，此类都这样做以使使用情况更易于监视。 它还支持条件并公开一种检测方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mutex</span> <span class="keyword">implements</span> <span class="title">Lock</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 我们内部的帮助类</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 报告是否处于锁定状态</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isHeldExclusively</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> getState() == <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 如果状态为零，则获取锁</span></span><br><span class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</span><br><span class="line">    		<span class="keyword">assert</span> acquires == <span class="number">1</span>; <span class="comment">// 否则未使用</span></span><br><span class="line">    		<span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, <span class="number">1</span>)) &#123;</span><br><span class="line">    		    setExclusiveOwnerThread(Thread.currentThread());</span><br><span class="line">    		    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    		&#125;</span><br><span class="line">    		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="comment">//通过将状态设置为零来释放锁定</span></span><br><span class="line">    	<span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryRelease</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</span><br><span class="line">    	    <span class="keyword">assert</span> releases == <span class="number">1</span>; <span class="comment">// 否则未使用</span></span><br><span class="line">    	    <span class="keyword">if</span> (getState() == <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">    	    setExclusiveOwnerThread(<span class="keyword">null</span>);</span><br><span class="line">    	    setState(<span class="number">0</span>);</span><br><span class="line">    	    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="comment">// 提供条件</span></span><br><span class="line">    	<span class="function">Condition <span class="title">newCondition</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">new</span> ConditionObject(); &#125;</span><br><span class="line">    	</span><br><span class="line">    	<span class="comment">// 正确反序列化</span></span><br><span class="line">    	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(ObjectInputStream s)</span></span></span><br><span class="line"><span class="function">    		<span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">    		s.defaultReadObject();</span><br><span class="line">    		setState(<span class="number">0</span>); <span class="comment">// 重置到未锁定状态</span></span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// The sync object does all the hard work. We just forward to it.</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Sync sync = <span class="keyword">new</span> Sync();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span>                </span>&#123; sync.acquire(<span class="number">1</span>); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span>          </span>&#123; <span class="keyword">return</span> sync.tryAcquire(<span class="number">1</span>); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span>              </span>&#123; sync.release(<span class="number">1</span>); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Condition <span class="title">newCondition</span><span class="params">()</span>   </span>&#123; <span class="keyword">return</span> sync.newCondition(); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isLocked</span><span class="params">()</span>         </span>&#123; <span class="keyword">return</span> sync.isHeldExclusively(); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasQueuedThreads</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> sync.hasQueuedThreads(); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    	sync.acquireInterruptibly(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br><span class="line"><span class="function">		<span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> sync.tryAcquireNanos(<span class="number">1</span>, unit.toNanos(timeout));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个类似于java.util.concurrent.CountDownLatch的闩锁类，只不过它只需要触发一个signal即可。 由于闩锁是非排他性的，因此它使用shared获取和释放方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BooleanLatch</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isSignalled</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> getState() != <span class="number">0</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> ignore)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> isSignalled() ? <span class="number">1</span> : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryReleaseShared</span><span class="params">(<span class="keyword">int</span> ignore)</span> </span>&#123;</span><br><span class="line">      setState(<span class="number">1</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Sync sync = <span class="keyword">new</span> Sync();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isSignalled</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> sync.isSignalled(); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span>         </span>&#123; sync.releaseShared(<span class="number">1</span>); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">     sync.acquireSharedInterruptibly(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>AbstractQueuedSynchronizer.Node</p>
+<p>等待队列节点类。</p>
+<p>等待队列是“ CLH”（Craig，Landin和Hagersten）锁定队列的变体。 CLH锁通常用于自旋锁。相反，我们将它们用于阻塞同步器，但是使用相同的基本策略，将有关线程的某些控制信息保存在其节点的前身中。每个节点中的“状态”字段将跟踪线程是否应阻塞。节点的前任释放时会发出信号。否则，队列的每个节点都充当一个特定通知样式的监视器，其中包含一个等待线程。虽然状态字段不控制是否授予线程锁等。线程可能会尝试获取它是否在队列中的第一位。但是先行并不能保证成功。它只赋予了抗辩的权利。因此，当前发布的竞争者线程可能需要重新等待。</p>
+<p>要加入CLH锁，您可以自动将其作为新尾部拼接。要出队，您只需设置头字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">     +------+  prev +-----+       +-----+</span><br><span class="line">head |      | &lt;---- |     | &lt;---- |     |  tail</span><br><span class="line">     +------+       +-----+       +-----+</span><br></pre></td></tr></table></figure>
+<p>插入到CLH队列中只需要对“尾巴”执行一次原子操作，因此存在一个简单的原子分界点，即从未排队到排队。同样，出队仅涉及更新“头”。但是，节点需要花费更多的精力来确定其后继者是谁，部分原因是要处理由于超时和中断而可能导致的取消。</p>
+<p>“ prev”链接（在原始CLH锁中不使用）主要用于处理取消。如果取消某个节点，则其后继节点（通常）会重新链接到未取消的前任节点。有关自旋锁情况下类似机制的说明，请参见Scott和Scherer的论文，网址为<a href="http://www.cs.rochester.edu/u/scott/synchronization/" target="_blank" rel="noopener">http://www.cs.rochester.edu/u/scott/synchronization/</a></p>
+<p>我们还使用“next”链接来实现阻止机制。每个节点的线程ID保留在其自己的节点中，因此前任通过遍历下一个链接以确定它是哪个线程，从而通知下一个节点唤醒。确定后继者必须避免与新排队的节点竞争以设置其前任节点的“ next”字段。如果需要，可以通过在节点的后继者为空时从原子更新的“tail”向后检查来解决此问题。 （或者换句话说，next链接是一种优化，因此我们通常不需要向后扫描。）</p>
+<p>取消将一些保守性引入到基本算法中。由于我们必须轮询其他节点的取消，因此我们可能会遗漏没有注意到已取消的节点在我们前面还是后面。要解决此问题，必须始终在取消时取消后继者，使他们能够稳定在新的前任者身上，除非我们能确定一个未取消的前任者将承担这一责任。</p>
+<p>CLH队列需要一个虚拟标头节点才能开始。但是，我们不会在构建过程中创建它们，因为如果没有争执，那将是浪费时间。取而代之的是，构造节点，并在第一次争用时设置头和尾指针。</p>
+<p>等待条件的线程使用相同的节点，但使用附加链接。条件只需要在简单（非并行）链接队列中链接节点，因为仅当它们专用时才可以访问它们。等待时，将节点插入条件队列。收到信号后，该节点将转移到主队列。状态字段的特殊值用于标记节点所在的队列。</p>
+<p>感谢Dave Dice，Mark Moir，Victor Luchangco，Bill Scherer和Michael Scott以及JSR-166专家组的成员，对此类的设计提出了有益的想法，讨论和批评。</p>
+<p>未完待续…</p>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> synchronize </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[mybatis 3.5.x源码系列（2）]]></title>
       <url>/2020/mybatis-source-02/</url>
       <content type="html"><![CDATA[<p>接着上一篇<a href="/2020/mybatis-source-01">mybatis 3.5.x源码系列（1）</a> 我们继续研究一下mybatis的配置读取<br><a id="more"></a></p>
@@ -2847,6 +2912,27 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> javascript </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[任意进制的转换]]></title>
       <url>/2013/java-any-hex-convert/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
@@ -2865,27 +2951,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> 10进制 </tag>
             
             <tag> 36进制 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> javascript </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
             
         </tags>
         
