@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title></title>
+      <title><![CDATA[Java垃圾收集基础]]></title>
       <url>/2022/java-gc01/</url>
       <content type="html"><![CDATA[<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。</p>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能的介绍。接下来的学生将获得关于垃圾收集如何在 JVM 中工作的分步指南。接下来为学习者提供了一个动手活动，以试用 Java JDK 中提供的一些监控工具，并将他们刚刚学到的关于垃圾收集的知识付诸实践。最后，提供了一节介绍 Hotspot JVM 中可用的垃圾收集方案选项。</p>
@@ -136,6 +136,20 @@
 </ul>
 ]]></content>
       
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> gc </tag>
+            
+        </tags>
         
     </entry>
     
