@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>xxzkid | 逗的8笔</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="概览目的本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。 简介本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xxzkid | 逗的8笔">
+<meta property="og:url" content="https://www.uyiplus.com/2022/java-gc01/index.html">
+<meta property="og:site_name" content="xxzkid | 逗的8笔">
+<meta property="og:description" content="概览目的本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。 简介本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-dcbd53d27b2f2dec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-dcbd53d27b2f2dec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-e03f74859fc36791.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-2d58b018e0d79b52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-3be6e75c30bb9e5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-7280fb319f98561e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-402a50b979a93da6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-1b50a3f814e7187d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-db5457450284c742.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-8a756af359ef4ca6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-56e8f06bd1c73c14.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-4bf93d59ed34c999.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-4a3e1164da606acb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-ed9c6f3ec2219ed1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-f1ae53c10578e5c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-668e4f11f5ed7066.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-a8a9c4b97dacb1eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-31e7ecf8100f1f33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-1cbb7f98bcd056dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-2a8d8fb06b22a344.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-cf29cd1e46edd508.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-3d93646cce175634.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-32d94b6cdcd76d71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-32bdac9c3805f821.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-f8ab0a35de10756e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-8e46e7db00ea3651.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-1b402ac8ed77d286.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2022-07-22T08:25:46.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xxzkid | 逗的8笔">
+<meta name="twitter:description" content="概览目的本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。 简介本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/9208244-dcbd53d27b2f2dec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+    
+    
+
+
+
+<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fe00750430833325b59901d367e6e01a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- google ads -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2328510744730535",
+    enable_page_level_ads: true
+  });
+</script>
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script>
+    $(function(){
+        $("img").each( (i,o) => {
+            var o = $(o);
+            // 判断图片的链接是否包含 sinaimg 关键字
+            if( o.attr("src").indexOf("sinaimg") > 0 ){
+                // 给这个标签加上 referrerPlicy 属性
+                o.attr("referrerpolicy","no-referrer");
+                // 备份图片的 src
+                var link = o.attr("src");
+                // 重新设置 src，让页面重新加载一次图片
+                o.attr("src",link);
+            }
+        });
+    });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-2328510744730535">
+</amp-auto-ads>
+<header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">xxzkid | 逗的8笔</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxzkid | 逗的8笔</h2>
+            <h3 id="title">哈哈，程序员一枚</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/xxzkid">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                62
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                85
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxzkid" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+        
+        <div class="profile-block">
+          <div>QQ群: 551304760</div>
+          <div>淘宝优惠券微信：jsbxyyx</div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java-gc01" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能的介绍。接下来的学生将获得关于垃圾收集如何在 JVM 中工作的分步指南。接下来为学习者提供了一个动手活动，以试用 Java JDK 中提供的一些监控工具，并将他们刚刚学到的关于垃圾收集的知识付诸实践。最后，提供了一节介绍 Hotspot JVM 中可用的垃圾收集方案选项。</p>
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ul>
+<li>JDK7 <a href="https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html" target="_blank" rel="noopener">jdk7</a></li>
+</ul>
+<h1 id="Java技术与JVM"><a href="#Java技术与JVM" class="headerlink" title="Java技术与JVM"></a>Java技术与JVM</h1><h2 id="Java概览"><a href="#Java概览" class="headerlink" title="Java概览"></a>Java概览</h2><p>Java 是 Sun Microsystems 于 1995 年首次发布的一种编程语言和计算平台。它是支持 Java 程序（包括实用程序、游戏和业务应用程序）的底层技术。 Java 在全球超过 8.5 亿台个人计算机和全球数十亿台设备上运行，包括移动设备和电视设备。 Java 由许多关键组件组成，它们作为一个整体创建了 Java 平台</p>
+<h2 id="JRE-Java-Runtime-Edition"><a href="#JRE-Java-Runtime-Edition" class="headerlink" title="JRE (Java Runtime Edition)"></a>JRE (Java Runtime Edition)</h2><p>下载 Java 时，您将获得 Java 运行时环境 (JRE)。 JRE 由 Java 虚拟机 (JVM)、Java 平台核心类和支持 Java 平台库组成。这三个都是在您的计算机上运行 Java 应用程序所必需的。在 Java 7 中，Java 应用程序作为操作系统中的桌面应用程序运行，作为桌面应用程序运行，但使用 Java Web Start 从 Web 安装，或者作为浏览器中的 Web 嵌入式应用程序（使用 JavaFX）运行。</p>
+<h2 id="Java编程语言-Java-Programming-Language"><a href="#Java编程语言-Java-Programming-Language" class="headerlink" title="Java编程语言 (Java Programming Language)"></a>Java编程语言 (Java Programming Language)</h2><p>Java 是一种面向对象的编程语言，包括以下特性。</p>
+<ul>
+<li>平台独立性——Java 应用程序被编译成字节码，存储在class文件中并加载到 JVM 中。由于应用程序在 JVM 中运行，因此它们可以在许多不同的操作系统和设备上运行。</li>
+<li>面向对象——Java 是一种面向对象的语言，它采用了 C 和 C++ 的许多特性并对其进行了改进。</li>
+<li>自动垃圾收集 - Java 自动分配和释放内存，因此程序不会承担该任务。</li>
+<li>丰富的标准库 - Java 包含大量可用于执行诸如输入/输出、网络和日期操作等任务的预制对象。</li>
+</ul>
+<h2 id="JDK-Java-Development-Kit"><a href="#JDK-Java-Development-Kit" class="headerlink" title="JDK (Java Development Kit)"></a>JDK (Java Development Kit)</h2><p>Java Development Kit (JDK) 是一组用于开发 Java 应用程序的工具。使用 JDK，您可以编译用 Java 编程语言编写的程序并在 JVM 中运行它们。此外，JDK 提供了用于打包和分发应用程序的工具。</p>
+<p>JDK 和 JRE 共享 Java 应用程序编程接口 (Java API)。 Java API 是开发人员用来创建 Java 应用程序的预打包库的集合。 Java API 通过提供工具来完成许多常见的编程任务，包括字符串操作、日期/时间处理、网络和实现数据结构（例如，列表、映射、堆栈和队列），从而使开发更容易。</p>
+<h2 id="JAVA虚拟机-Java-Virtual-Machine"><a href="#JAVA虚拟机-Java-Virtual-Machine" class="headerlink" title="JAVA虚拟机(Java Virtual Machine)"></a>JAVA虚拟机(Java Virtual Machine)</h2><p>Java 虚拟机 (JVM) 是一种抽象计算机。 JVM 是一个程序，对于编写在其中执行的程序来说，它看起来就像一台机器。通过这种方式，Java 程序被写入同一组接口和库。特定操作系统的每个 JVM 实现都将 Java 编程指令转换为在本地操作系统上运行的指令和命令。这样，Java 程序就实现了平台独立性。</p>
+<p>Java 虚拟机的第一个原型实现由 Sun Microsystems, Inc. 完成，它在类似于当代个人数字助理 (PDA) 的手持设备托管的软件中模拟 Java 虚拟机指令集。 Oracle 当前的实现在移动、桌面和服务器设备上模拟 Java 虚拟机，但 Java 虚拟机不采用任何特定的实现技术、主机硬件或主机操作系统。它本身不是解释的，但也可以通过将其指令集编译为硅 CPU 的指令集来实现。它也可以用微码或直接用硅实现。</p>
+<p>Java 虚拟机对 Java 编程语言一无所知，只知道一种特定的二进制格式，即class文件格式。class文件包含 Java 虚拟机指令（或字节码）和符号表，以及其他辅助信息。</p>
+<p>为了安全起见，Java 虚拟机对类文件中的代码施加了强大的句法和结构约束。但是，任何具有可以用有效类文件表示的功能的语言都可以由 Java 虚拟机托管。被一个普遍可用的、独立于机器的平台所吸引，其他语言的实现者可以将 Java 虚拟机作为他们语言的交付工具。</p>
+<h1 id="探索JVM架构"><a href="#探索JVM架构" class="headerlink" title="探索JVM架构"></a>探索JVM架构</h1><h2 id="Hotspot-架构"><a href="#Hotspot-架构" class="headerlink" title="Hotspot 架构"></a>Hotspot 架构</h2><p>HotSpot JVM 的架构支持强大的特性和能力基础，并支持实现高性能和大规模可扩展性的能力。例如，HotSpot JVM JIT 编译器生成动态优化。换句话说，它们在 Java 应用程序运行时做出优化决策，并生成针对底层系统架构的高性能本机机器指令。此外，通过其运行时环境和多线程垃圾收集器的成熟演变和持续工程，HotSpot JVM 即使在最大的可用计算机系统上也能产生高可扩展性。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-dcbd53d27b2f2dec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HotSpot 架构"><br>JVM 的主要组件包括类加载器、运行时数据区和执行引擎。</p>
+<h2 id="关键Hotspot组件"><a href="#关键Hotspot组件" class="headerlink" title="关键Hotspot组件"></a>关键Hotspot组件</h2><p>下图中突出显示了与性能相关的 JVM 关键组件。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-dcbd53d27b2f2dec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>JVM 的三个组件在调优性能时需要重点关注。堆是存储对象数据的地方。然后，该区域由启动时选择的垃圾收集器管理。大多数调整选项都与堆大小和为您的情况选择最合适的垃圾收集器有关。 JIT 编译器对性能也有很大影响，但很少需要使用较新版本的 JVM 进行调整。</p>
+<h1 id="性能基础"><a href="#性能基础" class="headerlink" title="性能基础"></a>性能基础</h1><p>通常，在调整 Java 应用程序时，重点是两个主要目标之一：响应性或吞吐量。随着教程的进行，我们将参考这些概念。</p>
+<h2 id="响应能力-Responsiveness"><a href="#响应能力-Responsiveness" class="headerlink" title="响应能力 (Responsiveness)"></a>响应能力 (Responsiveness)</h2><p>响应性是指应用程序或系统响应请求的数据的速度。示例包括：</p>
+<ul>
+<li>桌面 UI 响应事件的速度</li>
+<li>网站返回页面的速度</li>
+<li>返回数据库查询的速度</li>
+</ul>
+<p>对于专注于响应能力的应用程序，大的暂停时间是不可接受的。重点是在短时间内做出反应</p>
+<h2 id="吞吐量-Throughput"><a href="#吞吐量-Throughput" class="headerlink" title="吞吐量 (Throughput)"></a>吞吐量 (Throughput)</h2><p>吞吐量侧重于在特定时间段内最大化应用程序的工作量。如何衡量吞吐量的示例包括：</p>
+<ul>
+<li>在给定时间内完成的事务数。</li>
+<li>批处理程序在一小时内可以完成的作业数。</li>
+<li>一个小时内可以完成的数据库查询数。</li>
+</ul>
+<p>对于专注于吞吐量的应用程序来说，较长的暂停时间是可以接受的。由于高吞吐量应用程序在较长时间内专注于基准测试，因此无需考虑快速响应时间。</p>
+<h1 id="描述垃圾收集"><a href="#描述垃圾收集" class="headerlink" title="描述垃圾收集"></a>描述垃圾收集</h1><h2 id="什么是自动垃圾收集？"><a href="#什么是自动垃圾收集？" class="headerlink" title="什么是自动垃圾收集？"></a>什么是自动垃圾收集？</h2><p>自动垃圾回收是查看堆内存，识别哪些对象正在使用，哪些没有，并删除未使用的对象的过程。使用中的对象或引用的对象意味着程序的某些部分仍然维护指向该对象的指针。程序的任何部分都不再引用未使用的对象或未引用的对象。因此可以回收未引用对象使用的内存。</p>
+<p>在像 C 这样的编程语言中，分配和释放内存是一个手动过程。在 Java 中，释放内存的过程由垃圾收集器自动处理。基本过程可以描述如下。</p>
+<h3 id="第-1-步：标记"><a href="#第-1-步：标记" class="headerlink" title="第 1 步：标记"></a>第 1 步：标记</h3><p>该过程的第一步称为标记。这是垃圾收集器识别哪些内存正在使用，哪些没有使用的地方。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e03f74859fc36791.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Marking"></p>
+<p>引用的对象以蓝色显示。未引用的对象以金色显示。在标记阶段扫描所有对象以做出此决定。如果必须扫描系统中的所有对象，这可能是一个非常耗时的过程。</p>
+<h3 id="第-2-步：正常删除"><a href="#第-2-步：正常删除" class="headerlink" title="第 2 步：正常删除"></a>第 2 步：正常删除</h3><p>正常删除删除未引用的对象，留下引用的对象和指向可用空间的指针。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-2d58b018e0d79b52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Normal Deletion"></p>
+<p>内存分配器保存对可以分配新对象的可用空间块的引用。</p>
+<h3 id="步骤-2a：使用压缩删除"><a href="#步骤-2a：使用压缩删除" class="headerlink" title="步骤 2a：使用压缩删除"></a>步骤 2a：使用压缩删除</h3><p>为了进一步提高性能，除了删除未引用的对象外，还可以压缩剩余的引用对象。通过将引用的对象一起移动，这使得新的内存分配更加容易和快捷。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-3be6e75c30bb9e5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Deletion with Compacting"></p>
+<h4 id="为什么要进行分代垃圾收集？"><a href="#为什么要进行分代垃圾收集？" class="headerlink" title="为什么要进行分代垃圾收集？"></a>为什么要进行分代垃圾收集？</h4><p>如前所述，必须标记和压缩 JVM 中的所有对象是低效的。随着越来越多的对象被分配，对象列表越来越多，导致垃圾收集时间越来越长。然而，应用的经验分析表明，大多数对象都是短暂的。</p>
+<p>这是此类数据的示例。 Y 轴显示分配的字节数，X 访问显示随时间分配的字节数。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-7280fb319f98561e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Byte allocated"></p>
+<p>如您所见，随着时间的推移，分配的对象越来越少。事实上，大多数对象的寿命都很短，如图左侧的较高值所示。</p>
+<h2 id="JVM堆分代"><a href="#JVM堆分代" class="headerlink" title="JVM堆分代"></a>JVM堆分代</h2><p>从对象分配行为中学到的信息可以用来增强 JVM 的性能。因此，堆被分解成更小的部分或代。堆部分是：年轻代(Young Generation), 老年代(Old or Tenured Generation), 和永久代(Permanent Generation)<br><img src="https://upload-images.jianshu.io/upload_images/9208244-402a50b979a93da6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Hotspot Heap Structure"></p>
+<p>年轻代是所有新对象被分配和老化的地方。当年轻代填满时，这会导致Minor GC。假设对象死亡率很高，可以优化次要集合。一个充满死亡对象的年轻代很快就会被收集起来。一些幸存的对象被老化并最终移动到老年代。</p>
+<p>Stop the World Event——所有Minor GC都是“STW”事件。这意味着所有应用程序线程都将停止，直到操作完成。Minor GC始终是 STW 事件。</p>
+<p>老年代用于存储长期存活的对象。通常，为年轻代对象设置一个阈值，当满足该年龄时，该对象将移动到老年代。最终需要收集老年代。此事件称为Major GC。</p>
+<p>Major GC也是 STW 事件。通常一个Major GC要慢得多，因为它涉及所有活动对象。因此，对于响应式应用程序，应尽量减少Major GC。另请注意，Major GC的 STW 事件的长度受用于老年代空间的垃圾收集器类型的影响。</p>
+<p>永久代包含 JVM 所需的元数据，用于描述应用程序中使用的类和方法。 JVM 在运行时根据应用程序使用的类填充永久代。此外，Java SE 库类和方法可能存储在这里。</p>
+<p>如果 JVM 发现不再需要这些类并且其他类可能需要空间，则这些类可能会被收集（卸载）。永久代包含在完整的垃圾收集中。</p>
+<h1 id="分代垃圾收集过程"><a href="#分代垃圾收集过程" class="headerlink" title="分代垃圾收集过程"></a>分代垃圾收集过程</h1><p>现在您了解了为什么堆被分成不同的代，是时候看看这些空间究竟是如何相互作用的了。下面的图片介绍了 JVM 中的对象分配和老化过程。</p>
+<ol>
+<li><p>首先，任何新对象都被分配到伊甸园空间。两个幸存者空间一开始都是空的。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-1b50a3f814e7187d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Object Allocation"></p>
+</li>
+<li><p>当Eden空间填满时，会触发minor GC。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-db5457450284c742.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Filling the Eden Space"></p>
+</li>
+<li><p>被引用的对象被移动到第一个Survivor空间。当Eden空间被清除时，未引用的对象将被删除。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-8a756af359ef4ca6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Copying Referenced Objects"></p>
+</li>
+<li><p>在下一次minor GC 中，同样的事情发生在Eden空间。未引用的对象被删除，被引用的对象被移动到survivor空间。然而，在这种情况下，它们被移动到第二个Survivor空间（S1）。此外，来自第一个survivor空间 (S0) 上的最后一次minor  GC 的对象的年龄增加并被移动到 S1。一旦所有幸存的对象都被移动到 S1，S0 和 eden 都将被清除。请注意，我们现在在survivor空间中有不同年龄的对象。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-56e8f06bd1c73c14.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Object Aging"></p>
+</li>
+</ol>
+<p>5.在下一次minor GC 中，重复相同的过程。然而，这一次survivor空间切换。被引用的对象被移动到 S0。幸存的物体会老化。 Eden 和 S1 被清除。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-4bf93d59ed34c999.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Additional Aging"></p>
+<ol>
+<li><p>在一次 minor GC 之后，当老化对象达到某个年龄阈值（本例中为 8）时，它们会从年轻代提升到老年代。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-4a3e1164da606acb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Promotion"></p>
+</li>
+<li><p>随着 Minor GC 的不断发生，对象将继续被提升到老年代空间。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-ed9c6f3ec2219ed1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Promotion 2"></p>
+</li>
+<li><p>所以这几乎涵盖了年轻一代的整个过程。最终，将在老年代执行一次major GC，清理并压缩该空间。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-f1ae53c10578e5c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="GC Process Summary"></p>
+</li>
+</ol>
+<h1 id="进行自己的观察"><a href="#进行自己的观察" class="headerlink" title="进行自己的观察"></a>进行自己的观察</h1><h2 id="概览-1"><a href="#概览-1" class="headerlink" title="概览"></a>概览</h2><p>您已经使用一系列图片看到了垃圾收集过程。现在是时候现场体验和探索这个过程了。在本活动中，您将运行 Java 应用程序并使用 Visual VM 分析垃圾收集过程。 Visual VM 程序包含在 JDK 中，允许开发人员监控正在运行的 JVM 的各个方面。</p>
+<h2 id="动手活动"><a href="#动手活动" class="headerlink" title="动手活动"></a>动手活动</h2><h3 id="第-1-步：初始设置"><a href="#第-1-步：初始设置" class="headerlink" title="第 1 步：初始设置"></a>第 1 步：初始设置</h3><p>下载demo</p>
+<h3 id="第-2-步：启动演示应用程序"><a href="#第-2-步：启动演示应用程序" class="headerlink" title="第 2 步：启动演示应用程序"></a>第 2 步：启动演示应用程序</h3><p>安装 Java JDK 和演示后，您现在可以运行将在本活动中分析的演示应用程序。对于此示例，演示安装在 c:\javademos 中。</p>
+<p>演示应用程序是一个 2D 图形演示。要执行它，请键入：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code><br><img src="https://upload-images.jianshu.io/upload_images/9208244-668e4f11f5ed7066.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="2D Demo"></p>
+<h3 id="第-3-步：启动-VisualVM"><a href="#第-3-步：启动-VisualVM" class="headerlink" title="第 3 步：启动 VisualVM"></a>第 3 步：启动 VisualVM</h3><p>要启动 Visual VM，请使用 C:\Program Files\Java\jdk1.7.0_XX\bin 目录中的 jvisualvm 可执行文件。我建议您将此目录添加到您的路径中。在 Windows 7 上，步骤如下：Start -&gt; Computer -&gt; System Properties -&gt; Advanced System Settings -&gt; Environment Variables.然后在系统变量下选择路径并添加 C:\Program Files\Java\jdk1.7.0_XX\bin;到路径（其中 XX 是 JDK 的当前版本）。单击确定几次，然后关闭对话框。</p>
+<p>完成此操作后，您应该能够打开命令提示符窗口并键入 jvisualvm。</p>
+<p>Visual VM 第一次运行时，它会对您的系统进行校准。您将看到如下消息：<br><img src="https://upload-images.jianshu.io/upload_images/9208244-a8a9c4b97dacb1eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>然后是这样的消息：<br><img src="https://upload-images.jianshu.io/upload_images/9208244-31e7ecf8100f1f33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>最后加载主用户界面。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/9208244-1cbb7f98bcd056dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>从这里，我们可以监控正在运行的 JVM。但是，对于这个活动，我们需要添加 VisualGC 插件。</p>
+<h3 id="第-4-步：安装-Visual-GC"><a href="#第-4-步：安装-Visual-GC" class="headerlink" title="第 4 步：安装 Visual GC"></a>第 4 步：安装 Visual GC</h3><p>Visual VM 的 Visual GC 插件提供了 JVM 中垃圾收集器活动的图形表示。它是免费的，可以按照以下步骤添加到您的安装中。</p>
+<ol>
+<li>要安装 Visual GC，请从菜单中选择Tools —&gt; Plugins。您应该得到以下对话框。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-2a8d8fb06b22a344.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>2.选择 Visual GC，然后选择安装按钮。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-cf29cd1e46edd508.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>3.插件安装程序启动。点击下一步。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-3d93646cce175634.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>阅读并接受许可协议。单击安装。现在将安装插件。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-32d94b6cdcd76d71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>5.该插件现已安装。单击完成以完成安装。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-32bdac9c3805f821.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>6.单击关闭按钮关闭插件对话框。<br>安装了 VisualGC。现在我们可以检查 Java2Demo 以了解正在发生的事情。</li>
+</ol>
+<h3 id="第-5-步：分析-Java2Demo"><a href="#第-5-步：分析-Java2Demo" class="headerlink" title="第 5 步：分析 Java2Demo"></a>第 5 步：分析 Java2Demo</h3><p>是时候分析我们在第 2 步中启动的应用程序了。</p>
+<ol>
+<li>首先，在 Applications 选项卡的 Local applications 列表中右键单击 Java2Demo 应用程序。选择打开。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-f8ab0a35de10756e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>应用程序被加载到 Visual VM 中。请注意，界面右侧加载了许多选项卡。单击可视 GC 选项卡。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-8e46e7db00ea3651.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>3.Visual GC 选项卡显示垃圾收集器中正在进行的所有活动。您可以看到 Eden 空间被填满，数据在两个survivor空间 S1 和 S0 之间移动。此外，右侧显示了与垃圾收集器相关的图表和统计信息。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-1b402ac8ed77d286.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>随意尝试其他选项卡并查看有关 JVM 的信息。此外，您可以尝试更改示例应用程序中显示的字符串或图像的数量，以了解这对垃圾收集过程有何影响。</li>
+</ol>
+<h1 id="Java-垃圾收集器"><a href="#Java-垃圾收集器" class="headerlink" title="Java 垃圾收集器"></a>Java 垃圾收集器</h1><p>您现在了解了垃圾收集的基础知识，并且已经观察了垃圾收集器在示例应用程序中的作用。在本节中，您将了解可用于 Java 的垃圾收集器以及选择它们所需的命令行开关。</p>
+<h2 id="常见的堆相关开关"><a href="#常见的堆相关开关" class="headerlink" title="常见的堆相关开关"></a>常见的堆相关开关</h2><p>Java 可以使用许多不同的命令行开关。本节介绍了本 OBE 中也使用的一些更常用的开关。<br>| 开关   |  描述   |<br>| — | — |<br>|  -Xms  |  设置 JVM 启动时的初始堆大小。   |<br>|  -Xmx  |  设置最大堆大小。   |<br>|  -Xmn  |  设置年轻代的大小。   |<br>|  -XX:PermSize  |  设置永久代的起始大小。   |<br>|  -XX:MaxPermSize  |  设置永久代的最大大小。   | </p>
+<h2 id="串行收集器-Serial-GC"><a href="#串行收集器-Serial-GC" class="headerlink" title="串行收集器(Serial GC)"></a>串行收集器(Serial GC)</h2><p>串行收集器是 Java SE 5 和 6 中客户端样式机器的默认设置。使用串行收集器，次要和主要垃圾收集都是串行完成的（使用单个虚拟 CPU）。此外，它使用了一种标记紧凑的收集方法。此方法将较旧的内存移动到堆的开头，以便在堆的末尾将新的内存分配变成一个连续的内存块。这种内存压缩可以更快地将新的内存块分配给堆。</p>
+<h3 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h3><p>对于大多数对暂停时间要求不高且在客户端式机器上运行的应用程序来说，串行 GC 是首选的垃圾收集器。它仅利用单个虚拟处理器进行垃圾收集工作（因此，它的名字）。尽管如此，在今天的硬件上，串行 GC 可以有效地管理大量具有几百 MB Java 堆的重要应用程序，并且在最坏情况下的暂停时间相对较短（完全垃圾收集大约需要几秒钟）。</p>
+<p>Serial GC 的另一个流行用途是在同一台机器上运行大量 JVM 的环境中（在某些情况下，JVM 比可用处理器多！）。在这样的环境中，当 JVM 进行垃圾收集时，最好只使用一个处理器来最大限度地减少对剩余 JVM 的干扰，即使垃圾收集可能会持续更长时间。串行 GC 非常适合这种权衡。</p>
+<p>最后，随着具有最小内存和少数内核的嵌入式硬件的普及，串行 GC 可能会卷土重来。</p>
+<h3 id="命令行开关"><a href="#命令行开关" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用串行收集器，请使用：<code>-XX:+UseSerialGC</code><br>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h2 id="并行垃圾收集器-Parallel-GC"><a href="#并行垃圾收集器-Parallel-GC" class="headerlink" title="并行垃圾收集器(Parallel GC)"></a>并行垃圾收集器(Parallel GC)</h2><p>并行垃圾收集器使用多个线程来执行年轻代垃圾收集。默认情况下，在具有 N 个 CPU 的主机上，并行垃圾收集器在收集中使用 N 个垃圾收集器线程。垃圾收集器线程的数量可以通过命令行选项控制：</p>
+<p>-XX:ParallelGCThreads=&lt;所需数量&gt;</p>
+<p>在具有单个 CPU 的主机上，即使已请求并行垃圾收集器，也会使用默认垃圾收集器。在具有两个 CPU 的主机上，并行垃圾收集器的性能通常与默认垃圾收集器一样好，并且可以预期在具有两个以上 CPU 的主机上减少年轻代垃圾收集器的暂停时间。 Parallel GC 有两种风格。</p>
+<h3 id="使用案例-1"><a href="#使用案例-1" class="headerlink" title="使用案例"></a>使用案例</h3><p>并行收集器也称为吞吐量收集器。因为它可以使用多个 CPU 来加快应用程序的吞吐量。当需要完成大量工作并且可以接受长时间的停顿时，应该使用此收集器。例如，打印报告或账单或执行大量数据库查询等批处理。</p>
+<h3 id="XX-UseParallelGC"><a href="#XX-UseParallelGC" class="headerlink" title="-XX:+UseParallelGC"></a>-XX:+UseParallelGC</h3><p>使用此命令行选项，您将获得一个多线程年轻代收集器和一个单线程老年代收集器。该选项还对老年代进行单线程压缩。</p>
+<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h3 id="XX-UseParallelOldGC"><a href="#XX-UseParallelOldGC" class="headerlink" title="-XX:+UseParallelOldGC"></a>-XX:+UseParallelOldGC</h3><p>使用 -XX:+UseParallelOldGC 选项，GC 既是多线程年轻代收集器，也是多线程老年代收集器。它也是一个多线程压缩收集器。 HotSpot 只在老年代进行压缩。 HotSpot 中的年轻代被认为是一个副本收集器；因此，不需要压缩。</p>
+<p>压缩描述了以对象之间没有孔的方式移动对象的行为。垃圾收集扫描后，活动对象之间可能会留下空洞。压实移动对象，以便没有剩余的孔。垃圾收集器可能是非压缩收集器。因此，并行收集器和并行压缩收集器之间的区别可能是后者在垃圾收集扫描后压缩空间。前者不会。</p>
+<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelOldGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h2 id="并发标记扫描收集器-CMS"><a href="#并发标记扫描收集器-CMS" class="headerlink" title="并发标记扫描收集器 (CMS)"></a>并发标记扫描收集器 (CMS)</h2><p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集tenured generation。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
+<p>注意：年轻代的 CMS 收集器使用与并行收集器相同的算法。</p>
+<h3 id="使用案例-2"><a href="#使用案例-2" class="headerlink" title="使用案例"></a>使用案例</h3><p>CMS 收集器应该用于需要低暂停时间并且可以与垃圾收集器共享资源的应用程序。示例包括响应事件的桌面 UI 应用程序、响应请求的 Web 服务器或响应查询的数据库。</p>
+<h3 id="命令行开关-1"><a href="#命令行开关-1" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用 CMS 收集器，请使用：<br><code>-XX:+UseConcMarkSweepGC</code><br>并设置线程数使用：<br><code>-XX:ParallelCMSThreads=&lt;n&gt;</code></p>
+<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseConcMarkSweepGC -XX:ParallelCMSThreads=2 -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h3 id="G1-垃圾收集器"><a href="#G1-垃圾收集器" class="headerlink" title="G1 垃圾收集器"></a>G1 垃圾收集器</h3><p>Garbage First 或 G1 垃圾收集器在 Java 7 中可用，旨在长期替代 CMS 收集器。 G1 收集器是一个并行、并发和增量压缩的低暂停垃圾收集器，它的布局与前面描述的其他垃圾收集器完全不同。但是，详细讨论超出了本 OBE 的范围。</p>
+<h3 id="命令行开关-2"><a href="#命令行开关-2" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用 G1 收集器，请使用：<br><code>-XX:+UseG1GC</code></p>
+<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -XX:+UseG1GC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本 OBE 中，您将了解 Java JVM 上的垃圾收集系统。首先，您了解了堆和垃圾收集器如何成为任何 Java JVM 的关键部分。自动垃圾收集是使用分代垃圾收集方法完成的。一旦你了解了这个过程，你就可以使用 Visual VM 工具观察它。最后，您查看了 Java Hospot JVM 中可用的垃圾收集器。</p>
+<p>在本教程中，您学习了：</p>
+<ul>
+<li>Java JVM 的组件</li>
+<li>自动垃圾收集的工作原理</li>
+<li>分代垃圾收集过程</li>
+<li>如何使用 Visual VM 监控 JVM</li>
+<li>JVM 上可用的垃圾收集器类型</li>
+</ul>
+
+			
+			
+				<div id="donate" style="text-align:center">
+					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
+	<div>听说打赏的人都脱单了 ♪(＾∀＾●)ﾉ</div>
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+            <br>
+           
+        </span>
+        <br>
+      </div>  
+    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
+		
+    </div>
+    
+    <script type="text/javascript">
+		var html = ['<div style="/*width:194px; height:194px; float:left; margin: 0% 1%;*/">',
+			'<img src="http://wx3.sinaimg.cn/large/afc434bdly1fklmwz005xj205c05c0ta.jpg" id="weixin" title="支付宝打赏"  alt="支付宝打赏">',
+			'<span>支付宝打赏</span>',
+			'</div>',
+			'<div style="/*width:194px; height:194px; float: left;*/">',
+			'<img src="http://ww1.sinaimg.cn/large/afc434bdly1fki3rxy1t0j205g05gmxo.jpg" title="微信打赏" id="zhifubao"  alt="微信打赏">',
+			'<span>微信打赏</span>',
+			'</div>'].join('');
+        $('#weixin').hover()
+        document.getElementById('btn_donate').onclick = function(){
+            $('#donate_board').addClass('hidden');
+            $('#donate_guide').html(html).removeClass('hidden');
+        }
+      
+    </script>
+</div>
+<style>
+.donate_bar {
+    text-align: center;
+    margin-top: 3%;
+}
+.donate_bar2{
+    z-index: 9999;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 660px;
+    height: 360px;
+    margin: -180px 0 30px -330px;
+    border-radius: 5px;
+    border: solid 2px #666;
+    background-color: #fff;
+    
+    box-shadow: 0 0 10px #666;
+}
+.donate_bar a.btn_donate {
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    margin-left: auto;
+    margin-right: auto;
+    background: url(http://ww1.sinaimg.cn/large/ece90acdjw1fbq75kmh0pg202a06ywee.gif)no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s
+}
+.donate_bar a.btn_donate:hover {
+    background-position: 0 -82px
+}
+.donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei"
+}
+.donate_bar.hidden{
+    display: none
+}
+.post-donate{
+    margin-top: 80px;
+}
+#donate_guide{
+    height: 50%;
+    width: 50%;
+    margin: 3% auto;
+    padding: 5px;
+}
+</style>
+				</div>
+			
+			
+				<div class="alert alert-success">
+	<div class="copyright-left">
+		<i class="fa fa-lightbulb-o"></i>
+		本文由 <a href="/" target="_blank" title="xxzkid | 逗的8笔">xxzkid | 逗的8笔</a>创作，采用
+		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
+		可自由转载、引用，但需署名作者且注明文章出处。<br>
+		本文标题：<a href="/2022/java-gc01/" target="_blank" title=""></a><br>
+		本文链接：<a href="/2022/java-gc01/" target="_blank" title="">https://www.uyiplus.com/2022/java-gc01/</a>
+	</div>
+	<div style="clear:both;height:0px;"></div>
+</div>
+
+
+<style>
+.alert {
+	width: 95%;
+    margin: 0 auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #f5f5f5;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px)
+(index):495
+.copyright-left {
+    float: left;
+    width: 80%;
+}
+</style>
+				<style>
+	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
+</style>
+<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<script>
+	$(function(){
+		$(".article-entry .gallery-item").fancybox();;
+	});
+</script>
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/aqs-01/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">AbstractQueuedSynchronizer详解</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信助手/" style="font-size: 10px;">PC微信助手</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/c-c/" style="font-size: 10px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/leetcode/" style="font-size: 16px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis/" style="font-size: 12px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/seata/" style="font-size: 10px;">seata</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/synchronize/" style="font-size: 10px;">synchronize</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/微信/" style="font-size: 10px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 10px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+            </ul>
+        </div>
+    </div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- ad -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="6089417000"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 xxzkid | 逗的8笔<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+
+<script src="//cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("O6mJMECJQMze0pmhmIni3boW-gzGzoHsz", "Nfulfg9ReAg1M2VggxX2j9JD");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		var title = $(this).attr('data-flag-title').trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0';
+					$(document.getElementById(url)).text(content);
+					
+					var newcounter = new Counter();
+					newcounter.set("title", title);
+					newcounter.set("url", url);
+					newcounter.set("time", 0);
+					newcounter.save(null, {
+						success: function(newcounter) {
+							var content = newcounter.get('time');
+							$(document.getElementById(url)).text(content);
+						},
+						error: function(newcounter, error) {
+							console.log('Failed to create');
+						}
+					});
+					
+					return ;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+	});
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	}
+	showTime(Counter);
+});
+</script>
+
+        
+    
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var id = window.location.pathname;
+		id = id.substring(1);
+		id = id.substring(id.indexOf('/') + 1, id.length - 1);
+		
+		var gitalk = new Gitalk({
+		  clientID: 'd0cfd49cb3019a36b6cd',
+		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
+		  repo: 'x-comment',
+		  owner: 'jsbxyyx',
+		  admin: ['jsbxyyx'],
+		  id: id,
+		  distractionFreeMode: false
+		});
+		
+		gitalk.render('commentContainer');
+	</script>
+	
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
