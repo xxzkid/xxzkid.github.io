@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>G1 垃圾收集器 | xxzkid | 逗的8笔</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="G1 垃圾收集器Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：  可以与 CMS 收集器等应用程序线程同时操作。 紧凑的可用空间，没有冗长的 GC 引起的暂停时间">
+<meta name="keywords" content="java,gc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="G1 垃圾收集器">
+<meta property="og:url" content="https://www.uyiplus.com/2022/java-g1/index.html">
+<meta property="og:site_name" content="xxzkid | 逗的8笔">
+<meta property="og:description" content="G1 垃圾收集器Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：  可以与 CMS 收集器等应用程序线程同时操作。 紧凑的可用空间，没有冗长的 GC 引起的暂停时间">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-244b0c7278b8f214.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-024e241d821ac783.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-d60d4fa601a26487.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-2e5d0a32c1f9a2b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-51e11cfd0d02c98b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-488b67531acdde13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-e03973d899b1dd64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-be302cde1da00f86.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-af3ff350c354826b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-1c60266cd5985c28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-e24fe6dc762496ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-72036f0a03fb2ec0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-163ab7e42c72c19a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-64786c91190cb51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-d7bb21ce343ae6df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-9528fac0385e0258.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-a71225b6ab96067d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-dbbf973e11efe0e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/9208244-e3a2b99853e38f81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2022-07-23T07:43:45.429Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="G1 垃圾收集器">
+<meta name="twitter:description" content="G1 垃圾收集器Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：  可以与 CMS 收集器等应用程序线程同时操作。 紧凑的可用空间，没有冗长的 GC 引起的暂停时间">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/9208244-244b0c7278b8f214.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+    
+    
+
+
+
+<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fe00750430833325b59901d367e6e01a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- google ads -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2328510744730535",
+    enable_page_level_ads: true
+  });
+</script>
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script>
+    $(function(){
+        $("img").each( (i,o) => {
+            var o = $(o);
+            // 判断图片的链接是否包含 sinaimg 关键字
+            if( o.attr("src").indexOf("sinaimg") > 0 ){
+                // 给这个标签加上 referrerPlicy 属性
+                o.attr("referrerpolicy","no-referrer");
+                // 备份图片的 src
+                var link = o.attr("src");
+                // 重新设置 src，让页面重新加载一次图片
+                o.attr("src",link);
+            }
+        });
+    });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+        <amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-2328510744730535">
+</amp-auto-ads>
+<header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">xxzkid | 逗的8笔</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxzkid | 逗的8笔</h2>
+            <h3 id="title">哈哈，程序员一枚</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
+            <a id="follow" target="_blank" href="https://github.com/xxzkid">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                63
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                86
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxzkid" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+        
+        <div class="profile-block">
+          <div>QQ群: 551304760</div>
+          <div>淘宝优惠券微信：jsbxyyx</div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java-g1" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            G1 垃圾收集器
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2022/java-g1/">
+            <time datetime="2022-07-23T00:00:00.000Z" itemprop="datePublished">2022-07-23</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/gc/">gc</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="G1-垃圾收集器"><a href="#G1-垃圾收集器" class="headerlink" title="G1 垃圾收集器"></a>G1 垃圾收集器</h1><p>Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：</p>
+<ul>
+<li>可以与 CMS 收集器等应用程序线程同时操作。</li>
+<li>紧凑的可用空间，没有冗长的 GC 引起的暂停时间。</li>
+<li>需要更多可预测的 GC 暂停持续时间。</li>
+<li>不想牺牲很多吞吐量性能。</li>
+<li>不需要更大的 Java 堆。<a id="more"></a>
+G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G1 与 CMS 进行比较，G1 是一个更好的解决方案。一个区别是 G1 是一个压缩收集器。 G1 充分压缩以完全避免使用细粒度的空闲列表进行分配，而是依赖于区域。这大大简化了收集器的各个部分，并且主要消除了潜在的碎片问题。此外，G1 提供比 CMS 收集器更可预测的垃圾收集暂停，并允许用户指定所需的暂停目标。</li>
+</ul>
+<h2 id="G1运行概览"><a href="#G1运行概览" class="headerlink" title="G1运行概览"></a>G1运行概览</h2><p>较旧的垃圾收集器（串行(serial)、并行(parallel)、CMS）都将堆分为三个部分：年轻代、老年代和固定内存大小的永久代。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-244b0c7278b8f214.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>所有内存对象最终都位于这三个部分之一中。</p>
+<p>G1 收集器采用不同的方法。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-024e241d821ac783.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>堆被划分为一组大小相等的堆区域，每个区域都是连续的虚拟内存范围。某些区域集被分配了与旧收集器相同的角色（eden、survivor、old），但它们没有固定的大小。这为内存使用提供了更大的灵活性。</p>
+<p>在执行垃圾回收时，G1 以类似于 CMS 回收器的方式运行。 G1 执行一个并发的全局标记阶段来确定整个堆中对象的活跃度。标记阶段完成后，G1 知道哪些区域大部分是空的。它首先在这些区域收集，这通常会产生大量的可用空间。这就是为什么这种垃圾收集方法被称为 Garbage-First 的原因。顾名思义，G1 将其收集和压缩活动集中在堆中可能充满可回收对象的区域，即垃圾。 G1 使用停顿预测模型来满足用户定义的停顿时间目标，并根据指定的停顿时间目标选择要收集的区域数。</p>
+<p>G1 识别为可以回收的区域使用疏散进行垃圾收集。 G1 将对象从堆的一个或多个区域复制到堆上的单个区域，并在此过程中压缩和释放内存。这种疏散在多处理器上并行执行，以减少暂停时间并提高吞吐量。因此，每次垃圾回收时，G1 都会在用户定义的暂停时间内持续工作以减少碎片。这超出了前两种方法的能力。 CMS（并发标记扫描）垃圾收集器不进行压缩。 ParallelOld 垃圾收集仅执行整个堆压缩，这会导致相当长的暂停时间。</p>
+<p>需要注意的是，G1 不是实时收集器。它以高概率但不是绝对确定地满足设定的暂停时间目标。根据之前收集的数据，G1 会估计在用户指定的目标时间内可以收集多少个区域。因此，收集器有一个相当准确的区域收集成本模型，并且它使用该模型来确定要收集哪些区域以及要收集多少区域，同时保持在暂停时间目标内。</p>
+<p>注意：G1 具有并发（与应用程序线程一起运行，例如，细化(refinement)、标记(marking)、清理(cleanup)）和并行（多线程，例如，STW）阶段。Full GC仍然是单线程的，但如果调整得当，您的应用程序应该避免Full GC。</p>
+<h2 id="G1足迹"><a href="#G1足迹" class="headerlink" title="G1足迹"></a>G1足迹</h2><p>如果您从 ParallelOldGC 或 CMS 收集器迁移到 G1，您可能会看到更大的 JVM 进程大小。这主要与“记帐(accounting)”数据结构有关，例如记忆集(Remembered Sets)和集合集(Collection Sets)。</p>
+<p>记忆集(Remembered Sets)或 RSets 将对象引用跟踪到给定区域。堆中的每个区域都有一个 RSet。RSet 支持区域的并行和独立收集。RSets 的总体足迹影响小于 5%。</p>
+<p>Collection Sets 或 CSets 将在 GC 中收集的区域集。在 GC 期间，CSet 中的所有实时数据都会被撤出（复制/移动）。区域集可以是Eden、survivor 和/或 old generation。CSet 对 JVM 大小的影响不到 1%。</p>
+<h2 id="G1-的推荐用例"><a href="#G1-的推荐用例" class="headerlink" title="G1 的推荐用例"></a>G1 的推荐用例</h2><p>G1 的第一个重点是为运行需要大堆且 GC 延迟有限的应用程序的用户提供解决方案。这意味着大约 6GB 或更大的堆大小，以及低于 0.5 秒的稳定且可预测的暂停时间。</p>
+<p>如果应用程序具有以下一个或多个特征，则现在使用 CMS 或 ParallelOldGC 垃圾收集器运行的应用程序将受益于切换到 G1。</p>
+<ul>
+<li>Full GC 持续时间太长或太频繁。</li>
+<li>对象分配率或提升率差异很大。</li>
+<li>不需要的长时间垃圾收集或压缩暂停（超过 0.5 到 1 秒）</li>
+</ul>
+<p>注意：如果您使用的是 CMS 或 ParallelOldGC，并且您的应用程序没有经历长时间的垃圾收集暂停，则可以继续使用当前的收集器。使用最新的 JDK 不需要更改为 G1 收集器。</p>
+<h1 id="使用-CMS-查看-GC"><a href="#使用-CMS-查看-GC" class="headerlink" title="使用 CMS 查看 GC"></a>使用 CMS 查看 GC</h1><h2 id="查看分代-GC-和-CMS"><a href="#查看分代-GC-和-CMS" class="headerlink" title="查看分代 GC 和 CMS"></a>查看分代 GC 和 CMS</h2><p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集tenured generation。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
+<p>注意：年轻代的 CMS 收集器使用与并行收集器相同的算法。</p>
+<h3 id="CMS-收集阶段"><a href="#CMS-收集阶段" class="headerlink" title="CMS 收集阶段"></a>CMS 收集阶段</h3><p>CMS 收集器在老年代堆上执行以下阶段：<br>| 阶段 | 描述 |<br>| — | — |<br>| (1) 初始标记 STW | 老一代中的对象被“标记”为可访问的，包括那些可以从年轻代访问的对象。与Minor收集暂停时间相比，暂停时间通常较短。 |<br>| (2) 并发标记 | 在 Java 应用程序线程正在执行时，同时遍历可访问对象的永久生成对象图。从标记的对象开始扫描并传递标记从根可到达的所有对象。 mutator 在并发阶段 2、3 和 5 期间执行，并且在这些阶段期间在 CMS 生成中分配的任何对象（包括提升的对象）都会立即标记为活动的。 |<br>| (3)重新标记 STW | 在并发收集器完成跟踪该对象后，查找由于 Java 应用程序线程更新对象而被并发标记阶段遗漏的对象。 |<br>| (4)并发清楚 | 在标记阶段收集标识为无法访问的对象。死对象的集合将对象的空间添加到空闲列表以供以后分配。此时可能会发生死对象的合并。请注意，活动对象不会移动。 |<br>| (5) 复位 | 通过清除数据结构为下一次并发收集做准备。 |</p>
+<h3 id="查看垃圾收集步骤"><a href="#查看垃圾收集步骤" class="headerlink" title="查看垃圾收集步骤"></a>查看垃圾收集步骤</h3><p>接下来，让我们一步步回顾CMS Collector的操作。</p>
+<ol>
+<li>CMS 收集器的堆结构<br>堆被分成三个空间。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-d60d4fa601a26487.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>年轻代分为Eden和两个survivor空间。老年代是一个连续的空间。对象收集就地完成。除非有完整的 GC，否则不会进行压缩。</p>
+<ol>
+<li>Young GC 在 CMS 中的工作原理<br>新生代为浅绿色，老年代为蓝色。如果您的应用程序已经运行了一段时间，这就是 CMS 的样子。对象分散在老年代区域周围。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-2e5d0a32c1f9a2b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>使用 CMS，老年代对象被原地释放。他们没有四处移动。除非有完整的 GC，否则不会压缩空间。</p>
+<ol>
+<li><p>年轻一代合集<br>活动对象从Eden空间和survivor空间复制到另一个survivor空间。任何达到其老化阈值的旧对象都会被提升为老年代。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-51e11cfd0d02c98b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>在年轻 GC 之后<br>在年轻 GC 之后，Eden 空间被清除，survivor空间之一被清除。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-488b67531acdde13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+</ol>
+<p>新提升的对象在图表上以深蓝色显示。绿色对象是尚未提升到老年代的幸存年轻代对象。</p>
+<ol>
+<li><p>带有 CMS 的老一代集合<br>两个STW事件发生：初始标记和备注。当老年代达到一定的占用率时，CMS就会启动。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e03973d899b1dd64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>(1) 初始标记是一个短暂的暂停阶段，在此标记活动（可达）对象。(2) 并发标记在应用程序继续执行时发现活动对象。最后，在（3）重新标记阶段，发现在前一个阶段（2）并发标记期间遗漏的对象。</p>
+</li>
+<li><p>老年代收集 - 并发清除<br>在前一阶段未标记的对象将被原地释放。没有压缩 。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-be302cde1da00f86.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+</ol>
+<p>注意：未标记的对象 == 死对象</p>
+<ol>
+<li>老一代合集-清除后<br>（4）清除阶段之后，可以看到已经释放了很多内存。您还会注意到没有进行任何压缩。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-af3ff350c354826b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>最后，CMS 收集器将通过 (5) 重置阶段并等待下一次达到 GC 阈值。</p>
+<h1 id="G1-垃圾收集器一步一步"><a href="#G1-垃圾收集器一步一步" class="headerlink" title="G1 垃圾收集器一步一步"></a>G1 垃圾收集器一步一步</h1><p>G1 收集器采用不同的方法来分配堆。下面的图片逐步回顾了 G1 系统。</p>
+<ol>
+<li><p>G1 堆结构<br>堆是一个内存区域，分为许多固定大小的区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-1c60266cd5985c28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>区域大小由 JVM 在启动时选择。 JVM 通常针对大约 2000 个区域，大小从 1 到 32Mb 不等。</p>
+</li>
+<li><p>G1 堆分配<br>实际上，这些区域被映射为 Eden、Survivor 和老年代空间的逻辑表示。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e24fe6dc762496ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+</ol>
+<p>图片中的颜色显示了哪个区域与哪个角色相关联。活动对象从一个区域撤离（即复制或移动）到另一个区域。区域被设计为在停止或不停止所有其他应用程序线程的情况下并行收集。</p>
+<p>如图所示，区域可以分配到 Eden、Survivor 和老年代区域。此外，还有第四类物体，称为巨大区域(Humongous regions)。这些区域旨在容纳标准区域大小的 50% 或更大的对象。它们被存储为一组连续的区域。最后一种类型的区域将是堆中未使用的区域。</p>
+<p>注意：在撰写本文时，收集巨大对象尚未优化。因此，您应该避免创建这种大小的对象。</p>
+<ol>
+<li>G1 中的年轻代<br>堆被分成大约 2000 个区域。最小大小为 1Mb，最大大小为 32Mb。蓝色区域保存老年代对象，绿色区域保存年轻代对象。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-72036f0a03fb2ec0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>请注意，这些区域不需要像旧的垃圾收集器那样是连续的。</p>
+<ol>
+<li>G1 中的Young GC<br>活动对象被疏散（即复制或移动）到一个或多个幸存者区域。如果满足老化阈值，则将一些对象提升到老年代区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-163ab7e42c72c19a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>这是一个STW的暂停。为下一次Young GC 计算 Eden 大小和Survivor 大小。保留会计信息以帮助计算大小。考虑到暂停时间目标之类的事情。</p>
+<ol>
+<li>使用 G1 结束 Young GC<br>活动对象已被疏散到Survivor区域或老年代区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-64786c91190cb51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ol>
+<p>最近提升的对象以深蓝色显示。绿色的Survivor区域。</p>
+<p>综上所述，G1中的年轻代可以这么说：</p>
+<ul>
+<li>堆是分割成多个区域的单个内存空间。</li>
+<li>年轻代内存由一组不连续的区域组成。这使得在需要时可以轻松调整大小。</li>
+<li>年轻代垃圾回收或Young GC 是STW事件。所有应用程序线程都为该操作停止。</li>
+<li>Young GC 使用多个线程并行完成。</li>
+<li>活动对象被复制到新的Survivor或老年代区域。</li>
+</ul>
+<h2 id="带有-G1-的老年代集合"><a href="#带有-G1-的老年代集合" class="headerlink" title="带有 G1 的老年代集合"></a>带有 G1 的老年代集合</h2><p>与 CMS 收集器一样，G1 收集器被设计为老年代对象的低暂停收集器。下表描述了老年代的 G1 收集阶段。</p>
+<h3 id="G1-收集阶段-并发标记周期阶段"><a href="#G1-收集阶段-并发标记周期阶段" class="headerlink" title="G1 收集阶段 - 并发标记周期阶段"></a>G1 收集阶段 - 并发标记周期阶段</h3><p>G1 收集器在堆的老年代执行以下阶段。请注意，某些阶段是年轻代集合的一部分。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(1) 初始标记</td>
+<td>这是一个STW事件。使用 G1，它搭载在正常的Young GC 上。标记可能引用老年代对象的Survivor区域（根区域）。</td>
+</tr>
+<tr>
+<td>(2) 根区域扫描</td>
+<td>扫描Survivor区域以获取对老年代的引用。这会在应用程序继续运行时发生。该阶段必须在Young GC 发生之前完成。</td>
+</tr>
+<tr>
+<td>(3) 并发标记</td>
+<td>在整个堆上查找活动对象。这发生在应用程序运行时。这个阶段可以被年轻代垃圾回收打断。</td>
+</tr>
+<tr>
+<td>(4) 重新标记 (STW)</td>
+<td>完成堆中活动对象的标记。使用一种称为开始时快照 (SATB) 的算法，该算法比 CMS 收集器中使用的算法快得多。</td>
+</tr>
+<tr>
+<td>(5) 清除 (STW和并发)</td>
+<td>1. 对活动对象和完全自由的区域执行记帐(accounting)。 （STW）2. 清除记忆的集合。 （STW）3. 重置空白区域并将它们返回到空闲列表。 （并发）</td>
+</tr>
+<tr>
+<td>(*) 复制 (STW)</td>
+<td>这些是STW以将活动对象撤离或复制到新的未使用区域的停止。这可以通过记录为 [GC pause (young)] 的年轻代区域来完成。或者记录为 [GC Pause (mixed)] 的年轻代和老年代区域。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="G1老年代收集一步一步"><a href="#G1老年代收集一步一步" class="headerlink" title="G1老年代收集一步一步"></a>G1老年代收集一步一步</h3><p>定义完阶段后，让我们看看它们如何与 G1 收集器中的老年代交互。</p>
+<ol>
+<li><p>初始标记阶段<br>活动对象的初始标记搭载在年轻代垃圾收集上。在日志中，这被标记为 GC pause (young)(initial-mark)。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-d7bb21ce343ae6df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>并发标记阶段<br>如果找到空区域（如“X”所示），它们会在重新标记阶段立即删除。此外，计算确定活跃度的“记账(accounting)”信息。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-9528fac0385e0258.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>重新标记阶段<br>空区域被移除并回收。现在计算所有区域的区域活跃度。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-a71225b6ab96067d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>复制/清理阶段<br>G1 选择“活跃度”最低的区域，即可以最快收集到的区域。然后这些区域会在Young GC 的同时被收集。这在日志中表示为 [GC pause (mixed)]。所以年轻一代和老一代同时被收集。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-dbbf973e11efe0e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>复制/清理阶段之后<br>所选区域已被收集并压缩为图中所示的深蓝色区域和深绿色区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e3a2b99853e38f81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+</ol>
+<h3 id="老年代GC总结"><a href="#老年代GC总结" class="headerlink" title="老年代GC总结"></a>老年代GC总结</h3><p>综上所述，关于老年代的 G1 垃圾回收，我们可以提出几个关键点。</p>
+<ul>
+<li>并发标记阶段</li>
+</ul>
+<ol>
+<li>在应用程序运行时同时计算活跃度信息。</li>
+<li>该活跃度信息确定了在撤离暂停期间哪些区域最适合回收。</li>
+<li>没有像 CMS 那样的清扫阶段。</li>
+</ol>
+<ul>
+<li>重新标记阶段</li>
+</ul>
+<ol>
+<li>使用 Snapshot-at-the-Beginning (SATB) 算法，该算法比 CMS 使用的要快得多。</li>
+<li>完全空的区域被回收。</li>
+</ol>
+<ul>
+<li>复制/清理阶段</li>
+</ul>
+<ol>
+<li>年轻代和老年代同时回收。</li>
+<li>老年代区域是根据它们的活跃度来选择的。</li>
+</ol>
+<h1 id="命令行选项和最佳实践"><a href="#命令行选项和最佳实践" class="headerlink" title="命令行选项和最佳实践"></a>命令行选项和最佳实践</h1><p>在本节中，让我们看一下 G1 的各种命令行选项。</p>
+<h2 id="基本命令行"><a href="#基本命令行" class="headerlink" title="基本命令行"></a>基本命令行</h2><p>要启用 G1 收集器，请使用：<code>-XX:+UseG1GC</code></p>
+<p>以下是用于启动 JDK 演示和示例下载中包含的 Java2Demo 的示例命令行：<br><code>java -Xmx50m -Xms50m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h2 id="关键命令行开关"><a href="#关键命令行开关" class="headerlink" title="关键命令行开关"></a>关键命令行开关</h2><p><code>-XX:+UseG1GC</code> - 告诉 JVM 使用 G1 垃圾收集器。</p>
+<p><code>-XX:MaxGCPauseMillis=200</code> - 设置最大 GC 暂停时间的目标。这是一个软目标，JVM 将尽最大努力实现它。因此，暂停时间目标有时无法实现。默认值为 200 毫秒。</p>
+<p><code>-XX:InitiatingHeapOccupancyPercent=45</code> - 启动并发 GC 周期的（整个）堆占用百分比。 G1 使用它来触发基于整个堆的占用情况的并发 GC 周期，而不仅仅是一代。值 0 表示“执行恒定的 GC 循环”。默认值为 45（即 45% 已满或已占用）。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>在使用 G1 时，您应该遵循一些最佳实践。</p>
+<h4 id="不要设置年轻代大小"><a href="#不要设置年轻代大小" class="headerlink" title="不要设置年轻代大小"></a>不要设置年轻代大小</h4><p>通过 -Xmn 显式设置年轻代大小会影响 G1 收集器的默认行为。</p>
+<ul>
+<li>G1 将不再遵守集合的暂停时间目标。所以本质上，设置年轻代大小会禁用暂停时间目标。</li>
+<li>G1 不再能够根据需要扩展和收缩年轻代空间。由于大小是固定的，因此无法更改大小。</li>
+</ul>
+<h4 id="响应时间指标"><a href="#响应时间指标" class="headerlink" title="响应时间指标"></a>响应时间指标</h4><p>不要使用平均响应时间 (ART) 作为设置 XX:MaxGCPauseMillis=<n> 的指标，而是考虑设置将在 90% 或更多时间内满足目标的值。这意味着 90% 的发出请求的用户不会遇到高于目标的响应时间。请记住，暂停时间是一个目标，不能保证总是能达到。</n></p>
+<h4 id="什么是疏散失败？"><a href="#什么是疏散失败？" class="headerlink" title="什么是疏散失败？"></a>什么是疏散失败？</h4><p>当 JVM 在 GC 期间为幸存者和提升对象用完堆区域时发生提升失败。堆无法扩展，因为它已经达到最大值。这在使用 -XX:+PrintGCDetails 时通过 to-space 溢出在 GC 日志中指示。这很贵！</p>
+<ul>
+<li>GC 仍然必须继续，因此必须释放空间。</li>
+<li>未成功复制的对象必须在适当的位置进行永久保存。</li>
+<li>必须重新生成对 CSet 中区域 RSet 的任何更新。</li>
+<li>所有这些步骤都是昂贵的。</li>
+</ul>
+<h4 id="如何避免疏散失败"><a href="#如何避免疏散失败" class="headerlink" title="如何避免疏散失败"></a>如何避免疏散失败</h4><p>为避免疏散失败，请考虑以下选项。</p>
+<ul>
+<li>增加堆大小</li>
+</ul>
+<ol>
+<li>增加-XX:G1ReservePercent=n，默认为10。</li>
+<li>G1 通过尝试让保留内存空闲以防需要更多“to-space”来创建假天花板。</li>
+</ol>
+<ul>
+<li>提前开始标记周期</li>
+<li>使用 -XX:ConcGCThreads=n 选项增加标记线程的数量。</li>
+</ul>
+<h3 id="G1-GC-开关的完整列表"><a href="#G1-GC-开关的完整列表" class="headerlink" title="G1 GC 开关的完整列表"></a>G1 GC 开关的完整列表</h3><p>这是 G1 GC 开关的完整列表。请记住使用上述最佳实践。<br>| 选项和默认值 | 描述 |<br>| — | — |<br>| <code>-XX:+UseG1GC</code> | 使用垃圾优先 (G1) 收集器 |<br>| <code>-XX:MaxGCPauseMillis=n</code> | 设置最大 GC 暂停时间的目标。这是一个软目标，JVM 将尽最大努力实现它。 |<br>| <code>-XX:InitiatingHeapOccupancyPercent=n</code> | 启动并发 GC 周期的（整个）堆占用百分比。它被 GC 使用，这些 GC 根据整个堆的占用情况触发并发 GC 周期，而不仅仅是一代（例如 G1）。值 0 表示“执行恒定的 GC 循环”。默认值为 45。 |<br>| <code>-XX:NewRatio=n</code> | 新/旧代大小的比率。默认值为 2。 |<br>| <code>-XX:SurvivorRatio=n</code> | Eden/Survivor空间大小的比率。默认值为 8。 |<br>| <code>-XX:MaxTenuringThreshold=n</code> | 任期阈值的最大值。默认值为 15。 |<br>| <code>-XX:ParallelGCThreads=n</code> | 设置在垃圾收集器的并行阶段使用的线程数。默认值随运行 JVM 的平台而异。 |<br>| <code>-XX:ConcGCThreads=n</code> | 并发垃圾收集器将使用的线程数。默认值随运行 JVM 的平台而异。 |<br>| <code>-XX:G1ReservePercent=n</code> | 将保留的堆数量设置为错误上限，以减少升级失败的可能性。默认值为 10。 |<br>| <code>-XX:G1HeapRegionSize=n</code> | 在 G1 中，Java 堆被细分为大小一致的区域。这设置了各个细分的大小。此参数的默认值是根据堆大小以符合人体工程学的方式确定的。最小值为 1Mb，最大值为 32Mb。 |</p>
+<h1 id="使用-G1-记录-GC"><a href="#使用-G1-记录-GC" class="headerlink" title="使用 G1 记录 GC"></a>使用 G1 记录 GC</h1><p>我们需要讨论的最后一个主题是使用日志信息来分析 G1 收集器的性能。本节简要概述了可用于收集数据的开关以及打印在日志中的信息。</p>
+<h2 id="设置日志详细信息"><a href="#设置日志详细信息" class="headerlink" title="设置日志详细信息"></a>设置日志详细信息</h2><p>您可以将详细信息设置为三个不同的详细信息级别。</p>
+<p>(1) -verbosegc（相当于-XX:+PrintGC）将日志的详细级别设置为fine。<br><strong>样本输出</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC pause (G1 Humongous Allocation) (young) (initial-mark) 24M- &gt;21M(64M), 0.2349730 secs]</span><br><span class="line">[GC pause (G1 Evacuation Pause) (mixed) 66M-&gt;21M(236M), 0.1625268 secs]</span><br></pre></td></tr></table></figure></p>
+<p>(2) -XX:+PrintGCDetails 设置细节级别finer。选项显示以下信息：</p>
+<ul>
+<li>显示每个阶段的平均、最小和最大时间。</li>
+<li>根扫描、RSet 更新（带有已处理的缓冲区信息）、RSet 扫描、对象复制、终止（带有尝试次数）。</li>
+<li>还显示“其他”时间，例如选择 CSet、引用处理、引用入队和释放 CSet 所花费的时间。</li>
+<li>显示 Eden、Survivors 和 Total Heap 占用。</li>
+</ul>
+<p><strong>样本输出</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Ext Root Scanning (ms): Avg: 1.7 Min: 0.0 Max: 3.7 Diff: 3.7]</span><br><span class="line">[Eden: 818M(818M)-&gt;0B(714M) Survivors: 0B-&gt;104M Heap: 836M(4096M)-&gt;409M(4096M)]</span><br></pre></td></tr></table></figure></p>
+<p>(3) -XX:+UnlockExperimentalVMOptions -XX:G1LogLevel=finest 将细节级别设置为finest。像finer，但包括单独的工作线程信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[Ext Root Scanning (ms): 2.1 2.4 2.0 0.0</span><br><span class="line">           Avg: 1.6 Min: 0.0 Max: 2.4 Diff: 2.3]</span><br><span class="line">       [Update RS (ms):  0.4  0.2  0.4  0.0</span><br><span class="line">           Avg: 0.2 Min: 0.0 Max: 0.4 Diff: 0.4]</span><br><span class="line">           [Processed Buffers : 5 1 10 0</span><br><span class="line">           Sum: 16, Avg: 4, Min: 0, Max: 10, Diff: 10]</span><br></pre></td></tr></table></figure></p>
+<h2 id="确定时间"><a href="#确定时间" class="headerlink" title="确定时间"></a>确定时间</h2><p>几个开关决定了时间在 GC 日志中的显示方式。<br>(1) -XX:+PrintGCTimeStamps - 显示自 JVM 启动以来经过的时间。<br><strong>样本输出</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1.729: [GC pause (young) 46M-&gt;35M(1332M), 0.0310029 secs]</span><br></pre></td></tr></table></figure></p>
+<p>(2) -XX:+PrintGCDateStamps - 为每个条目添加时间前缀。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2012-05-02T11:16:32.057+0200: [GC pause (young) 46M-&gt;35M(1332M), 0.0317225 secs]</span><br></pre></td></tr></table></figure></p>
+<h2 id="了解-G1-日志"><a href="#了解-G1-日志" class="headerlink" title="了解 G1 日志"></a>了解 G1 日志</h2><p>为了理解日志，本节定义了一些使用实际 GC 日志输出的术语。以下示例显示了日志的输出以及您将在其中找到的术语和值的解释。</p>
+<h2 id="G1-记录术语索引"><a href="#G1-记录术语索引" class="headerlink" title="G1 记录术语索引"></a>G1 记录术语索引</h2><p>Clear CT<br>CSet<br>External Root Scanning<br>Free CSet<br>GC Worker End<br>GC Worker Other<br>Object Copy<br>Other<br>Parallel Time<br>Ref Eng<br>Ref Proc<br>Scanning Remembered Sets<br>Termination Time<br>Update Remembered Set<br>Worker Start</p>
+<p><strong>Parallel Time</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">414.557: [GC pause (young), 0.03039600 secs] [Parallel Time: 22.9 ms]</span><br><span class="line">[GC Worker Start (ms): 7096.0 7096.0 7096.1 7096.1 706.1 7096.1 7096.1 7096.1 7096.2 7096.2 7096.2 7096.2</span><br><span class="line">       Avg: 7096.1, Min: 7096.0, Max: 7096.2, Diff: 0.2]</span><br><span class="line"></span><br><span class="line">Parallel Time – 暂停的主要并行部分的总经过时间</span><br><span class="line">Worker Start – 工作开始的时间戳</span><br><span class="line">注意：日志按线程 id 排序，并且在每个条目上都是一致的</span><br></pre></td></tr></table></figure></p>
+<p><strong>External Root Scanning</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Ext Root Scanning (ms): 3.1 3.4 3.4 3.0 4.2 2.0 3.6 3.2 3.4 7.7 3.7 4.4</span><br><span class="line">     Avg: 3.8, Min: 2.0, Max: 7.7, Diff: 5.7]</span><br><span class="line"></span><br><span class="line">External root scanning - 扫描外部根所花费的时间（例如，指向堆的系统字典之类的东西。）</span><br></pre></td></tr></table></figure></p>
+<p><strong>Update Remembered Set</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Update RS (ms): 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 Avg: 0.0, Min: 0.0, Max: 0.1, Diff: 0.1]</span><br><span class="line">   [Processed Buffers : 26 0 0 0 0 0 0 0 0 0 0 0</span><br><span class="line">    Sum: 26, Avg: 2, Min: 0, Max: 26, Diff: 26]</span><br><span class="line">Update Remembered Set - 必须更新在暂停开始之前已完成但尚未由并发细化线程处理的任何缓冲区。时间取决于卡片的密度。卡越多，需要的时间就越长。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Scanning Remembered Sets</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Scan RS (ms): 0.4 0.2 0.1 0.3 0.0 0.0 0.1 0.2 0.0 0.1 0.0 0.0 Avg: 0.1, Min: 0.0, Max: 0.4, Diff: 0.3]F</span><br><span class="line"></span><br><span class="line">Scanning Remembered Sets - 寻找指向集合集的指针。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Object Copy</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Object Copy (ms): 16.7 16.7 16.7 16.9 16.0 18.1 16.5 16.8 16.7 12.3 16.4 15.7 Avg: 16.3, Min: 12.3, Max:  18.1, Diff: 5.8]</span><br><span class="line">Object copy – 每个单独线程花费在复制和撤离对象的时间。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Termination Time</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[Termination (ms): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0</span><br><span class="line">0.0 Avg: 0.0, Min: 0.0, Max: 0.0, Diff: 0.0] [Termination Attempts : 1 1 1 1 1 1 1 1 1 1 1 1 Sum: 12, Avg: 1, Min: 1, Max: 1, Diff: 0]</span><br><span class="line"></span><br><span class="line">Termination time - 当工作线程完成其要复制和扫描的特定对象集时，它进入终止协议。它寻找要窃取的工作，一旦完成该工作，它就会再次进入终止协议。终止尝试计算所有窃取工作的尝试。</span><br></pre></td></tr></table></figure></p>
+<p><strong>GC Worker End</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[GC Worker End (ms): 7116.4 7116.3 7116.4 7116.3 7116.4 7116.3 7116.4 7116.4 7116.4 7116.4 7116.3 7116.3</span><br><span class="line">    Avg: 7116.4, Min: 7116.3, Max: 7116.4, Diff:   0.1]</span><br><span class="line">[GC Worker (ms): 20.4 20.3 20.3 20.2 20.3 20.2 20.2 20.2 20.3 20.2 20.1 20.1</span><br><span class="line">     Avg: 20.2, Min: 20.1, Max: 20.4, Diff: 0.3]</span><br><span class="line"></span><br><span class="line">GC worker end time – 单个 GC 工作停止时的时间戳。</span><br><span class="line">GC worker time – 单个 GC 工作线程花费的时间。</span><br></pre></td></tr></table></figure></p>
+<p><strong>GC Worker Other</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[GC Worker Other (ms): 2.6 2.6 2.7 2.7 2.7 2.7 2.7 2.8 2.8 2.8 2.8 2.8</span><br><span class="line">    Avg: 2.7, Min: 2.6, Max: 2.8, Diff: 0.2]</span><br><span class="line"></span><br><span class="line">GC worker other – 不能归因于前面列出的工作阶段的时间（对于每个 GC 线程）。应该很低。过去，我们看到过高的值，它们被归因于 JVM 其他部分的瓶颈（例如，分层代码缓存占用率增加）。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Clear CT</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Clear CT: 0.6 ms]</span><br><span class="line"></span><br><span class="line">清除RSet扫描元数据卡表所用时间</span><br></pre></td></tr></table></figure></p>
+<p><strong>Other</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Other: 6.8 ms]</span><br><span class="line"></span><br><span class="line">GC 暂停的各种其他顺序阶段所花费的时间。</span><br></pre></td></tr></table></figure></p>
+<p><strong>CSet</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Choose CSet: 0.1 ms]</span><br><span class="line"></span><br><span class="line">最终确定要收集的区域集所花费的时间。通常非常小；必须选择旧时稍长。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Ref Proc</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Ref Proc: 4.4 ms]</span><br><span class="line"></span><br><span class="line">处理从 GC 的先前阶段推迟的软、弱等引用所花费的时间。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Ref Enq</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Ref Enq: 0.1 ms]</span><br><span class="line"></span><br><span class="line">将软、弱等引用放入待处理列表所花费的时间。</span><br></pre></td></tr></table></figure></p>
+<p><strong>Free CSet</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Free CSet: 2.0 ms]</span><br><span class="line"></span><br><span class="line">释放刚刚收集的区域集（包括它们的记忆集）所花费的时间。</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本 OBE 中，您将了解 Java JVM 中包含的 G1 垃圾收集器的概述。首先，您了解了堆和垃圾收集器如何成为任何 Java JVM 的关键部分。接下来你回顾了垃圾收集是如何使用 CMS 收集器和 G1 收集器工作的。接下来，您了解了 G1 命令行开关以及使用它们的最佳实践。最后，您了解了 GC 日志中包含的日志记录对象和数据。</p>
+<p>在本教程中，您学习了：</p>
+<ul>
+<li>Java JVM 的组件</li>
+<li>G1 收集器概述</li>
+<li>CMS 收集器的回顾</li>
+<li>G1 收集器的查看</li>
+<li>命令行开关和最佳实践</li>
+<li>使用 G1 日志</li>
+</ul>
+
+			
+			
+				<div id="donate" style="text-align:center">
+					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
+	<div>听说打赏的人都脱单了 ♪(＾∀＾●)ﾉ</div>
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+            <br>
+           
+        </span>
+        <br>
+      </div>  
+    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
+		
+    </div>
+    
+    <script type="text/javascript">
+		var html = ['<div style="/*width:194px; height:194px; float:left; margin: 0% 1%;*/">',
+			'<img src="http://wx3.sinaimg.cn/large/afc434bdly1fklmwz005xj205c05c0ta.jpg" id="weixin" title="支付宝打赏"  alt="支付宝打赏">',
+			'<span>支付宝打赏</span>',
+			'</div>',
+			'<div style="/*width:194px; height:194px; float: left;*/">',
+			'<img src="http://ww1.sinaimg.cn/large/afc434bdly1fki3rxy1t0j205g05gmxo.jpg" title="微信打赏" id="zhifubao"  alt="微信打赏">',
+			'<span>微信打赏</span>',
+			'</div>'].join('');
+        $('#weixin').hover()
+        document.getElementById('btn_donate').onclick = function(){
+            $('#donate_board').addClass('hidden');
+            $('#donate_guide').html(html).removeClass('hidden');
+        }
+      
+    </script>
+</div>
+<style>
+.donate_bar {
+    text-align: center;
+    margin-top: 3%;
+}
+.donate_bar2{
+    z-index: 9999;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 660px;
+    height: 360px;
+    margin: -180px 0 30px -330px;
+    border-radius: 5px;
+    border: solid 2px #666;
+    background-color: #fff;
+    
+    box-shadow: 0 0 10px #666;
+}
+.donate_bar a.btn_donate {
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    margin-left: auto;
+    margin-right: auto;
+    background: url(http://ww1.sinaimg.cn/large/ece90acdjw1fbq75kmh0pg202a06ywee.gif)no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s
+}
+.donate_bar a.btn_donate:hover {
+    background-position: 0 -82px
+}
+.donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei"
+}
+.donate_bar.hidden{
+    display: none
+}
+.post-donate{
+    margin-top: 80px;
+}
+#donate_guide{
+    height: 50%;
+    width: 50%;
+    margin: 3% auto;
+    padding: 5px;
+}
+</style>
+				</div>
+			
+			
+				<div class="alert alert-success">
+	<div class="copyright-left">
+		<i class="fa fa-lightbulb-o"></i>
+		本文由 <a href="/" target="_blank" title="xxzkid | 逗的8笔">xxzkid | 逗的8笔</a>创作，采用
+		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
+		可自由转载、引用，但需署名作者且注明文章出处。<br>
+		本文标题：<a href="/2022/java-g1/" target="_blank" title="G1 垃圾收集器">G1 垃圾收集器</a><br>
+		本文链接：<a href="/2022/java-g1/" target="_blank" title="G1 垃圾收集器">https://www.uyiplus.com/2022/java-g1/</a>
+	</div>
+	<div style="clear:both;height:0px;"></div>
+</div>
+
+
+<style>
+.alert {
+	width: 95%;
+    margin: 0 auto;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #f5f5f5;
+    padding: 7px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+@media (min-width: 768px)
+(index):495
+.copyright-left {
+    float: left;
+    width: 80%;
+}
+</style>
+				<style>
+	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
+</style>
+<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+<script>
+	$(function(){
+		$(".article-entry .gallery-item").fancybox();;
+	});
+</script>
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2022/java-gc01/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Java垃圾收集基础</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信助手/" style="font-size: 10px;">PC微信助手</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 10px;">c</a> <a href="/tags/c-c/" style="font-size: 10px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/gc/" style="font-size: 12px;">gc</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/leetcode/" style="font-size: 16px;">leetcode</a> <a href="/tags/linux/" style="font-size: 12px;">linux</a> <a href="/tags/log/" style="font-size: 10px;">log</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/maven/" style="font-size: 12px;">maven</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis/" style="font-size: 12px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/seata/" style="font-size: 10px;">seata</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 12px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring mvc</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring-boot</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/synchronize/" style="font-size: 10px;">synchronize</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/ueditor/" style="font-size: 12px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/乐观锁/" style="font-size: 10px;">乐观锁</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/微信/" style="font-size: 10px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 10px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/支付/" style="font-size: 10px;">支付</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 10px;">架构</a> <a href="/tags/正则表达式/" style="font-size: 12px;">正则表达式</a> <a href="/tags/测试/" style="font-size: 10px;">测试</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/秒杀/" style="font-size: 10px;">秒杀</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+            </ul>
+        </div>
+    </div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- ad -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="6089417000"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 xxzkid | 逗的8笔<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+
+<script src="//cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("O6mJMECJQMze0pmhmIni3boW-gzGzoHsz", "Nfulfg9ReAg1M2VggxX2j9JD");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		var title = $(this).attr('data-flag-title').trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0';
+					$(document.getElementById(url)).text(content);
+					
+					var newcounter = new Counter();
+					newcounter.set("title", title);
+					newcounter.set("url", url);
+					newcounter.set("time", 0);
+					newcounter.save(null, {
+						success: function(newcounter) {
+							var content = newcounter.get('time');
+							$(document.getElementById(url)).text(content);
+						},
+						error: function(newcounter, error) {
+							console.log('Failed to create');
+						}
+					});
+					
+					return ;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+	});
+}
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	}
+	showTime(Counter);
+});
+</script>
+
+        
+    
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var id = window.location.pathname;
+		id = id.substring(1);
+		id = id.substring(id.indexOf('/') + 1, id.length - 1);
+		
+		var gitalk = new Gitalk({
+		  clientID: 'd0cfd49cb3019a36b6cd',
+		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
+		  repo: 'x-comment',
+		  owner: 'jsbxyyx',
+		  admin: ['jsbxyyx'],
+		  id: id,
+		  distractionFreeMode: false
+		});
+		
+		gitalk.render('commentContainer');
+	</script>
+	
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
