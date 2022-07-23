@@ -14,9 +14,9 @@
 <li>不需要更大的 Java 堆。<a id="more"></a>
 G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G1 与 CMS 进行比较，G1 是一个更好的解决方案。一个区别是 G1 是一个压缩收集器。 G1 充分压缩以完全避免使用细粒度的空闲列表进行分配，而是依赖于区域。这大大简化了收集器的各个部分，并且主要消除了潜在的碎片问题。此外，G1 提供比 CMS 收集器更可预测的垃圾收集暂停，并允许用户指定所需的暂停目标。</li>
 </ul>
-<h2 id="G1运行概览"><a href="#G1运行概览" class="headerlink" title="G1运行概览"></a>G1运行概览</h2><p>较旧的垃圾收集器（串行(serial)、并行(parallel)、CMS）都将堆分为三个部分：年轻代、老年代和固定内存大小的永久代。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-244b0c7278b8f214.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="G1运行概览"><a href="#G1运行概览" class="headerlink" title="G1运行概览"></a>G1运行概览</h2><p>较旧的垃圾收集器（串行(serial)、并行(parallel)、CMS）都将堆分为三个部分：年轻代、老年代和固定内存大小的永久代。<br><img src="https://img-blog.csdnimg.cn/img_convert/4dd2a43fccd97c864ab2361268638d51.png" alt=""></p>
 <p>所有内存对象最终都位于这三个部分之一中。</p>
-<p>G1 收集器采用不同的方法。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-024e241d821ac783.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>堆被划分为一组大小相等的堆区域，每个区域都是连续的虚拟内存范围。某些区域集被分配了与旧收集器相同的角色（eden、survivor、old），但它们没有固定的大小。这为内存使用提供了更大的灵活性。</p>
+<p>G1 收集器采用不同的方法。<br><img src="https://img-blog.csdnimg.cn/img_convert/a9734d03db66a1421d39f037806db4e5.png" alt=""><br>堆被划分为一组大小相等的堆区域，每个区域都是连续的虚拟内存范围。某些区域集被分配了与旧收集器相同的角色（eden、survivor、old），但它们没有固定的大小。这为内存使用提供了更大的灵活性。</p>
 <p>在执行垃圾回收时，G1 以类似于 CMS 回收器的方式运行。 G1 执行一个并发的全局标记阶段来确定整个堆中对象的活跃度。标记阶段完成后，G1 知道哪些区域大部分是空的。它首先在这些区域收集，这通常会产生大量的可用空间。这就是为什么这种垃圾收集方法被称为 Garbage-First 的原因。顾名思义，G1 将其收集和压缩活动集中在堆中可能充满可回收对象的区域，即垃圾。 G1 使用停顿预测模型来满足用户定义的停顿时间目标，并根据指定的停顿时间目标选择要收集的区域数。</p>
 <p>G1 识别为可以回收的区域使用疏散进行垃圾收集。 G1 将对象从堆的一个或多个区域复制到堆上的单个区域，并在此过程中压缩和释放内存。这种疏散在多处理器上并行执行，以减少暂停时间并提高吞吐量。因此，每次垃圾回收时，G1 都会在用户定义的暂停时间内持续工作以减少碎片。这超出了前两种方法的能力。 CMS（并发标记扫描）垃圾收集器不进行压缩。 ParallelOld 垃圾收集仅执行整个堆压缩，这会导致相当长的暂停时间。</p>
 <p>需要注意的是，G1 不是实时收集器。它以高概率但不是绝对确定地满足设定的暂停时间目标。根据之前收集的数据，G1 会估计在用户指定的目标时间内可以收集多少个区域。因此，收集器有一个相当准确的区域收集成本模型，并且它使用该模型来确定要收集哪些区域以及要收集多少区域，同时保持在暂停时间目标内。</p>
@@ -37,51 +37,51 @@ G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G
 <h3 id="CMS-收集阶段"><a href="#CMS-收集阶段" class="headerlink" title="CMS 收集阶段"></a>CMS 收集阶段</h3><p>CMS 收集器在老年代堆上执行以下阶段：<br>| 阶段 | 描述 |<br>| — | — |<br>| (1) 初始标记 STW | 老一代中的对象被“标记”为可访问的，包括那些可以从年轻代访问的对象。与Minor收集暂停时间相比，暂停时间通常较短。 |<br>| (2) 并发标记 | 在 Java 应用程序线程正在执行时，同时遍历可访问对象的永久生成对象图。从标记的对象开始扫描并传递标记从根可到达的所有对象。 mutator 在并发阶段 2、3 和 5 期间执行，并且在这些阶段期间在 CMS 生成中分配的任何对象（包括提升的对象）都会立即标记为活动的。 |<br>| (3)重新标记 STW | 在并发收集器完成跟踪该对象后，查找由于 Java 应用程序线程更新对象而被并发标记阶段遗漏的对象。 |<br>| (4)并发清楚 | 在标记阶段收集标识为无法访问的对象。死对象的集合将对象的空间添加到空闲列表以供以后分配。此时可能会发生死对象的合并。请注意，活动对象不会移动。 |<br>| (5) 复位 | 通过清除数据结构为下一次并发收集做准备。 |</p>
 <h3 id="查看垃圾收集步骤"><a href="#查看垃圾收集步骤" class="headerlink" title="查看垃圾收集步骤"></a>查看垃圾收集步骤</h3><p>接下来，让我们一步步回顾CMS Collector的操作。</p>
 <ol>
-<li>CMS 收集器的堆结构<br>堆被分成三个空间。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-d60d4fa601a26487.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>CMS 收集器的堆结构<br>堆被分成三个空间。<br><img src="https://img-blog.csdnimg.cn/img_convert/1a954723b7925ce208eb0420e968ded6.png" alt=""></li>
 </ol>
 <p>年轻代分为Eden和两个survivor空间。老年代是一个连续的空间。对象收集就地完成。除非有完整的 GC，否则不会进行压缩。</p>
 <ol>
-<li>Young GC 在 CMS 中的工作原理<br>新生代为浅绿色，老年代为蓝色。如果您的应用程序已经运行了一段时间，这就是 CMS 的样子。对象分散在老年代区域周围。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-2e5d0a32c1f9a2b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>Young GC 在 CMS 中的工作原理<br>新生代为浅绿色，老年代为蓝色。如果您的应用程序已经运行了一段时间，这就是 CMS 的样子。对象分散在老年代区域周围。<br><img src="https://img-blog.csdnimg.cn/img_convert/8ad116e26175abcddf8fae91eb8c1b2a.png" alt=""></li>
 </ol>
 <p>使用 CMS，老年代对象被原地释放。他们没有四处移动。除非有完整的 GC，否则不会压缩空间。</p>
 <ol>
-<li><p>年轻一代合集<br>活动对象从Eden空间和survivor空间复制到另一个survivor空间。任何达到其老化阈值的旧对象都会被提升为老年代。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-51e11cfd0d02c98b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>年轻一代合集<br>活动对象从Eden空间和survivor空间复制到另一个survivor空间。任何达到其老化阈值的旧对象都会被提升为老年代。<br><img src="https://img-blog.csdnimg.cn/img_convert/d1c97835b318e609beb213aeb750f521.png" alt=""></p>
 </li>
-<li><p>在年轻 GC 之后<br>在年轻 GC 之后，Eden 空间被清除，survivor空间之一被清除。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-488b67531acdde13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>在年轻 GC 之后<br>在年轻 GC 之后，Eden 空间被清除，survivor空间之一被清除。<br><img src="https://img-blog.csdnimg.cn/img_convert/9382ad5bef9b3aef927d0791a69718bd.png" alt=""></p>
 </li>
 </ol>
 <p>新提升的对象在图表上以深蓝色显示。绿色对象是尚未提升到老年代的幸存年轻代对象。</p>
 <ol>
-<li><p>带有 CMS 的老一代集合<br>两个STW事件发生：初始标记和备注。当老年代达到一定的占用率时，CMS就会启动。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e03973d899b1dd64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>(1) 初始标记是一个短暂的暂停阶段，在此标记活动（可达）对象。(2) 并发标记在应用程序继续执行时发现活动对象。最后，在（3）重新标记阶段，发现在前一个阶段（2）并发标记期间遗漏的对象。</p>
+<li><p>带有 CMS 的老一代集合<br>两个STW事件发生：初始标记和备注。当老年代达到一定的占用率时，CMS就会启动。<br><img src="https://img-blog.csdnimg.cn/img_convert/48950d8324af55d8d5019d8e4539c494.png" alt=""><br>(1) 初始标记是一个短暂的暂停阶段，在此标记活动（可达）对象。(2) 并发标记在应用程序继续执行时发现活动对象。最后，在（3）重新标记阶段，发现在前一个阶段（2）并发标记期间遗漏的对象。</p>
 </li>
-<li><p>老年代收集 - 并发清除<br>在前一阶段未标记的对象将被原地释放。没有压缩 。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-be302cde1da00f86.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>老年代收集 - 并发清除<br>在前一阶段未标记的对象将被原地释放。没有压缩 。<br><img src="https://img-blog.csdnimg.cn/img_convert/386feb8b606d6439a0f0bc78d7e4e4fc.png" alt=""></p>
 </li>
 </ol>
 <p>注意：未标记的对象 == 死对象</p>
 <ol>
-<li>老一代合集-清除后<br>（4）清除阶段之后，可以看到已经释放了很多内存。您还会注意到没有进行任何压缩。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-af3ff350c354826b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>老一代合集-清除后<br>（4）清除阶段之后，可以看到已经释放了很多内存。您还会注意到没有进行任何压缩。<br><img src="https://img-blog.csdnimg.cn/img_convert/e2e153533c49255356e1d64397a7f784.png" alt=""></li>
 </ol>
 <p>最后，CMS 收集器将通过 (5) 重置阶段并等待下一次达到 GC 阈值。</p>
 <h1 id="G1-垃圾收集器一步一步"><a href="#G1-垃圾收集器一步一步" class="headerlink" title="G1 垃圾收集器一步一步"></a>G1 垃圾收集器一步一步</h1><p>G1 收集器采用不同的方法来分配堆。下面的图片逐步回顾了 G1 系统。</p>
 <ol>
-<li><p>G1 堆结构<br>堆是一个内存区域，分为许多固定大小的区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-1c60266cd5985c28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>区域大小由 JVM 在启动时选择。 JVM 通常针对大约 2000 个区域，大小从 1 到 32Mb 不等。</p>
+<li><p>G1 堆结构<br>堆是一个内存区域，分为许多固定大小的区域。<br><img src="https://img-blog.csdnimg.cn/img_convert/76e749c5eef57caaf993e3bfebbe3c57.png" alt=""><br>区域大小由 JVM 在启动时选择。 JVM 通常针对大约 2000 个区域，大小从 1 到 32Mb 不等。</p>
 </li>
-<li><p>G1 堆分配<br>实际上，这些区域被映射为 Eden、Survivor 和老年代空间的逻辑表示。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e24fe6dc762496ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>G1 堆分配<br>实际上，这些区域被映射为 Eden、Survivor 和老年代空间的逻辑表示。<br><img src="https://img-blog.csdnimg.cn/img_convert/631b1b5568b4f513c80dd64987ed2520.png" alt=""></p>
 </li>
 </ol>
 <p>图片中的颜色显示了哪个区域与哪个角色相关联。活动对象从一个区域撤离（即复制或移动）到另一个区域。区域被设计为在停止或不停止所有其他应用程序线程的情况下并行收集。</p>
 <p>如图所示，区域可以分配到 Eden、Survivor 和老年代区域。此外，还有第四类物体，称为巨大区域(Humongous regions)。这些区域旨在容纳标准区域大小的 50% 或更大的对象。它们被存储为一组连续的区域。最后一种类型的区域将是堆中未使用的区域。</p>
 <p>注意：在撰写本文时，收集巨大对象尚未优化。因此，您应该避免创建这种大小的对象。</p>
 <ol>
-<li>G1 中的年轻代<br>堆被分成大约 2000 个区域。最小大小为 1Mb，最大大小为 32Mb。蓝色区域保存老年代对象，绿色区域保存年轻代对象。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-72036f0a03fb2ec0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>G1 中的年轻代<br>堆被分成大约 2000 个区域。最小大小为 1Mb，最大大小为 32Mb。蓝色区域保存老年代对象，绿色区域保存年轻代对象。<br><img src="https://img-blog.csdnimg.cn/img_convert/69dd2b785860abebb19e1bd57872bf2b.png" alt=""></li>
 </ol>
 <p>请注意，这些区域不需要像旧的垃圾收集器那样是连续的。</p>
 <ol>
-<li>G1 中的Young GC<br>活动对象被疏散（即复制或移动）到一个或多个幸存者区域。如果满足老化阈值，则将一些对象提升到老年代区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-163ab7e42c72c19a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>G1 中的Young GC<br>活动对象被疏散（即复制或移动）到一个或多个幸存者区域。如果满足老化阈值，则将一些对象提升到老年代区域。<br><img src="https://img-blog.csdnimg.cn/img_convert/76d379877f150fcec62a5a4cdcd9028e.png" alt=""></li>
 </ol>
 <p>这是一个STW的暂停。为下一次Young GC 计算 Eden 大小和Survivor 大小。保留会计信息以帮助计算大小。考虑到暂停时间目标之类的事情。</p>
 <ol>
-<li>使用 G1 结束 Young GC<br>活动对象已被疏散到Survivor区域或老年代区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-64786c91190cb51f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+<li>使用 G1 结束 Young GC<br>活动对象已被疏散到Survivor区域或老年代区域。<br><img src="https://img-blog.csdnimg.cn/img_convert/b10ee22b557fbcd77f0f9918ad05d329.png" alt=""></li>
 </ol>
 <p>最近提升的对象以深蓝色显示。绿色的Survivor区域。</p>
 <p>综上所述，G1中的年轻代可以这么说：</p>
@@ -132,15 +132,15 @@ G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G
 </div>
 <h3 id="G1老年代收集一步一步"><a href="#G1老年代收集一步一步" class="headerlink" title="G1老年代收集一步一步"></a>G1老年代收集一步一步</h3><p>定义完阶段后，让我们看看它们如何与 G1 收集器中的老年代交互。</p>
 <ol>
-<li><p>初始标记阶段<br>活动对象的初始标记搭载在年轻代垃圾收集上。在日志中，这被标记为 GC pause (young)(initial-mark)。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-d7bb21ce343ae6df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>初始标记阶段<br>活动对象的初始标记搭载在年轻代垃圾收集上。在日志中，这被标记为 GC pause (young)(initial-mark)。<br><img src="https://img-blog.csdnimg.cn/img_convert/8c77877941e558ba071c7c2fa94f2767.png" alt=""></p>
 </li>
-<li><p>并发标记阶段<br>如果找到空区域（如“X”所示），它们会在重新标记阶段立即删除。此外，计算确定活跃度的“记账(accounting)”信息。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-9528fac0385e0258.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>并发标记阶段<br>如果找到空区域（如“X”所示），它们会在重新标记阶段立即删除。此外，计算确定活跃度的“记账(accounting)”信息。<br><img src="https://img-blog.csdnimg.cn/img_convert/3f5689c8deaacecbce740f2eeb251f40.png" alt=""></p>
 </li>
-<li><p>重新标记阶段<br>空区域被移除并回收。现在计算所有区域的区域活跃度。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-a71225b6ab96067d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>重新标记阶段<br>空区域被移除并回收。现在计算所有区域的区域活跃度。<br><img src="https://img-blog.csdnimg.cn/img_convert/203938a4c0e45a7d7eb694f102ab883f.png" alt=""></p>
 </li>
-<li><p>复制/清理阶段<br>G1 选择“活跃度”最低的区域，即可以最快收集到的区域。然后这些区域会在Young GC 的同时被收集。这在日志中表示为 [GC pause (mixed)]。所以年轻一代和老一代同时被收集。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-dbbf973e11efe0e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>复制/清理阶段<br>G1 选择“活跃度”最低的区域，即可以最快收集到的区域。然后这些区域会在Young GC 的同时被收集。这在日志中表示为 [GC pause (mixed)]。所以年轻一代和老一代同时被收集。<br><img src="https://img-blog.csdnimg.cn/img_convert/16cd81e7ac9547c0abaa7177d52f2f7e.png" alt=""></p>
 </li>
-<li><p>复制/清理阶段之后<br>所选区域已被收集并压缩为图中所示的深蓝色区域和深绿色区域。<br><img src="https://upload-images.jianshu.io/upload_images/9208244-e3a2b99853e38f81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<li><p>复制/清理阶段之后<br>所选区域已被收集并压缩为图中所示的深蓝色区域和深绿色区域。<br><img src="https://img-blog.csdnimg.cn/img_convert/e0ac721a1cb9b16e2a73cec4e2a8be46.png" alt=""></p>
 </li>
 </ol>
 <h3 id="老年代GC总结"><a href="#老年代GC总结" class="headerlink" title="老年代GC总结"></a>老年代GC总结</h3><p>综上所述，关于老年代的 G1 垃圾回收，我们可以提出几个关键点。</p>
