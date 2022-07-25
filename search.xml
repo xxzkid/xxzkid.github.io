@@ -39,7 +39,7 @@ G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G
 <ol>
 <li>CMS 收集器的堆结构<br>堆被分成三个空间。<br><img src="https://img-blog.csdnimg.cn/img_convert/1a954723b7925ce208eb0420e968ded6.png" alt=""></li>
 </ol>
-<p>年轻代分为Eden和两个survivor空间。老年代是一个连续的空间。对象收集就地完成。除非有完整的 GC，否则不会进行压缩。</p>
+<p>年轻代分为Eden和两个survivor空间。老年代是一个连续的空间。对象收集就地完成。除非有Full GC，否则不会进行压缩。</p>
 <ol>
 <li>Young GC 在 CMS 中的工作原理<br>新生代为浅绿色，老年代为蓝色。如果您的应用程序已经运行了一段时间，这就是 CMS 的样子。对象分散在老年代区域周围。<br><img src="https://img-blog.csdnimg.cn/img_convert/8ad116e26175abcddf8fae91eb8c1b2a.png" alt=""></li>
 </ol>
