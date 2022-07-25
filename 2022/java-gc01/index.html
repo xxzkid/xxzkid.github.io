@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/879dfa3d9076eb223b996ce0bed907a9.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/47d31ee5532ba4cb3fde448792cce24a.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/1ab0185c3b653bc5c2e8ecf9e38c432b.png">
-<meta property="og:updated_time" content="2022-07-23T07:54:25.567Z">
+<meta property="og:updated_time" content="2022-07-25T01:51:04.018Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java垃圾收集基础">
 <meta name="twitter:description" content="概览目的本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。">
@@ -412,7 +412,7 @@ var _hmt = _hmt || [];
 <h3 id="XX-UseParallelOldGC"><a href="#XX-UseParallelOldGC" class="headerlink" title="-XX:+UseParallelOldGC"></a>-XX:+UseParallelOldGC</h3><p>使用 -XX:+UseParallelOldGC 选项，GC 既是多线程年轻代收集器，也是多线程老年代收集器。它也是一个多线程压缩收集器。 HotSpot 只在老年代进行压缩。 HotSpot 中的年轻代被认为是一个副本收集器；因此，不需要压缩。</p>
 <p>压缩描述了以对象之间没有孔的方式移动对象的行为。垃圾收集扫描后，活动对象之间可能会留下空洞。压实移动对象，以便没有剩余的孔。垃圾收集器可能是非压缩收集器。因此，并行收集器和并行压缩收集器之间的区别可能是后者在垃圾收集扫描后压缩空间。前者不会。</p>
 <p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelOldGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h2 id="并发标记扫描收集器-CMS"><a href="#并发标记扫描收集器-CMS" class="headerlink" title="并发标记扫描收集器 (CMS)"></a>并发标记扫描收集器 (CMS)</h2><p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集tenured generation。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
+<h2 id="并发标记扫描收集器-CMS"><a href="#并发标记扫描收集器-CMS" class="headerlink" title="并发标记扫描收集器 (CMS)"></a>并发标记扫描收集器 (CMS)</h2><p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集老年代。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
 <p>注意：年轻代的 CMS 收集器使用与并行收集器相同的算法。</p>
 <h3 id="使用案例-2"><a href="#使用案例-2" class="headerlink" title="使用案例"></a>使用案例</h3><p>CMS 收集器应该用于需要低暂停时间并且可以与垃圾收集器共享资源的应用程序。示例包括响应事件的桌面 UI 应用程序、响应请求的 Web 服务器或响应查询的数据库。</p>
 <h3 id="命令行开关-1"><a href="#命令行开关-1" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用 CMS 收集器，请使用：<br><code>-XX:+UseConcMarkSweepGC</code><br>并设置线程数使用：<br><code>-XX:ParallelCMSThreads=&lt;n&gt;</code></p>
