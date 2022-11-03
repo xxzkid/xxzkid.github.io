@@ -3387,6 +3387,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[v2ray]]></title>
+      <url>/2013/v2ray/</url>
+      <content type="html"><![CDATA[<p>v2ray<br><a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">sudo docker pull teddysun/v2ray</span><br><span class="line"></span><br><span class="line">sudo mkdir /etc/v2ray</span><br><span class="line"></span><br><span class="line">sudo vi /etc/v2ray/config.txt</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;log&quot;: &#123;</span><br><span class="line">        &quot;loglevel&quot;: &quot;warning&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;routing&quot;: &#123;</span><br><span class="line">        &quot;domainStrategy&quot;: &quot;AsIs&quot;,</span><br><span class="line">        &quot;rules&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;type&quot;: &quot;field&quot;,</span><br><span class="line">                &quot;ip&quot;: [</span><br><span class="line">                    &quot;geoip:private&quot;</span><br><span class="line">                ],</span><br><span class="line">                &quot;outboundTag&quot;: &quot;block&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;inbounds&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;listen&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">            &quot;port&quot;: 50250,</span><br><span class="line">            &quot;protocol&quot;: &quot;vmess&quot;,</span><br><span class="line">            &quot;settings&quot;: &#123;</span><br><span class="line">                &quot;clients&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;id&quot;: &quot;xxxxxxxxxxxxxxx&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;streamSettings&quot;: &#123;</span><br><span class="line">                &quot;network&quot;: &quot;tcp&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;outbounds&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;protocol&quot;: &quot;freedom&quot;,</span><br><span class="line">            &quot;tag&quot;: &quot;direct&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;protocol&quot;: &quot;blackhole&quot;,</span><br><span class="line">            &quot;tag&quot;: &quot;block&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sudo mv /etc/v2ray/config.txt /etc/v2ray/config.json</span><br><span class="line"></span><br><span class="line">修改 id: xxxx 改成随机的uuid</span><br><span class="line"></span><br><span class="line">docker run -itd --network host --name v2ray --restart=always -v /etc/v2ray:/etc/v2ray teddysun/v2ray</span><br></pre></td></tr></table></figure>
+<p>下载</p>
+]]></content>
+      
+        <categories>
+            
+            <category> ss </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> ss </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[2012蓝桥杯java高职题目分析]]></title>
       <url>/2013/2012-lqb-java/</url>
       <content type="html"><![CDATA[<p>30年的改革开放，给中国带来了翻天覆地的变化。<br>2011全年中国手机产量约为11.72亿部。手机已经成为百姓的基本日用品！<br>给手机选个好听又好记的号码可能是许多人的心愿。<br>但号源有限，只能辅以有偿选号的方法了。<br>这个程序的目的就是：根据给定的手机尾号（4位），按照一定的规则来打分。<br>其规则如下：</p>
