@@ -52,6 +52,12 @@ collections:
         editor:
           preview: true
         fields: *ref_0
+      - name: qrcode.html
+        label: ''
+        file: source/qrcode.html
+        editor:
+          preview: true
+        fields: *ref_0
       - name: categories-index.md
         label: 分类
         file: source/categories/index.md
