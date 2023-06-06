@@ -14,8 +14,9 @@
 <script>
 jQuery(function(){
   var input = document.getElementById("input");
+  var output = document.getElementById("output");
   input.addEventListener("input", function(e) {
-    input.innerHTML = '';
+    output.innerHTML = '';
     qrcode(e.target.value);
   });
 });
