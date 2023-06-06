@@ -15,14 +15,15 @@
 jQuery(function(){
   var input = document.getElementById("input");
   input.addEventListener("input", function(e) {
+    input.innerHTML = '';
     qrcode(e.target.value);
   });
 });
   
 function qrcode(text) {
   jQuery('#output').qrcode({
-		text: text
-	});
+	  text: text
+  });
 }
 </script>
 
