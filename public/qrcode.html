@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>QRCode</title>
+
+</head>
+<body>
+<div>
+  <input id="input" type="text"/>
+</div>
+
+<div id="output"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+jQuery(function(){
+  var input = document.getElementById("input");
+  input.addEventListener("input", function(e) {
+    qrcode(e.target.value);
+  });
+});
+  
+function qrcode(val) {
+  jQuery('#output').qrcode(val);
+}
+</script>
+
+</body>
+</html>
