@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<title>QRCode</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>QRCode</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 </head>
 <body>
 <div>
@@ -24,11 +24,11 @@ jQuery(function(){
   
 function qrcode(text) {
   jQuery('#output').qrcode({
-	  text: text
+    text: text
   });
-	var canvas = $('#output canvas');
-	var img = canvas.get(0).toDataURL("image/png");
-	output.innerHTML = '<img src="' + img + '"/>';
+  var canvas = $('#output canvas');
+  var img = canvas.get(0).toDataURL("image/png");
+  output.innerHTML = '<img src="' + img + '"/>';
 }
 </script>
 
