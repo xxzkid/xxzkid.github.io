@@ -26,6 +26,9 @@ function qrcode(text) {
   jQuery('#output').qrcode({
 	  text: text
   });
+	var canvas = $('#output canvas');
+	var img = canvas.get(0).toDataURL("image/png");
+	output.innerHTML = '<img src="' + img + '"/>';
 }
 </script>
 
