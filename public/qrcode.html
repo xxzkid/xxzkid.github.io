@@ -4,33 +4,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>QRCode</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.8/dayjs.min.js"></script>
 </head>
 <body>
-<div>
-  <input id="input" type="text"/>
-</div>
-
-<div id="output" style="margin: 5px;"></div>
-<script>
-jQuery(function(){
-  var input = document.getElementById("input");
-  var output = document.getElementById("output");
-  input.addEventListener("input", function(e) {
-    output.innerHTML = '';
-    qrcode(e.target.value);
-  });
-});
+  <h3>qrcode</h3>  
+  <div>
+    <input id="qrcode-input" type="text"/>
+  </div>
+  <div id="qrcode-output" style="margin: 20px;"></div>
   
-function qrcode(text) {
-  jQuery('#output').qrcode({
-    text: text
-  });
-  var canvas = $('#output canvas');
-  var img = canvas.get(0).toDataURL("image/png");
-  output.innerHTML = '<img src="' + img + '"/>';
-}
-</script>
+  <h3>timestamp</h3>
+  <div>
+    <input id="timestamp-input" type="text" />
+  </div>
+  <div id="timestamp-output" style="margin: 20px"></div>
 
+  <script>
+  jQuery(function(){
+    var qrcode_input = document.getElementById("qrcode-input");
+    var qrcode_output = document.getElementById("qrcode-output");
+    qrcode_input.addEventListener("input", function(e) {
+      qrcode_output.innerHTML = '';
+      qrcode(e.target.value);
+    });
+  });
+  
+  function qrcode(text) {
+    jQuery('#qrcode-output').qrcode({
+      text: text
+    });
+    var canvas = $('#qrcode-output canvas');
+    var img = canvas.get(0).toDataURL("image/png");
+    qrcode_output.innerHTML = '<img src="' + img + '"/>';
+  }
+  </script>
+  
+  <script>
+    var timestamp_input = document.getElementById("timestamp-input");
+    
+  </script>
 </body>
 </html>
