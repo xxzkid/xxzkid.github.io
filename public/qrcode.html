@@ -31,21 +31,19 @@
 
   <script>
   jQuery(function(){
-    var qrcode_input = document.getElementById("qrcode-input");
-    var qrcode_output = document.getElementById("qrcode-output");
-    qrcode_input.addEventListener("input", function(e) {
-      qrcode_output.innerHTML = '';
+    document.getElementById("qrcode-input").addEventListener("input", function(e) {
+      document.getElementById("qrcode-output").innerHTML = '';
       qrcode(e.target.value);
     });
   });
   
-  function qrcode(text) {
+  function qrcode(qrcode_output, text) {
     jQuery('#qrcode-output').qrcode({
       text: text
     });
     var canvas = $('#qrcode-output canvas');
     var img = canvas.get(0).toDataURL("image/png");
-    qrcode_output.innerHTML = '<img src="' + img + '"/>';
+    document.getElementById("qrcode-output").innerHTML = '<img src="' + img + '"/>';
   }
   </script>
 
@@ -72,7 +70,7 @@
 				$("#qrcode-parse-canvas").attr("height", img.height)
 				ctx.drawImage(img, 0, 0, img.width, img.height);
 				var imageData = ctx.getImageData(0, 0, img.width, img.height);
-				const code = jsQR(imageData.data, imageData.width, imageData.height, {
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
 					inversionAttempts: "dontInvert",
 				});
 				if(code){
@@ -87,5 +85,6 @@
   <script>
     var timestamp_input = document.getElementById("timestamp-input");
   </script>
+  
 </body>
 </html>
