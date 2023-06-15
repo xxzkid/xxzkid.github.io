@@ -64,9 +64,3 @@ collections:
         editor:
           preview: true
         fields: *ref_0
-      - name: public-jsQR.js
-        label: ''
-        file: source/public/jsQR.js
-        editor:
-          preview: true
-        fields: *ref_0
