@@ -55,11 +55,11 @@
 				fr.readAsDataURL(file);
 				fr.onloadend = function(e) {
 					var base64Data = e.target.result;
-					base64ToqR(base64Data)
+					base64ToQR(base64Data);
 				}
 			}
 		});
-    function base64ToqR(data) {
+    function base64ToQR(data) {
 			var c = document.getElementById("qrcode-parse-canvas");
 			var ctx = c.getContext("2d");
 	
@@ -79,7 +79,7 @@
 					$('#qrcode-parse-output').text("parse error");
 				}
 			};
-		}
+    }
   </script>
   
   <script>
