@@ -1,434 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>APlayer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-@font-face {
-    font-family: 'JosefinSans Light';
-    src: url(./music/JosefinSans-Light.ttf);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'JosefinSans Light';
-    background: url('./music/bg1.jpg');
-    background-size: cover;
-}
-
-.player {
-    width: 380px;
-    height: 280px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 5px;
-    box-shadow: 5px 5px 15px rgb(54 79 60 / 40%);
-    transition: all 0.5s ease-in-out;
-}
-
-.player .img {
-    width: 100%;
-    height: 100%;
-    user-select: none;
-}
-
-.player .img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    user-select: none;
-    transition: .5s all ease-in-out;
-}
-
-.player .info {
-    width: 100%;
-    height: 120px;
-    background-color: #fff;
-    opacity: 0.9;
-    position: absolute;
-    bottom: 0;
-    transform: translateY(35px);
-    transition: .5s all ease-in-out;
-}
-
-.player:hover .info {
-    transform: translateY(0px);
-}
-
-.player:hover .img img {
-    transform: scale(1.1);
-}
-
-.info .progress {
-    height: 34px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-}
-
-.info .progress #start,
-.info .progress #end {
-    margin: 0 12px;
-    user-select: none;
-}
-
-.info .progress #bar {
-    width: 300px;
-    height: 8px;
-    border-radius: 4px;
-    background-color: rgb(222, 230, 238);
-}
-
-.info .song-detail {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.info .song-detail span {
-    margin: 4px 0;
-    height: 16px;
-    user-select: none;
-}
-
-.info .song-detail #title {
-    font-size: 16px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.info .song-detail #author {
-    letter-spacing: 1px;
-}
-
-.info .controls {
-    margin-top: 12px;
-    padding: 0 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.info .controls .play {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.info .controls .play span {
-    margin: 0 16px;
-    cursor: pointer;
-}
-
-.info .controls span {
-    user-select: none;
-}
-
-/* 隐藏audio */
-.audio {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-}
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .container {
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 150px;
+        }
+        h1 {
+            font-size: 54px;
+            color: #333;
+            margin: 30px 0 10px;
+        }
+        h2 {
+            font-size: 22px;
+            color: #555;
+        }
+        h3 {
+            font-size: 24px;
+            color: #555;
+        }
+        hr {
+            display: block;
+            width: 7rem;
+            height: 1px;
+            margin: 2.5rem 0;
+            background-color: #eee;
+            border: 0;
+        }
+        a {
+            color: #08c;
+            text-decoration: none;
+        }
+        p {
+            font-size: 18px;
+        }
     </style>
-    <style>
-@font-face {
-  font-family: "iconfont";
-  src: url('./music/iconfont.ttf?t=1665812026095') format('truetype');
-}
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-jushoucang:before {
-  content: "\e643";
-}
-
-.icon-jushoucanggift:before {
-  content: "\e684";
-}
-
-.icon-iconstop:before {
-  content: "\e69d";
-}
-
-.icon-danlieliebiao:before {
-  content: "\e6e4";
-}
-
-.icon-tianjia:before {
-  content: "\e622";
-}
-
-.icon-xiayishou:before {
-  content: "\e647";
-}
-
-.icon-suiji:before {
-  content: "\e60a";
-}
-
-.icon-xunhuan:before {
-  content: "\e6a9";
-}
-
-.icon-diyiyeshouyeshangyishou:before {
-  content: "\e76d";
-}
-
-.icon-shengyin_shiti:before {
-  content: "\eca5";
-}
-
-.icon-shangyishou:before {
-  content: "\e603";
-}
-
-.icon-xiayishou1:before {
-  content: "\e602";
-}
-
-.icon-24gf-play:before {
-  content: "\ea82";
-}
-
-.icon-xiayishou2:before {
-  content: "\e63e";
-}
-
-.icon-shangyishou1:before {
-  content: "\e61e";
-}
-
-.icon-shunxu:before {
-  content: "\e64f";
-}
-
-.icon-volume-mute-fill:before {
-  content: "\e625";
-}
-    </style>
-    <title>Music Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/vconsole/dist/vconsole.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js"></script>
+    <script src="APlayer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/color-thief-don@2.0.2/src/color-thief.js"></script>
 </head>
 <body>
-
-    <div class="player">
-        <!-- 音乐插图 -->
-        <section class="img">
-            <img id="bg-img" src="" alt="">
-        </section>
-
-        <!-- 信息 -->
-        <section class="info">
-            <!-- 进度栏 -->
-            <div class="progress">
-                <div id="start">0:00</div>
-                <div id="bar"></div>
-                <div id="end">3:15</div>
-            </div>
-            <!-- 歌曲信息 -->
-            <div class="song-detail">
-                <span id="title"></span>
-                <span id="author"></span>
-            </div>
-            <!-- 按钮区域 -->
-            <div id="controls" class="controls">
-                <span><i id="list" class="iconfont icon-danlieliebiao"></i></span>
-                <div class="play">
-                    <span><i id="voice" class="iconfont icon-shengyin_shiti"></i></span>
-                    <span><i id="pre" class="iconfont icon-shangyishou"></i></span>
-                    <span><i id="play" class="iconfont icon-24gf-play"></i></span>
-                    <span><i id="next" class="iconfont icon-xiayishou2"></i></span>
-                    <span><i id="mode" class="iconfont icon-suiji"></i></span>
-                </div>
-                <span><i id="" class="iconfont icon-tianjia"></i></span>
-            </div>
-        </section>
-
-        <!-- audio标签 -->
-        <section class="audio">
-            <audio id="audio" controls src="">
-            </audio>
-        </section>
+    <div class="container">
+        <h1>APlayer</h1>
+        <h2>Wow, such a beautiful html5 music player</h2>
+        <p>Made by <a href="https://www.anotherhome.net/" target="_blank">DIYgod</a>. Available on <a href="https://github.com/DIYgod/APlayer" target="_blank">GitHub</a>. Licensed MIT.</p>
+        <hr>
+        <h3>Normal</h3>
+        <div id="player1"></div>
+        <p></p>
+        <button onclick="ap1.play()">ap.play()</button>
+        <button onclick="ap1.seek(100)">ap.seek(100)</button>
+        <button onclick="ap1.pause()">ap.pause()</button>
+        <button onclick="ap1.toggle()">ap.toggle()</button>
+        <button onclick="ap1.volume(0.1)">ap.volume(0.1)</button>
+        <button onclick="ap1.addAudio([
+            {
+                name: 'あっちゅ～ま青春!',
+                artist: '七森中☆ごらく部',
+                url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yuruyuri.mp3',
+                cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yuruyuri.jpg'
+            },
+            {
+                name: 'secret base~君がくれたもの~',
+                artist: '茅野愛衣',
+                url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/secretbase.mp3',
+                cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/secretbase.jpg'
+            },
+            {
+                name: '回レ！雪月花',
+                artist: '小倉唯',
+                url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/snowmoonflowers.mp3',
+                cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/snowmoonflowers.jpg'
+            }
+        ])">ap.addAudio(...)</button>
+        <button onclick="ap1.destroy()">ap.destroy()</button>
+        <h3>With playlist</h3>
+        <div id="player4" class="aplayer"></div>
+        <p></p>
+        <button onclick="ap4.switchAudio(2)">ap.switchAudio(2)</button>
+        <h3>With lyrics</h3>
+        <div id="player3" class="aplayer"></div>
+        <h3>With playlist and lyrics</h3>
+        <div id="player5" class="aplayer"></div>
+        <h3>Narrow</h3>
+        <div id="player2" class="aplayer"></div>
+        <h3>HLS</h3>
+        <div id="player6" class="aplayer"></div>
+        <div id="player7" class="aplayer"></div>
+        <div id="player8" class="aplayer"></div>
     </div>
+    <script>
+        if (/mobile/i.test(window.navigator.userAgent)) {
+            new VConsole();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    <script>
+        const ap1 = new APlayer({
+    element: document.getElementById('player1'),
+    mini: false,
+    autoplay: false,
+    lrcType: false,
+    mutex: true,
+    preload: 'metadata',
+    audio: [{
+        name: '光るなら',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        theme: '#ebd0c2'
+    }]
+});
+ap1.on('play', function () {
+    console.log('play');
+});
+ap1.on('play', function () {
+    console.log('play play');
+});
+ap1.on('pause', function () {
+    console.log('pause');
+});
+ap1.on('canplay', function () {
+    console.log('canplay');
+});
+ap1.on('playing', function () {
+    console.log('playing');
+});
+ap1.on('ended', function () {
+    console.log('ended');
+});
+ap1.on('error', function () {
+    console.log('error');
+});
 
+const ap2 = new APlayer({
+    element: document.getElementById('player2'),
+    mini: true,
+    autoplay: false,
+    lrcType: false,
+    mutex: true,
+    audio: [{
+        name: '光るなら',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc',
+        theme: '#ebd0c2'
+    }]
+});
 
-</body>
+const ap3 = new APlayer({
+    element: document.getElementById('player3'),
+    mini: false,
+    autoplay: false,
+    lrcType: 3,
+    mutex: true,
+    audio: [{
+        name: '光るなら',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc',
+        theme: '#ebd0c2'
+    }]
+});
 
-<script>
-var doc = document;
+const ap4 = new APlayer({
+    element: document.getElementById('player4'),
+    mini: false,
+    autoplay: false,
+    lrcType: false,
+    mutex: true,
+    theme: '#ad7a86',
+    order: 'random',
+    audio: [{
+        name: '光るなら',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc',
+        theme: '#ebd0c2'
+    }, {
+        name: 'トリカゴ',
+        artist: 'XX:me',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.lrc',
+        theme: '#46718b'
+    }, {
+        name: '前前前世',
+        artist: 'RADWIMPS',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.lrc',
+        theme: '#505d6b'
+    }, {
+        name: '光るなら(HLS)',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hls/hikarunara.m3u8',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        theme: '#ebd0c2',
+        type: 'hls'
+    }]
+});
 
-// 歌曲信息数组
-var songsList = [
-    {
-        id: 'xxx-01',
-        title: '小幸运',
-        author: '田馥甄',
-        path: './music/小幸运.mp3',
-        bgPath: './music/1.jpg',
-        time: 0
-    },
-    {
-        id: 'xxx-02',
-        title: '最初的梦想',
-        author: '范玮琪',
-        path: './music/最初的梦想.mp3',
-        bgPath: './music/1.jpg',
-        time: 0
-    },
-    {
-        id: 'xxx-03',
-        title: '起风了',
-        author: '买辣椒也用券',
-        path: './music/起风了-买辣椒也用券.mp3',
-        bgPath: './music/1.jpg',
-        time: 0
+const ap5 = new APlayer({
+    element: document.getElementById('player5'),
+    mini: false,
+    autoplay: false,
+    lrcType: 3,
+    mutex: true,
+    theme: '#e9e9e9',
+    listFolded: false,
+    listMaxHeight: 80,
+    audio: [{
+        name: '光るなら',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.lrc',
+    }, {
+        name: 'トリカゴ',
+        artist: 'XX:me',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/darling.lrc',
+    }, {
+        name: '前前前世',
+        artist: 'RADWIMPS',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.mp3',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.jpg',
+        lrc: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/yourname.lrc',
+    }]
+});
+const colorThief = new ColorThief();
+const image = new Image();
+const xhr = new XMLHttpRequest();
+const setTheme = (index) => {
+    if (!ap5.list.audios[index].theme) {
+        xhr.onload = function(){
+            let coverUrl = URL.createObjectURL(this.response);
+            image.onload = function(){
+                let color = colorThief.getColor(image);
+                ap5.theme(`rgb(${color[0]}, ${color[1]}, ${color[2]})`, index);
+                URL.revokeObjectURL(coverUrl)
+            };
+            image.src = coverUrl;
+        }
+        xhr.open('GET', ap5.list.audios[index].cover, true);
+        xhr.responseType = 'blob';
+        xhr.send();
     }
-];
+};
+setTheme(ap5.list.index);
+ap5.on('listswitch', (data) => {
+    setTheme(data.index);
+});
 
-// DOM元素
-var audio = doc.querySelector('#audio'); // 播放器
-var bgImg = doc.querySelector('#bg-img'); // 插图
-var controls = doc.querySelector('#controls'); // 按钮区域
-var title = doc.querySelector('#title'); // 歌曲标题
-var author = doc.querySelector('#author'); // 歌曲作者
-var playBtn = doc.querySelector('#play'); // 播放按钮
-var voiceBtn = doc.querySelector('#voice'); // 声音开关
-
-// 当前播放歌曲
-var curSongIndex = 1;
-// 是否在播放
-var isPlay = false;
-
-
-// 初始化
-function init() {
-    render(songsList[curSongIndex]);
-}
-
-
-// 按钮事件
-controls.addEventListener('click', e => {
-    switch (e.target?.id) {
-        case 'list': // 歌曲列表
-            // TODO
-            break;
-        case 'voice': // 声音开关
-            voiceControl();
-            break;
-        case 'pre': // 上一首
-            preSong();
-            break;
-        case 'play': // 播放/暂停
-            togglePlay();
-            break;
-        case 'next': // 下一首
-            nextSong();
-            break;
-        case 'mode': // 播放模式
-            // TODO
-            break;
-        default:
-            break;
+const ap6 = new APlayer({
+    element: document.getElementById('player6'),
+    mutex: true,
+    audio: [{
+        name: '光るなら(HLS)',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hls/hikarunara.m3u8',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        theme: '#ebd0c2',
+        type: 'hls'
+    }]
+});
+const ap7 = new APlayer({
+    element: document.getElementById('player7'),
+    mutex: true,
+    audio: [{
+        name: '光るなら(HLS)',
+        artist: 'Goose house',
+        url: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hls/hikarunara.m3u8',
+        cover: 'https://cn-south-17-aplayer-46154810.oss.dogecdn.com/hikarunara.jpg',
+        theme: '#ebd0c2',
+        type: 'customHls',
+    }],
+    customAudioType: {
+        'customHls': function (audioElement, audio, player) {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(audio.url);
+                hls.attachMedia(audioElement);
+            }
+            else if (audioElement.canPlayType('application/x-mpegURL') || audioElement.canPlayType('application/vnd.apple.mpegURL')) {
+                audioElement.src = audio.url;
+            }
+            else {
+                player.notice('Error: HLS is not supported.');
+            }
+        }
     }
 });
 
-// 播放 / 暂停 切换
-function togglePlay() {
-    if (!isPlay) {
-        // 暂停 图标切换
-        songPlay();
-    } else {
-        // 播放 图标切换
-        songPause();
+const ap8 = new APlayer({
+    element: document.getElementById('player8'),
+    mutex: true,
+    theme: '#ad7a86',
+    order: 'random',
+    lrcType: 3,
+    fixed: true,
+});
+$.ajax({
+    url: 'https://api.i-meto.com/meting/api?server=netease&type=playlist&id=35798529',
+    success: function (list) {
+        ap8.list.add(JSON.parse(list));
     }
-}
-
-// 播放
-function songPlay() {
-    isPlay = true;
-    playBtn.classList.remove('icon-24gf-play');
-    playBtn.classList.add('icon-iconstop');
-    audio.play();
-}
-
-// 暂停
-function songPause() {
-    isPlay = false;
-    playBtn.classList.remove('icon-iconstop');
-    playBtn.classList.add('icon-24gf-play');
-    audio.pause();
-}
-
-// 上一首
-function preSong() {
-    if (curSongIndex > 0) {
-        curSongIndex--;
-        render(songsList[curSongIndex]);
-        songPlay();
-    }
-}
-
-// 下一首
-function nextSong() {
-    if (curSongIndex < songsList.length - 1) {
-        curSongIndex++;
-        render(songsList[curSongIndex]);
-        songPlay();
-    }
-}
-
-// 声音控制
-function voiceControl() {
-    if (audio.volume > 0) {
-        voiceOff();
-    } else {
-        voiceOn();
-    }
-}
-
-// 声音开
-function voiceOn() {
-    audio.volume = 1;
-    voiceBtn.classList.remove('icon-volume-mute-fill');
-    voiceBtn.classList.add('icon-shengyin_shiti');
-}
-
-// 声音关
-function voiceOff() {
-    audio.volume = 0;
-    voiceBtn.classList.remove('icon-shengyin_shiti');
-    voiceBtn.classList.add('icon-volume-mute-fill');
-}
-
-
-// 内容渲染到页面
-function render(song) {
-    title.innerHTML = song.title;
-    author.innerHTML = song.author;
-    bgImg.src = song.bgPath; // 插图
-    audio.volume = 1; // 音量 0 ~ 1
-    audio.src = song.path; // 音乐资源路径
-}
-
-init();
-</script>
+});
+    </script>
+</body>
 </html>
