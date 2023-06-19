@@ -58,6 +58,12 @@ collections:
         editor:
           preview: true
         fields: *ref_0
+      - name: public-music.html
+        label: ''
+        file: source/public/music.html
+        editor:
+          preview: true
+        fields: *ref_0
       - name: tags-index.md
         label: 标签
         file: source/tags/index.md
