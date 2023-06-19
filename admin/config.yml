@@ -70,9 +70,3 @@ collections:
         editor:
           preview: true
         fields: *ref_0
-      - name: public-music-iconfont.json
-        label: ''
-        file: source/public/music/iconfont.json
-        editor:
-          preview: true
-        fields: *ref_0
