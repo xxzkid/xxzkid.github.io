@@ -13,7 +13,7 @@ self.addEventListener('fetch', (event) => {
     /.*\.mp3/.test(event.request.url)
   ) {
     var request = event.request;
-    event.responseWith(firstCache(request, 'cache_music'));
+    event.respondWith(firstCache(request, 'cache_music'));
   }
 });
 
