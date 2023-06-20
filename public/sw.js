@@ -52,9 +52,9 @@ self.addEventListener('fetch', function(event) {
         return cache.match(event.request.url);
       }).then(function(res) {
         if (!res) {
-          return fetch(event.request)
+          return fetch(event.request.clone())
           .then(res => {
-            return res.arrayBuffer();
+            return res.clone().arrayBuffer();
           });
         }
         console.log('cached : ', event.request.url);
@@ -83,10 +83,10 @@ self.addEventListener('fetch', function(event) {
         console.log('No response found in cache. About to fetch from network...');
         // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
         // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
-        return fetch(event.request).then(function(response) {
+        return fetch(event.request.clone()).then(function(response) {
           console.log('Response from network is:', response);
   
-          return response;
+          return response.clone();
         }).catch(function(error) {
           // This catch() will handle exceptions thrown from the fetch() operation.
           // Note that a HTTP error response (e.g. 404) will NOT trigger an exception.
