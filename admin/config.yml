@@ -76,9 +76,3 @@ collections:
         editor:
           preview: true
         fields: *ref_0
-      - name: public-music-hls.min.js
-        label: ''
-        file: source/public/music/hls.min.js
-        editor:
-          preview: true
-        fields: *ref_0
