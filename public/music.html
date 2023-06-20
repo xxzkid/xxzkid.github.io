@@ -34,7 +34,7 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerRoute(
   new RegExp('.*\.mp3'),
-  workbox.strategies.cacheFirst();
+  workbox.strategies.cacheFirst()
 );
         
 const ap = new APlayer({
