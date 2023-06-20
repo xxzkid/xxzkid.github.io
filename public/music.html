@@ -41,7 +41,7 @@ if ('serviceWorker' in navigator) {
     .then(waitUntilInstalled)
     .then((registration) => {
         console.log('ServiceWorker scope : ', registration.scope);
-        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope);
+        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope;
     })
     .catch(function(error) {
       // Something went wrong during registration. The service-worker.js file
