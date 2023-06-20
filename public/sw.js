@@ -72,7 +72,7 @@ self.addEventListener('fetch', function(event) {
       }));
   } else {
     console.log('Non-range request for', event.request.url);
-    return fetch(event.request);
+    return fetch(event.request.clone());
     // event.respondWith(
     //   // caches.match() will look for a cache entry in all of the caches available to the service worker.
     //   // It's an alternative to first opening a specific named cache and then matching on that.
