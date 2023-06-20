@@ -13,10 +13,7 @@
     <div id="aplayer"></div>
     <script>
 // 首先引入 Workbox 框架
-importScripts('https://g.alicdn.com/kg/workbox/3.3.0/workbox-sw.js');
-workbox.setConfig({
-  modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
-});
+importScripts('./workbox-sw.js');
 workbox.precaching([
   // 注册成功后要立即缓存的资源列表
 ]);
