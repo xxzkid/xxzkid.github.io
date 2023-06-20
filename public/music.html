@@ -8,8 +8,19 @@
     <script src="./music/APlayer.min.js"></script>
 </head>
 <body>
+    <div id="m-service-worker" style="color: green;"></div>
     <div id="aplayer"></div>
     <script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then((registration) => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope;
+    }).cache((err) => {
+        console.log('ServiceWorker registration failed: ', err);
+        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker err';
+    });
+}
+
 const ap = new APlayer({
     container: document.getElementById('aplayer'),
     listFolded: false,
