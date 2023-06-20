@@ -12,45 +12,30 @@
     <div id="m-cached-text" style="color: green;"></div>
     <div id="aplayer"></div>
     <script>
-function waitUntilInstalled(registration) {
-  return new Promise(function(resolve, reject) {
-    if (registration.installing) {
-      // If the current registration represents the "installing" service worker,
-      // then wait until the installation step (during which the resources are
-      // pre-fetched) completes to display the file list.
-      registration.installing.addEventListener('statechange', function(e) {
-        if (e.target.state === 'installed') {
-          resolve(registration);
-        } else if (e.target.state === 'redundant') {
-          reject(registration);
-        }
-      });
-    } else {
-      // Otherwise, if this isn't the "installing" service worker, then
-      // installation must have been completed during a previous visit to this
-      // page, and the resources are already pre-fetched.
-      resolve(registration);
-    }
-  });
-}
+// 首先引入 Workbox 框架
+importScripts('https://g.alicdn.com/kg/workbox/3.3.0/workbox-sw.js');
+workbox.setConfig({
+  modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
+});
+workbox.precaching([
+  // 注册成功后要立即缓存的资源列表
+]);
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js', {
-    scope: './'
-  })
-    .then(waitUntilInstalled)
-    .then((registration) => {
-        console.log('ServiceWorker scope : ', registration.scope);
-        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope;
-    })
-    .catch(function(error) {
-      // Something went wrong during registration. The service-worker.js file
-      // might be unavailable or contain a syntax error.
-      console.log(error);
-    });
-} else {
-  console.log('This browser does not support Service Worker');
-}
+// html的缓存策略
+workbox.routing.registerRoute(
+  new RegExp(''.*\.html'),
+  workbox.strategies.networkFirst()
+);
+
+workbox.routing.registerRoute(
+  new RegExp('.*\.(?:js|css)'),
+  workbox.strategies.cacheFirst()
+);
+
+workbox.routing.registerRoute(
+  new RegExp('.*\.mp3'),
+  workbox.strategies.cacheFirst();
+);
         
 const ap = new APlayer({
     container: document.getElementById('aplayer'),
