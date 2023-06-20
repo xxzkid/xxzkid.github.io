@@ -64,3 +64,9 @@ collections:
         editor:
           preview: true
         fields: *ref_0
+      - name: public-music-APlayer.min.css
+        label: ''
+        file: source/public/music/APlayer.min.css
+        editor:
+          preview: true
+        fields: *ref_0
