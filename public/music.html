@@ -20,9 +20,9 @@ function waitUntilInstalled(registration) {
       // pre-fetched) completes to display the file list.
       registration.installing.addEventListener('statechange', function(e) {
         if (e.target.state === 'installed') {
-          resolve();
+          resolve(e);
         } else if (e.target.state === 'redundant') {
-          reject();
+          reject(e);
         }
       });
     } else {
@@ -39,6 +39,10 @@ if ('serviceWorker' in navigator) {
     scope: './'
   })
     .then(waitUntilInstalled)
+    .then((e) => {
+        console.log('ServiceWorker scope : ', e.target.scope);
+        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope ' + e.target.scope);
+    })
     .catch(function(error) {
       // Something went wrong during registration. The service-worker.js file
       // might be unavailable or contain a syntax error.
