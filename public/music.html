@@ -14,6 +14,9 @@
     <script>
 // 首先引入 Workbox 框架
 importScripts('./workbox-sw.js');
+workbox.setConfig({
+  modulePathPrefix: './'
+});
 workbox.precaching([
   // 注册成功后要立即缓存的资源列表
 ]);
