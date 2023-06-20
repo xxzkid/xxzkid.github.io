@@ -20,6 +20,8 @@ self.addEventListener('fetch', (event) => {
 function firstCache(request, cacheName) {
   return caches.match(request).then((cache) => {
     if (cache) {
+      console.log('cached : ', request.url);
+      document.getElementById('m-cached-text').innerHTML = request.url;
       return cache;
     }
     var requestCopy = request.clone();
