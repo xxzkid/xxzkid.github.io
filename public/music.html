@@ -20,16 +20,16 @@ function waitUntilInstalled(registration) {
       // pre-fetched) completes to display the file list.
       registration.installing.addEventListener('statechange', function(e) {
         if (e.target.state === 'installed') {
-          resolve(e);
+          resolve(registration);
         } else if (e.target.state === 'redundant') {
-          reject(e);
+          reject(registration);
         }
       });
     } else {
       // Otherwise, if this isn't the "installing" service worker, then
       // installation must have been completed during a previous visit to this
       // page, and the resources are already pre-fetched.
-      resolve();
+      resolve(registration);
     }
   });
 }
@@ -39,9 +39,9 @@ if ('serviceWorker' in navigator) {
     scope: './'
   })
     .then(waitUntilInstalled)
-    .then((e) => {
-        console.log('ServiceWorker scope : ', e.target.scope);
-        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope ' + e.target.scope);
+    .then((registration) => {
+        console.log('ServiceWorker scope : ', registration.scope);
+        document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope);
     })
     .catch(function(error) {
       // Something went wrong during registration. The service-worker.js file
