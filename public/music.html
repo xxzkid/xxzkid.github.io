@@ -23,7 +23,7 @@ workbox.precaching([
 
 // html的缓存策略
 workbox.routing.registerRoute(
-  new RegExp(''.*\.html'),
+  new RegExp('.*\.html'),
   workbox.strategies.networkFirst()
 );
 
