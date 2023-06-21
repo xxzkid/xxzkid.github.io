@@ -16,17 +16,17 @@ if (workbox) {
   
   workbox.routing.registerRoute(
     new RegExp('.*\.html'),
-    workbox.strategies.networkFirst()
+    new workbox.strategies.NetworkFirst()
   );
   
   workbox.routing.registerRoute(
     new RegExp('.*\.(?:js|css)'),
-    workbox.strategies.cacheFirst()
+    new workbox.strategies.CacheFirst()
   );
   
   workbox.routing.registerRoute(
     new RegExp('.*\.mp3'),
-    workbox.strategies.cacheFirst({
+    new workbox.strategies.CacheFirst({
       plugins: [new RangeRequestsPlugin()]
     })
   );
