@@ -1,4 +1,4 @@
-var prefix = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+var prefix = '/public';
 importScripts(prefix + '/workbox-v6.4.1/workbox-sw.js');
 
 if (workbox) {
