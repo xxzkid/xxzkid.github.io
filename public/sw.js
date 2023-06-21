@@ -1,8 +1,9 @@
-importScripts('/public/workbox-v6.4.1/workbox-sw.js');
+var prefix = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+importScripts(prefix + '/workbox-v6.4.1/workbox-sw.js');
 
 if (workbox) {
   workbox.setConfig({
-    modulePathPrefix: '/public/workbox-v6.4.1/',
+    modulePathPrefix: prefix + '/workbox-v6.4.1/',
   });
   
   workbox.core.setCacheNameDetails({
