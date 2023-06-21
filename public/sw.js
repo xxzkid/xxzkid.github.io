@@ -3,7 +3,13 @@
 //   modulePathPrefix: 'https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/6.4.1/'
 // });
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
+
 if (workbox) {
+  workbox.loadModule('routing');
+  workbox.loadModule('strategies');
+  workbox.loadModule('cacheableResponse');
+  workbox.loadModule('rangeRequests');
+  
   workbox.core.setCacheNameDetails({
     prefix: 'app',
     suffix: 'v1',
@@ -25,9 +31,18 @@ if (workbox) {
   );
   
   workbox.routing.registerRoute(
-    new RegExp('.*\.mp3'),
+    ({request}) => {
+      const {destination} = request;
+      return destination === 'video' || destination === 'audio'
+    },
     new workbox.strategies.CacheFirst({
-      plugins: [new RangeRequestsPlugin()]
+      cacheName: 'cache-music',
+      plugins: [
+        new CacheableResponsePlugin({
+          statuses: [200]
+        }),
+        new RangeRequestsPlugin()
+      ]
     })
   );
 } else {
