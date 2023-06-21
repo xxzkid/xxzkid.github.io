@@ -1,6 +1,6 @@
-importScripts('./workbox-sw.js');
+importScripts('https://g.alicdn.com/kg/workbox/3.3.0/workbox-sw.js');
 workbox.setConfig({
-  modulePathPrefix: './'
+  modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
 });
 
 workbox.precaching([
