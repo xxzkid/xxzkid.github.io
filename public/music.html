@@ -12,30 +12,17 @@
     <div id="m-cached-text" style="color: green;"></div>
     <div id="aplayer"></div>
     <script>
-// 首先引入 Workbox 框架
-importScripts('./workbox-sw.js');
-workbox.setConfig({
-  modulePathPrefix: './'
-});
-workbox.precaching([
-  // 注册成功后要立即缓存的资源列表
-]);
-
-// html的缓存策略
-workbox.routing.registerRoute(
-  new RegExp('.*\.html'),
-  workbox.strategies.networkFirst()
-);
-
-workbox.routing.registerRoute(
-  new RegExp('.*\.(?:js|css)'),
-  workbox.strategies.cacheFirst()
-);
-
-workbox.routing.registerRoute(
-  new RegExp('.*\.mp3'),
-  workbox.strategies.cacheFirst()
-);
+if ( 'serviceWorker' in navigator ) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').then(function (registration) {
+      console.log('ServiceWorker scope : ', registration.scope);
+      document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope;
+    }, function (err) {
+      console.log('ServiceWorker scope : ', err);
+      document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope err';
+    });
+  });
+}
         
 const ap = new APlayer({
     container: document.getElementById('aplayer'),
