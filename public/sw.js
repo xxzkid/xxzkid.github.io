@@ -11,8 +11,8 @@ if (workbox) {
     runtime: 'runtime'
   });
   
-  workbox.routing.precacheAndRoute([
-  ]);
+  // workbox.routing.precacheAndRoute([
+  // ]);
   
   workbox.routing.registerRoute(
     new RegExp('.*\.html'),
