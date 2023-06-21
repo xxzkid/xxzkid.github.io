@@ -1,6 +1,6 @@
-importScripts('https://g.alicdn.com/kg/workbox/3.3.0/workbox-sw.js');
+importScripts('https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/workbox-sw.min.js');
 workbox.setConfig({
-  modulePathPrefix: 'https://g.alicdn.com/kg/workbox/3.3.0/'
+  modulePathPrefix: 'https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/'
 });
 if (workbox) {
   workbox.core.setCacheNameDetails({
