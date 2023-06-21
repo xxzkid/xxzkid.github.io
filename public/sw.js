@@ -8,7 +8,7 @@ if (workbox) {
   
   workbox.core.setCacheNameDetails({
     prefix: 'app',
-    suffix: 'v1',
+    suffix: 'v2',
     precache: 'precache',
     runtime: 'runtime'
   });
@@ -31,7 +31,7 @@ if (workbox) {
       const {destination} = request;
       return destination === 'video' || destination === 'audio'
     },
-    new workbox.strategies.CacheOnly({
+    new workbox.strategies.CacheFirst({
       cacheName: 'cache-music',
       plugins: [
         new workbox.cacheableResponse.CacheableResponsePlugin({
