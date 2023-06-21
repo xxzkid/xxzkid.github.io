@@ -5,11 +5,6 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
 if (workbox) {
-  workbox.loadModule('routing');
-  workbox.loadModule('strategies');
-  workbox.loadModule('cacheableResponse');
-  workbox.loadModule('rangeRequests');
-  
   workbox.core.setCacheNameDetails({
     prefix: 'app',
     suffix: 'v1',
@@ -38,10 +33,10 @@ if (workbox) {
     new workbox.strategies.CacheFirst({
       cacheName: 'cache-music',
       plugins: [
-        new CacheableResponsePlugin({
+        new workbox.cacheableResponse.CacheableResponsePlugin({
           statuses: [200]
         }),
-        new RangeRequestsPlugin()
+        new workbox.rangeRequests.RangeRequestsPlugin()
       ]
     })
   );
