@@ -1,7 +1,8 @@
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/workbox-sw.min.js');
-workbox.setConfig({
-  modulePathPrefix: 'https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/'
-});
+// importScripts('https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/workbox-sw.min.js');
+// workbox.setConfig({
+//   modulePathPrefix: 'https://cdnjs.cloudflare.com/ajax/libs/workbox-sw/7.0.0/'
+// });
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.3.0/workbox-sw.js');
 if (workbox) {
   workbox.core.setCacheNameDetails({
     prefix: 'app',
