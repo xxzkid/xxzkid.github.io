@@ -30,7 +30,7 @@ if (workbox) {
       const {destination} = request;
       return destination === 'video' || destination === 'audio'
     },
-    new workbox.strategies.CacheFirst({
+    new workbox.strategies.CacheOnly({
       cacheName: 'cache-music',
       plugins: [
         new workbox.cacheableResponse.CacheableResponsePlugin({
