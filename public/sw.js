@@ -34,6 +34,7 @@ if (workbox) {
       event.target.clients.get(event.clientId).then((c) => {
         var text = decodeURI(request.url);
         c.postMessage({type: 'LOG', text: text});
+        c.postMessage({type: 'VERSION', text: suffix});
       });
       return response;
     };
