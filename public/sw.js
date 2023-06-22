@@ -14,7 +14,7 @@ if (workbox) {
     runtime: 'runtime'
   });
   
-  serviceWorker.controller.postMessage({
+  serviceWorker.postMessage({
     type: 'VERSION', text: suffix
   });
   
