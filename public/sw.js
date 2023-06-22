@@ -7,20 +7,13 @@ if (workbox) {
   });
 
   var prefix = 'app';
-  var suffix = 'v2';
+  var suffix = 'v3';
   workbox.core.setCacheNameDetails({
     prefix: prefix,
     suffix: suffix,
     precache: 'precache',
     runtime: 'runtime'
   });
-  self['details'] = {
-    prefix: prefix,
-    suffix: suffix,
-  };
-  
-  // workbox.routing.precacheAndRoute([
-  // ]);
   
   workbox.routing.registerRoute(
     new RegExp('.*\.html'),
