@@ -16,14 +16,17 @@
 if ( 'serviceWorker' in navigator ) {
   window.addEventListener('load', function() {
     
-    navigator.serviceWorker.onmessage = function (event) {
+    navigator.serviceWorker.addEventListener('message', function (event) {
       if (event.data) {
         if (event.data.type === 'LOG') {
           var text = event.data['text'];
           document.getElementById('m-log').innerText = 'cached : ' + text.substring(text.lastIndexOf('/'));
+        } else if (event.data.type === 'VERSION') {
+          var text = event.data['text'];
+          document.getElementById('m-version').innerText = 'version : ' + text;
         }
       }
-    }
+    });
     
     navigator.serviceWorker.register('./sw.js').then(function (registration) {
       console.log('ServiceWorker scope : ', registration.scope);
