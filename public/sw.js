@@ -33,6 +33,9 @@ if (workbox) {
     },
     new workbox.strategies.CacheFirst({
       cacheName: 'cache-music',
+      matchOptions: {
+        ignoreSearch: true
+      },
       plugins: [
         new workbox.cacheableResponse.CacheableResponsePlugin({
           statuses: [200]
@@ -41,6 +44,9 @@ if (workbox) {
       ]
     })
   );
+
+  workbox.core.skipWaiting();
+  workbox.core.clientsClaim();
 } else {
   console.log('workbox did not load');
 }
