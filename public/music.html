@@ -15,6 +15,18 @@
     <script>
 if ( 'serviceWorker' in navigator ) {
   window.addEventListener('load', function() {
+    
+    navigator.serviceWorker.onmessage = function (event) {
+      if (event.data) {
+        if (event.data.type === 'LOG') {
+          var text = event.data['text'];
+          document.getElementById('m-log').innerText = 'cached : ' + text.substring(text.lastIndexOf('/'));
+        } else if (event.data.type === 'VERSION') {
+          document.getElementById('m-version').innerText = 'version : ' + event.data['text'];
+        }
+      }
+    }
+    
     navigator.serviceWorker.register('./sw.js').then(function (registration) {
       console.log('ServiceWorker scope : ', registration.scope);
       document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope : ' + registration.scope;
@@ -23,16 +35,6 @@ if ( 'serviceWorker' in navigator ) {
       document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope err';
     });
     
-    navigator.serviceWorker.onmessage = function (event) {
-      if (event.data) {
-        if (event.data.type === 'LOG') {
-          var text = event.data['text'];
-          document.getElementById('m-log').innerText = 'cached : ' + text.substring(text.lastIndexOf('/'));
-        } else if (event.data.type === 'VERSION') {
-          document.getElementById('m-version').innerText = 'version : ' + event.data.text;
-        }
-      }
-    }
   });
 }
         
