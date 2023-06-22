@@ -8,9 +8,10 @@
     <script src="./music/APlayer.min.js"></script>
 </head>
 <body>
-    <div id="m-service-worker" style="color: green;"></div>
-    <div id="m-log" style="color: gray;"></div>
-    <div id="aplayer"></div>
+  <div id="m-service-worker" style="color: green;"></div>
+  <div id="m-version" style="color: red;"></div>
+  <div id="m-log" style="color: gray;"></div>
+  <div id="aplayer"></div>
     <script>
 if ( 'serviceWorker' in navigator ) {
   window.addEventListener('load', function() {
@@ -23,9 +24,13 @@ if ( 'serviceWorker' in navigator ) {
     });
     
     navigator.serviceWorker.onmessage = function (event) {
-      if (event.data && event.data.type === 'LOG') {
-        var log = event.data['log'];
-        document.getElementById('m-log').innerText = 'cached : ' + log.substring(log.lastIndexOf('/'));
+      if (event.data) {
+        if (event.data.type === 'LOG') {
+          var text = event.data['text'];
+          document.getElementById('m-log').innerText = 'cached : ' + text.substring(text.lastIndexOf('/'));
+        } else if (event.data.type === 'VERSION') {
+          document.getElementById('m-version').innerText = 'version : ' + event.data.text);
+        }
       }
     }
   });
