@@ -5,12 +5,17 @@ if (workbox) {
   workbox.setConfig({
     modulePathPrefix: prefix + '/workbox-v6.4.1/',
   });
-  
+
+  var suffix = 'v2';
   workbox.core.setCacheNameDetails({
     prefix: 'app',
-    suffix: 'v2',
+    suffix: suffix,
     precache: 'precache',
     runtime: 'runtime'
+  });
+  
+  serviceWorker.controller.postMessage({
+    type: 'VERSION', text: suffix
   });
   
   // workbox.routing.precacheAndRoute([
@@ -33,8 +38,8 @@ if (workbox) {
       var response = options.response;
       var error = options.error;
       event.target.clients.get(event.clientId).then((c) => {
-        var log = decodeURI(request.url);
-        c.postMessage({type: 'LOG', log: log});
+        var text = decodeURI(request.url);
+        c.postMessage({type: 'LOG', text: text});
       });
       return response;
     };
