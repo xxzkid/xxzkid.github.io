@@ -14,7 +14,7 @@ if (workbox) {
     precache: 'precache',
     runtime: 'runtime'
   });
-  self.registration['details'] = {
+  self['serviceWorker']['details'] = {
     prefix: prefix,
     suffix: suffix,
   };
