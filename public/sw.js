@@ -15,10 +15,10 @@ if (workbox) {
     runtime: 'runtime'
   });
   
-  workbox.routing.registerRoute(
-    new RegExp('.*\.html'),
-    new workbox.strategies.NetworkFirst()
-  );
+  // workbox.routing.registerRoute(
+  //   new RegExp('.*\.html'),
+  //   new workbox.strategies.NetworkFirst()
+  // );
   
   workbox.routing.registerRoute(
     new RegExp('.*\.(?:js|css)'),
