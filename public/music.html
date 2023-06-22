@@ -28,7 +28,7 @@ if ( 'serviceWorker' in navigator ) {
     navigator.serviceWorker.register('./sw.js').then(function (registration) {
       console.log('ServiceWorker scope : ', registration.scope);
       document.getElementById('m-service-worker').innerText = 'ServiceWorker scope : ' + registration.scope;
-        document.getElementById('m-version').innerText = 'version : ' + registration['details']['suffix'];
+      document.getElementById('m-version').innerText = 'version : ' + registration['details']['suffix'];
     }, function (err) {
       console.log('ServiceWorker scope : ', err);
       document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope err';
