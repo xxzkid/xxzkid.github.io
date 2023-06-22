@@ -29,7 +29,7 @@ if ( 'serviceWorker' in navigator ) {
           var text = event.data['text'];
           document.getElementById('m-log').innerText = 'cached : ' + text.substring(text.lastIndexOf('/'));
         } else if (event.data.type === 'VERSION') {
-          document.getElementById('m-version').innerText = 'version : ' + event.data.text);
+          document.getElementById('m-version').innerText = 'version : ' + event.data.text;
         }
       }
     }
