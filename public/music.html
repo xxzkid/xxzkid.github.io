@@ -33,7 +33,7 @@ if ( 'serviceWorker' in navigator ) {
       document.getElementById('m-service-worker').innerText = 'ServiceWorker scope : ' + registration.scope;
     }, function (err) {
       console.log('ServiceWorker scope : ', err);
-      document.getElementById('m-service-worker').innerHTML = 'ServiceWorker scope err';
+      document.getElementById('m-service-worker').innerText = 'ServiceWorker scope err';
     });
     
   });
