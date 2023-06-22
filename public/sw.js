@@ -13,10 +13,7 @@ if (workbox) {
     precache: 'precache',
     runtime: 'runtime'
   });
-  
-  serviceWorker.postMessage({
-    type: 'VERSION', text: suffix
-  });
+  self.suffix = suffix;
   
   // workbox.routing.precacheAndRoute([
   // ]);
