@@ -6,14 +6,18 @@ if (workbox) {
     modulePathPrefix: prefix + '/workbox-v6.4.1/',
   });
 
+  var prefix = 'app';
   var suffix = 'v2';
   workbox.core.setCacheNameDetails({
-    prefix: 'app',
+    prefix: prefix,
     suffix: suffix,
     precache: 'precache',
     runtime: 'runtime'
   });
-  self.suffix = suffix;
+  self.registration['details'] = {
+    prefix: prefix,
+    suffix: suffix,
+  };
   
   // workbox.routing.precacheAndRoute([
   // ]);
