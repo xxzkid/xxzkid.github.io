@@ -25,6 +25,20 @@ if (workbox) {
     new RegExp('.*\.(?:js|css)'),
     new workbox.strategies.CacheFirst()
   );
+
+  var MusicLog = function () {
+    this.handlerDidComplete = function(options) {
+      var event = options.event;
+      var request = options.request;
+      var response = options.response;
+      var error = options.error;
+      event.target.clients.get(event.clientId).then((c) => {
+        var log = decodeURI(request.url);
+        c.postMessage({type: 'LOG', log: log});
+      });
+      return response;
+    };
+  };
   
   workbox.routing.registerRoute(
     ({request}) => {
@@ -37,6 +51,7 @@ if (workbox) {
         ignoreSearch: true
       },
       plugins: [
+        new MusicLog(),
         new workbox.cacheableResponse.CacheableResponsePlugin({
           statuses: [200]
         }),
