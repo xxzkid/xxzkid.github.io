@@ -37,6 +37,9 @@ if ( 'serviceWorker' in navigator ) {
     });
     
   });
+} else {
+  console.log('ServiceWorker not support');
+  document.getElementById('m-service-worker').innerText = 'ServiceWorker not support';
 }
         
 const ap = new APlayer({
