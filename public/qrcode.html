@@ -17,7 +17,6 @@
 
   <h3>qrcode parse</h3>
   <div>
-    <span>choose picture</span>
     <input type="file" id="qrcode-parse-picture"/>
     <canvas id="qrcode-parse-canvas" style="display:none;"></canvas>
   </div>
@@ -26,10 +25,12 @@
   <h3>timestamp</h3>
   <div>
     <input id="timestamp-input" type="text" />
+    <input id="timestamp-output" type="text" />
+    <button click="getTimestamp()">GET TIMESTAMP</button>
   </div>
   <div id="timestamp-output" style="margin: 20px"></div>
 
-  <a href="https://1drv.ms/u/s!AiNWfQlr4yYGgdMMpo5gxQXzdLzyWw?e=c0RswE">WeChat_8.0.2.apk x86</a>
+  <p><a href="https://1drv.ms/u/s!AiNWfQlr4yYGgdMMpo5gxQXzdLzyWw?e=c0RswE">WeChat_8.0.2.apk</a> x86</p>
   <script>
   jQuery(function(){
     document.getElementById("qrcode-input").addEventListener("input", function(e) {
@@ -105,6 +106,11 @@
   
   <script>
     var timestamp_input = document.getElementById("timestamp-input");
+    var timestamp_output = document.getElementById("timestamp-output");
+    function getTimestamp() {
+      var ts = new Date().getTime();
+      timestamp_output.value = ts;
+    }
   </script>
   
 </body>
