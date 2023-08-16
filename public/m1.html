@@ -280,6 +280,7 @@
       audioEl.muted = false;
       container.append(audioEl);
       try {
+        audioEl.pause();
         audioEl.play();
       } catch (e) {}
 
