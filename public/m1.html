@@ -266,21 +266,23 @@
       if (audio.buffer) {
         audio = arrayBufferToBlob(audio.buffer, audio.type);
       }
-
+      var container = document.getElementById("container");
+      
       var audioEl = document.getElementById('audio');
       if (audioEl == null) {
         audioEl = document.createElement("audio");
+        container.append(audioEl);
       }
-      var container = document.getElementById("container");
-      container.innerHTML = '';
+
       audioEl.id = 'audio';
       audioEl.controls = "controls";
       audioEl.autoplay = "autoplay";
-      audioEl.src = URL.createObjectURL(audio);
-      audioEl.muted = false;
-      container.append(audioEl);
       try {
         audioEl.pause();
+      } catch (e) {}
+      audioEl.src = URL.createObjectURL(audio);
+      audioEl.muted = false;
+      try {
         audioEl.play();
       } catch (e) {}
 
