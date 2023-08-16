@@ -266,16 +266,22 @@
       if (audio.buffer) {
         audio = arrayBufferToBlob(audio.buffer, audio.type);
       }
-      const audioEl = document.createElement("audio");
-      const audioSrc = document.createElement("source");
-      const container = document.getElementById("container");
+
+      var audioEl = document.getElementById('audio');
+      if (audioEl == null) {
+        audioEl = document.createElement("audio");
+      }
+      var container = document.getElementById("container");
       container.innerHTML = '';
+      audioEl.id = 'audio';
       audioEl.controls = "controls";
       audioEl.autoplay = "autoplay";
-      audioSrc.type = audio.type;
-      audioSrc.src = URL.createObjectURL(audio);
+      audioEl.src = URL.createObjectURL(audio);
+      audioEl.muted = false;
       container.append(audioEl);
-      audioEl.append(audioSrc);
+      try {
+        audioEl.play();
+      } catch (e) {}
 
       audioEl.onended = function () {
         if (current >= audios.length) {
