@@ -81,6 +81,11 @@
     var current = 0;
     var audioEl = document.getElementById('audio');
     audioEl.onplay = function () {
+      spectrumAnimationFrame && window.cancelAnimationFrame(spectrumAnimationFrame);
+      spectrum();
+    }
+    audioEl.onseeked = function() {
+      spectrumAnimationFrame && window.cancelAnimationFrame(spectrumAnimationFrame);
       spectrum();
     }
     audioEl.onended = function () {
@@ -135,16 +140,15 @@
     }
 
     var spectrumAnimationFrame;
-    var audioSource;
+    var audioSource, analyser;
     const spectrum = function () {
-      window.cancelAnimationFrame(spectrumAnimationFrame);
       var audio = document.getElementById('audio');
-      var ctx = new AudioContext();
-      var analyser = ctx.createAnalyser();
+      var audioContext = new AudioContext();
       if (!audioSource) {
-        audioSource = ctx.createMediaElementSource(audio);
+        analyser = audioContext.createAnalyser();
+        audioSource = audioContext.createMediaElementSource(audio);
         audioSource.connect(analyser);
-        analyser.connect(ctx.destination);
+        analyser.connect(audioContext.destination);
         analyser.fftSize = 512;
       }
 
