@@ -139,13 +139,12 @@
       });
     }
 
-    var spectrumAnimationFrame;
-    var audioSource, analyser;
+    var spectrumAnimationFrame, audioSource;
     const spectrum = function () {
       var audio = document.getElementById('audio');
       var audioContext = new AudioContext();
       if (!audioSource) {
-        analyser = audioContext.createAnalyser();
+        var analyser = audioContext.createAnalyser();
         audioSource = audioContext.createMediaElementSource(audio);
         audioSource.connect(analyser);
         analyser.connect(audioContext.destination);
