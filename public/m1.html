@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="./localforage.min.js"></script>
   <script src="./song.js"></script>
+  <script src="./av.js"></script>
   <style>
     body {
       background: black;
@@ -51,8 +52,19 @@
   <div id="log" class="log"></div>
   <script>
     const _console_log = console.log;
+    const _console_error = console.error;
     console.log = function () {
       _console_log(...arguments);
+      const log_el = document.createElement('div');
+      var logs = [];
+      for (var i in arguments) {
+        logs.push(arguments[i]);
+      }
+      log_el.innerText = logs.join(' ');
+      document.getElementById('log').append(log_el);
+    }
+    console.error = function() {
+      _console_error(...arguments);
       const log_el = document.createElement('div');
       var logs = [];
       for (var i in arguments) {
@@ -79,14 +91,16 @@
     }
 
     var current = 0;
-    var audioEl = document.getElementById('audio');
+    const audioEl = document.getElementById('audio');
+    const canvasEl = document.getElementById('canvas');
+    const av = new AV(audioEl, canvasEl);
+
     audioEl.onplay = function () {
-      spectrumAnimationFrame && window.cancelAnimationFrame(spectrumAnimationFrame);
-      spectrum();
+      if (audioEl.src == '') {
+        play(audios[current].url, current);
+      }
     }
     audioEl.onseeked = function() {
-      spectrumAnimationFrame && window.cancelAnimationFrame(spectrumAnimationFrame);
-      spectrum();
     }
     audioEl.onended = function () {
       if (current >= audios.length - 1) {
@@ -96,8 +110,7 @@
       }
       play(audios[current].url, current);
     }
-    const canvasEl = document.getElementById('canvas');
-
+    
     const createAudioPlayer = function (audio) {
       if (audio.buffer) {
         audio = arrayBufferToBlob(audio.buffer, audio.type);
@@ -139,61 +152,11 @@
       });
     }
 
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    var spectrumAnimationFrame, audioSource, analyser;
-    const spectrum = function () {
-      var audio = document.getElementById('audio');
-      var audioContext = new AudioContext();
-      if (!audioSource) {
-        analyser = audioContext.createAnalyser()
-        audioSource = audioContext.createMediaElementSource(audio);
-        audioSource.connect(analyser);
-        analyser.connect(audioContext.destination);
-        analyser.fftSize = 512;
-      }
-
-      var PI = Math.PI;
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext('2d');
-      var cwidth = canvas.width;
-      var cheight = canvas.height;
-      var cr = 90;//环形半径
-      var minHeight = 2;
-      var meterWidth = 3;
-      var meterNum = (2 * PI * cr) / (meterWidth + 2);//设置方块的数量，考虑到闭环的关系
-      var gradient = ctx.createLinearGradient(0, -cr, 0, -cwidth / 2);
-      gradient.addColorStop(0, '#0f0');
-      gradient.addColorStop(0.5, '#ff0');
-      gradient.addColorStop(1, '#f00');
-      ctx.fillStyle = gradient;
-
-      function render() {
-        var array = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(array);
-        var step = Math.round(array.length / meterNum);
-        ctx.clearRect(0, 0, cwidth, cheight);
-        ctx.save();
-        ctx.translate(cwidth / 2, cheight / 2);
-        for (var i = 0; i < meterNum; i++) {
-          //ctx.save();
-          var value = array[i * step];
-          var meterHeight = value * (cheight / 2 - cr) / 256 || minHeight;
-          ctx.rotate(2 * PI / meterNum);
-          ctx.fillRect(-meterWidth / 2, -cr - meterHeight, meterWidth, meterHeight);
-          //ctx.restore();
-        }
-        ctx.restore();
-        spectrumAnimationFrame = requestAnimationFrame(render);
-      }
-      render();
-    }
-
-
     window.addEventListener("load", e => {
       console.log("supports IndexedDB " + localforage.supports(localforage.INDEXEDDB));
 
       if (audios.length > 0) {
-        play(audios[current].url, current);
+        // play(audios[current].url, current);
 
         var song_list_el = document.getElementById('song-list');
         var html = '';
@@ -203,11 +166,6 @@
         }
         song_list_el.innerHTML = html;
       }
-    });
-
-    window.addEventListener('touchend', function () {
-      var audioEl = document.getElementById('audio');
-      audioEl.play();
     });
   </script>
 </body>
