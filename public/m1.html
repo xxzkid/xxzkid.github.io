@@ -140,12 +140,12 @@
     }
 
     var AudioContext = window.AudioContext || window.webkitAudioContext;
-    var spectrumAnimationFrame, audioSource;
+    var spectrumAnimationFrame, audioSource, analyser;
     const spectrum = function () {
       var audio = document.getElementById('audio');
       var audioContext = new AudioContext();
       if (!audioSource) {
-        var analyser = audioContext.createAnalyser();
+        analyser = audioContext.createAnalyser()
         audioSource = audioContext.createMediaElementSource(audio);
         audioSource.connect(analyser);
         analyser.connect(audioContext.destination);
