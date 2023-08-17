@@ -139,6 +139,7 @@
       });
     }
 
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
     var spectrumAnimationFrame, audioSource;
     const spectrum = function () {
       var audio = document.getElementById('audio');
