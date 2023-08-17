@@ -6,7 +6,19 @@
   <title>APlayer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="./localforage.min.js"></script>
+  <script src="./song.js"></script>
   <style>
+    body {
+      background: black;
+      color: white;
+    }
+
+    canvas,
+    audio {
+      display: block;
+      margin: 0 auto;
+    }
+
     .container {
       box-sizing: content-box;
     }
@@ -20,6 +32,7 @@
       padding: 0 15px;
       border-top: 1px solid #e9e9e9;
       transition: all .2s ease;
+      color: white;
     }
 
     .log {
@@ -31,7 +44,8 @@
 </head>
 
 <body>
-  <div id="container"></div>
+  <canvas id='canvas' width="350" height="350"></canvas>
+  <audio id="audio" controls="controls" autoplay="autoplay"></audio>
   <div>当前播放歌曲：<span id="current-song" style="color: green;"></span></div>
   <div id="song-list"></div>
   <div id="log" class="log"></div>
@@ -50,208 +64,10 @@
     window.onerror = function (message, source, lineno, colno, error) {
       console.log("Error: " + message + "\n" + "Source: " + source + "\n" + "Line: " + lineno + "\n" + "Column: " + colno + "\n" + "Stack: " + error.stack);
     }
-
-    window.current = 0;
-    window.audios = [
-        {
-            name: '起风了',
-            artist: '买辣椒也用券',
-            url: './music/起风了-买辣椒也用券.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '最初的梦想',
-            artist: '范玮琪',
-            url: './music/最初的梦想.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '小幸运',
-            artist: '田馥甄',
-            url: './music/小幸运.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '孤勇者',
-            artist: '陈奕迅',
-            url: './music/孤勇者-陈奕迅.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '庐州月',
-            artist: '许嵩',
-            url: './music/庐州月-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '我好像在哪见过你',
-            artist: '薛之谦',
-            url: './music/我好像在哪见过你-薛之谦.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '青春纪念册',
-            artist: '可米小子',
-            url: './music/青春纪念册-可米小子.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '不分手的恋爱',
-            artist: '汪苏泷',
-            url: './music/不分手的恋爱-汪苏泷.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '关不上的窗',
-            artist: '周传雄',
-            url: './music/关不上的窗-周传雄.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '可能',
-            artist: '程响',
-            url: './music/可能-程响.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '世界这么大还是遇见你',
-            artist: '程响',
-            url: './music/世界这么大还是遇见你-程响.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '人间烟火',
-            artist: '程响',
-            url: './music/人间烟火-程响.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '蓝莲花',
-            artist: '许巍',
-            url: './music/蓝莲花-许巍.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '雅俗共赏',
-            artist: '许嵩',
-            url: './music/雅俗共赏-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '有何不可',
-            artist: '许嵩',
-            url: './music/有何不可-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '清明雨上',
-            artist: '许嵩',
-            url: './music/清明雨上-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '天龙八部之宿敌',
-            artist: '许嵩',
-            url: './music/天龙八部之宿敌-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '断桥残雪',
-            artist: '许嵩',
-            url: './music/断桥残雪-许嵩.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '燕归巢',
-            artist: '张靓颖,张杰',
-            url: './music/燕归巢-张靓颖-张杰.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '天下',
-            artist: '张杰',
-            url: './music/天下-张杰.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '三生三世',
-            artist: '张杰',
-            url: './music/三生三世-张杰.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '夜空中最亮的星',
-            artist: '张杰',
-            url: './music/夜空中最亮的星-张杰.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '逆战',
-            artist: '张杰',
-            url: './music/逆战-张杰.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        },
-        {
-            name: '我的梦',
-            artist: '张靓颖',
-            url: './music/我的梦-张靓颖.mp3',
-            cover: '',
-            lrc: '',
-            theme: '#ebd0c2'
-        }
-    ];
-
-    window.arrayBufferToBlob = function (buffer, type) {
+    const arrayBufferToBlob = function (buffer, type) {
       return new Blob([buffer], { type: type });
     }
-
-    window.blobToArrayBuffer = function (blob) {
+    const blobToArrayBuffer = function (blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.addEventListener("loadend", e => {
@@ -262,41 +78,40 @@
       });
     }
 
-    window.createAudioPlayer = function (audio) {
+    var current = 0;
+    var audioEl = document.getElementById('audio');
+    audioEl.onplay = function () {
+      spectrum();
+    }
+    audioEl.onended = function () {
+      if (current >= audios.length - 1) {
+        current = 0;
+      } else {
+        current++;
+      }
+      play(audios[current].url, current);
+    }
+    const canvasEl = document.getElementById('canvas');
+
+    const createAudioPlayer = function (audio) {
       if (audio.buffer) {
         audio = arrayBufferToBlob(audio.buffer, audio.type);
       }
-      var container = document.getElementById("container");
-      
-      var audioEl = document.getElementById('audio');
-      if (audioEl == null) {
-        audioEl = document.createElement("audio");
-        container.append(audioEl);
-      }
-
       audioEl.id = 'audio';
       audioEl.controls = "controls";
       audioEl.autoplay = "autoplay";
-      try {
-        audioEl.pause();
-      } catch (e) {}
-      audioEl.src = URL.createObjectURL(audio);
       audioEl.muted = false;
       try {
+        audioEl.pause();
+      } catch (e) { }
+      audioEl.src = URL.createObjectURL(audio);
+      try {
         audioEl.play();
-      } catch (e) {}
-
-      audioEl.onended = function () {
-        if (current >= audios.length - 1) {
-          current = 0;
-        } else {
-          current++;
-        }
-        play(audios[current].url, current);
-      }
+      } catch (e) { }
+      document.title = audios[current].name + ' - ' + audios[current].artist;
     }
 
-    window.play = function (url, index) {
+    const play = function (url, index) {
       localforage.getItem(url).then(audio => {
         current = index;
         document.getElementById('current-song').innerText = audios[current].name + ' - ' + audios[current].artist;
@@ -319,6 +134,57 @@
       });
     }
 
+    var spectrumAnimationFrame;
+    var audioSource;
+    const spectrum = function () {
+      window.cancelAnimationFrame(spectrumAnimationFrame);
+      var audio = document.getElementById('audio');
+      var ctx = new AudioContext();
+      var analyser = ctx.createAnalyser();
+      if (!audioSource) {
+        audioSource = ctx.createMediaElementSource(audio);
+        audioSource.connect(analyser);
+        analyser.connect(ctx.destination);
+        analyser.fftSize = 512;
+      }
+
+      var PI = Math.PI;
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      var cwidth = canvas.width;
+      var cheight = canvas.height;
+      var cr = 90;//环形半径
+      var minHeight = 2;
+      var meterWidth = 3;
+      var meterNum = (2 * PI * cr) / (meterWidth + 2);//设置方块的数量，考虑到闭环的关系
+      var gradient = ctx.createLinearGradient(0, -cr, 0, -cwidth / 2);
+      gradient.addColorStop(0, '#0f0');
+      gradient.addColorStop(0.5, '#ff0');
+      gradient.addColorStop(1, '#f00');
+      ctx.fillStyle = gradient;
+
+      function render() {
+        var array = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+        var step = Math.round(array.length / meterNum);
+        ctx.clearRect(0, 0, cwidth, cheight);
+        ctx.save();
+        ctx.translate(cwidth / 2, cheight / 2);
+        for (var i = 0; i < meterNum; i++) {
+          //ctx.save();
+          var value = array[i * step];
+          var meterHeight = value * (cheight / 2 - cr) / 256 || minHeight;
+          ctx.rotate(2 * PI / meterNum);
+          ctx.fillRect(-meterWidth / 2, -cr - meterHeight, meterWidth, meterHeight);
+          //ctx.restore();
+        }
+        ctx.restore();
+        spectrumAnimationFrame = requestAnimationFrame(render);
+      }
+      render();
+    }
+
+
     window.addEventListener("load", e => {
       console.log("supports IndexedDB " + localforage.supports(localforage.INDEXEDDB));
 
@@ -333,6 +199,11 @@
         }
         song_list_el.innerHTML = html;
       }
+    });
+
+    window.addEventListener('touchend', function () {
+      var audioEl = document.getElementById('audio');
+      audioEl.play();
     });
   </script>
 </body>
