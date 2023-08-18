@@ -26,7 +26,6 @@
     }
 
     .song-item {
-      margin-top: 10px;
       cursor: pointer;
       line-height: 32px;
       height: 32px;
@@ -35,35 +34,38 @@
       border-top: 1px solid #e9e9e9;
       transition: all .2s ease;
       color: white;
+      margin-bottom: 10px;
     }
 
     .log {
       color: gray;
       border: 1px solid #e9e9e9;
-      margin-top: 30px;
     }
 
-    .mt10 {
-      margin-top: 10px;
+    .mb10 {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 
 <body>
-  <canvas id='canvas' width="350" height="350"></canvas>
-  <div class="mt10">
+  <canvas class="mb10" id='canvas' width="350" height="350"></canvas>
+  <div class="mb10">
     <audio id="audio" controls="controls" autoplay="autoplay"></audio>
   </div>
-  <div class="mt10">
+  <div class="mb10">
     <div id="modes"></div>
   </div>
-  <div class="mt10">
+  <div class="mb10">
     <span>当前播放模式：</span>
     <span style="color: greenyellow;" id="current-mode"></span>
   </div>
-  <div class="mt10">当前播放歌曲：<span id="current-song" style="color: green;"></span></div>
-  <div id="song-list"></div>
-  <div id="log" class="log"></div>
+  <div class="mb10">当前播放歌曲：<span id="current-song" style="color: green;"></span></div>
+  <div id="song-list" class="mb10"></div>
+  <div id="log" class="log mb10"></div>
+  <div class="mb10">
+    <button onclick="clearCache()">清除缓存</button>
+  </div>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
     var _modes = { '0': '顺序播放', '1': '随机播放', '2': '单曲播放' };
@@ -147,13 +149,19 @@
       console.log("play list : " + _play_list);
     }
 
-    function shuffle(array) {
+    const shuffle = function (array) {
       for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         var temp = array[i];
         array[i] = array[j];
         array[j] = temp;
       }
+    }
+
+    const clearCache = function () {
+      localforage.clear().then(function () {
+        console.log('clear cache');
+      });
     }
 
     window.addEventListener("load", e => {
