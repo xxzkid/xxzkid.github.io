@@ -51,44 +51,47 @@
 
 <body>
   <canvas id='canvas' width="350" height="350"></canvas>
-  <audio id="audio" controls="controls" autoplay="autoplay"></audio>
   <div class="mt10">
-    <button onclick="changeMode(0)">顺序播放</button>
-    <button onclick="changeMode(1)">随机播放</button>
-    <button onclick="changeMode(2)">单曲播放</button>
+    <audio id="audio" controls="controls" autoplay="autoplay"></audio>
+  </div>
+  <div class="mt10">
+    <div id="modes"></div>
+  </div>
+  <div class="mt10">
+    <span>当前播放模式：</span>
+    <span style="color: greenyellow;" id="current-mode"></span>
   </div>
   <div class="mt10">当前播放歌曲：<span id="current-song" style="color: green;"></span></div>
   <div id="song-list"></div>
   <div id="log" class="log"></div>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
+    var _modes = { '0': '顺序播放', '1': '随机播放', '2': '单曲播放' };
     const audioEl = document.getElementById('audio');
     const canvasEl = document.getElementById('canvas');
     const av = new AV(audioEl, canvasEl);
 
     audioEl.onplay = function () {
       if (audioEl.src == '') {
-        if (_play_list.length <= 0) {
-          console.log('play list is empty');
-          return;
-        }
-        if (_current >= _play_list.length - 1) {
-          _current = 0;
-        }
+        _current = 0;
         play(_current);
       }
     }
     audioEl.onseeked = function () {
     }
     audioEl.onended = function () {
+      _current++;
+      do_play(_current);
+    }
+
+    const do_play = function (index) {
       if (_play_list.length <= 0) {
         console.log('play list is empty');
         return;
       }
-      if (_current >= _play_list.length - 1) {
+      _current = index;
+      if (_current >= _play_list.length) {
         _current = 0;
-      } else {
-        _current++;
       }
       play(_play_list[_current]);
     }
@@ -103,7 +106,7 @@
         audioEl.play();
         document.title = audios[index].name + ' - ' + audios[index].artist;
         document.getElementById('current-song').innerText = document.title;
-      })
+      });
     }
 
     const fetchAudio = function (url, callback) {
@@ -131,16 +134,16 @@
 
     const changeMode = function (mode) {
       console.log('mode : ' + mode);
-      if (mode == 0) {
-        _play_list = [];
-        for (var i in audios) {
-          _play_list.push(i << 0);
-        }
-      } else if (mode == 1) {
+      _play_list = [];
+      for (var i in audios) {
+        _play_list.push(i << 0);
+      }
+      if (mode == 1) {
         shuffle(_play_list);
       } else if (mode == 2) {
         _play_list = [_current];
       }
+      document.getElementById('current-mode').innerText = _modes[mode];
       console.log("play list : " + _play_list);
     }
 
@@ -158,18 +161,24 @@
 
       if (audios.length > 0) {
         var song_list_el = document.getElementById('song-list');
-        var html = '';
+        var song_list_html = '';
         for (var i in audios) {
           _play_list.push(i << 0);
           var audio = audios[i];
-          html += '<div class="song-item" onclick="play({idx})">{idx} {name} - {artist}</div>'
+          song_list_html += '<div class="song-item" onclick="do_play({idx})">{idx} {name} - {artist}</div>'
             .replace(/{idx}/g, (i << 0))
             .replace(/{name}/g, audio.name)
             .replace(/{artist}/g, audio.artist);
         }
-        song_list_el.innerHTML = html;
+        song_list_el.innerHTML = song_list_html;
         console.log("play list : " + _play_list);
       }
+
+      var mode_html = '';
+      for (var key in _modes) {
+        mode_html += '<button onclick="changeMode({idx})">{name}</button> '.replace(/{idx}/g, key).replace(/{name}/g, _modes[key]);
+      }
+      document.getElementById('modes').innerHTML = mode_html;
     });
 
     const arrayBufferToBlob = function (buffer, type) {
