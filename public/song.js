@@ -190,5 +190,13 @@ window.audios = [
       cover: '',
       lrc: '',
       theme: '#ebd0c2'
+  },
+  {
+      name: '年少的你啊',
+      artist: '浩然',
+      url: './music/年少的你啊-浩然.mp3',
+      cover: '',
+      lrc: '',
+      theme: '#ebd0c2'
   }
 ];
