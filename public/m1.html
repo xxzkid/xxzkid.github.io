@@ -8,6 +8,20 @@
   <script src="./localforage.min.js"></script>
   <script src="./av.js"></script>
   <script src="./log.js"></script>
+  <script>
+    function load_script(path) {
+      var script_el = document.createElement('script');
+      var new_path = '';
+      if (path.indexOf('?') > 0) {
+        new_path = path + '&_=' + (+new Date());
+      } else {
+        new_path = path + '?_=' + (+new Date());
+      }
+      script_el.src = new_path;
+      document.getElementsByTagName('head')[0].appendChild(script_el);
+    }
+    load_script('./song.js');
+  </script>
   <style>
     body {
       background: black;
@@ -65,11 +79,6 @@
   <div class="mb10">
     <button onclick="clearCache()">清除缓存</button>
   </div>
-  <script>
-    var script_el = document.createElement('script');
-    script_el.src = './song.js?_=' + (+new Date());
-    document.getElementsByTagName('head')[0].appendChild(script_el);
-  </script>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
     var _modes = { '0': '顺序播放', '1': '随机播放', '2': '单曲播放' };
