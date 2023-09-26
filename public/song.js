@@ -198,5 +198,21 @@ window.audios = [
       cover: '',
       lrc: '',
       theme: '#ebd0c2'
+  },
+  {
+      name: '奢香夫人',
+      artist: '凤凰传奇',
+      url: './music/奢香夫人-凤凰传奇.mp3',
+      cover: '',
+      lrc: '',
+      theme: '#ebd0c2'
+  },
+  {
+      name: '错位时空',
+      artist: '艾辰',
+      url: './music/错位时空-艾辰.mp3',
+      cover: '',
+      lrc: '',
+      theme: '#ebd0c2'
   }
 ];
