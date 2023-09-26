@@ -66,7 +66,9 @@
     <button onclick="clearCache()">清除缓存</button>
   </div>
   <script>
-    document.getElementsByTagName('head')[0].append('<script src="./song.js?_=' + (+new Date()) + '"></script>');
+    var script_el = document.createElement('script');
+    script_el.src = './song.js?_=' + (+new Date());
+    document.getElementsByTagName('head')[0].appendChild(script_el);
   </script>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
