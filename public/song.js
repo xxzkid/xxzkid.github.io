@@ -1,218 +1,44 @@
 window.audios = [
-  {
-      name: '起风了',
-      artist: '买辣椒也用券',
-      url: './music/起风了-买辣椒也用券.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '最初的梦想',
-      artist: '范玮琪',
-      url: './music/最初的梦想.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '小幸运',
-      artist: '田馥甄',
-      url: './music/小幸运.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '孤勇者',
-      artist: '陈奕迅',
-      url: './music/孤勇者-陈奕迅.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '庐州月',
-      artist: '许嵩',
-      url: './music/庐州月-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '我好像在哪见过你',
-      artist: '薛之谦',
-      url: './music/我好像在哪见过你-薛之谦.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '青春纪念册',
-      artist: '可米小子',
-      url: './music/青春纪念册-可米小子.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '不分手的恋爱',
-      artist: '汪苏泷',
-      url: './music/不分手的恋爱-汪苏泷.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '关不上的窗',
-      artist: '周传雄',
-      url: './music/关不上的窗-周传雄.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '可能',
-      artist: '程响',
-      url: './music/可能-程响.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '世界这么大还是遇见你',
-      artist: '程响',
-      url: './music/世界这么大还是遇见你-程响.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '人间烟火',
-      artist: '程响',
-      url: './music/人间烟火-程响.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '蓝莲花',
-      artist: '许巍',
-      url: './music/蓝莲花-许巍.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '雅俗共赏',
-      artist: '许嵩',
-      url: './music/雅俗共赏-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '有何不可',
-      artist: '许嵩',
-      url: './music/有何不可-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '清明雨上',
-      artist: '许嵩',
-      url: './music/清明雨上-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '天龙八部之宿敌',
-      artist: '许嵩',
-      url: './music/天龙八部之宿敌-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '断桥残雪',
-      artist: '许嵩',
-      url: './music/断桥残雪-许嵩.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '燕归巢',
-      artist: '张靓颖,张杰',
-      url: './music/燕归巢-张靓颖-张杰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '天下',
-      artist: '张杰',
-      url: './music/天下-张杰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '三生三世',
-      artist: '张杰',
-      url: './music/三生三世-张杰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '夜空中最亮的星',
-      artist: '张杰',
-      url: './music/夜空中最亮的星-张杰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '逆战',
-      artist: '张杰',
-      url: './music/逆战-张杰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '我的梦',
-      artist: '张靓颖',
-      url: './music/我的梦-张靓颖.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '年少的你啊',
-      artist: '浩然',
-      url: './music/年少的你啊-浩然.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '奢香夫人',
-      artist: '凤凰传奇',
-      url: './music/奢香夫人-凤凰传奇.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  },
-  {
-      name: '错位时空',
-      artist: '艾辰',
-      url: './music/错位时空-艾辰.mp3',
-      cover: '',
-      lrc: '',
-      theme: '#ebd0c2'
-  }
+  { name: '起风了', artist: '买辣椒也用券', url: './music/起风了-买辣椒也用券.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '最初的梦想', artist: '范玮琪', url: './music/最初的梦想.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '小幸运', artist: '田馥甄', url: './music/小幸运.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '孤勇者', artist: '陈奕迅', url: './music/孤勇者-陈奕迅.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '庐州月', artist: '许嵩', url: './music/庐州月-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '我好像在哪见过你', artist: '薛之谦', url: './music/我好像在哪见过你-薛之谦.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '青春纪念册', artist: '可米小子', url: './music/青春纪念册-可米小子.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '不分手的恋爱', artist: '汪苏泷', url: './music/不分手的恋爱-汪苏泷.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '关不上的窗', artist: '周传雄', url: './music/关不上的窗-周传雄.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '可能', artist: '程响', url: './music/可能-程响.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '世界这么大还是遇见你', artist: '程响', url: './music/世界这么大还是遇见你-程响.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '人间烟火', artist: '程响', url: './music/人间烟火-程响.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '蓝莲花', artist: '许巍', url: './music/蓝莲花-许巍.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '雅俗共赏', artist: '许嵩', url: './music/雅俗共赏-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '有何不可', artist: '许嵩', url: './music/有何不可-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '清明雨上', artist: '许嵩', url: './music/清明雨上-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '天龙八部之宿敌', artist: '许嵩', url: './music/天龙八部之宿敌-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '断桥残雪', artist: '许嵩', url: './music/断桥残雪-许嵩.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '燕归巢', artist: '张靓颖,张杰', url: './music/燕归巢-张靓颖-张杰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '天下', artist: '张杰', url: './music/天下-张杰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '三生三世', artist: '张杰', url: './music/三生三世-张杰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '夜空中最亮的星', artist: '张杰', url: './music/夜空中最亮的星-张杰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '逆战', artist: '张杰', url: './music/逆战-张杰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '我的梦', artist: '张靓颖', url: './music/我的梦-张靓颖.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '年少的你啊', artist: '浩然', url: './music/年少的你啊-浩然.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '奢香夫人', artist: '凤凰传奇', url: './music/奢香夫人-凤凰传奇.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '错位时空', artist: '艾辰', url: './music/错位时空-艾辰.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '秋天不回来', artist: '王强', url: './music/王强-秋天不回来.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '求佛', artist: '誓言', url: './music/誓言-求佛.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '别说我的眼泪你无所谓', artist: '东来东往', url: './music/东来东往-别说我的眼泪你无所谓.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '你到底爱谁', artist: '刘嘉亮', url: './music/刘嘉亮-你到底爱谁.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '感动天感动地', artist: '宇桐非', url: './music/宇桐非-感动天感动地.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '生日礼物', artist: '江涛', url: './music/江涛-生日礼物.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '今生最爱', artist: '王程明', url: './music/王程明-今生最爱.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '放生', artist: '范逸臣', url: './music/范逸臣-放生.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '外滩十八号', artist: '袁成杰,戚薇', url: './music/袁成杰,戚薇-外滩十八号.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '那一夜', artist: '谢军', url: './music/谢军-那一夜.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '那女孩对我说', artist: 'Uu', url: './music/Uu-那女孩对我说.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '让泪化作相思雨', artist: '南合文斗', url: './music/南合文斗-让泪化作相思雨.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '奔跑', artist: '羽泉', url: './music/羽泉-奔跑.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '下一个天亮', artist: '郭静', url: './music/郭静-下一个天亮.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '做你的爱人', artist: '饶天亮', url: './music/饶天亮-做你的爱人.mp3', cover: '', lrc: '', theme: '#ebd0c2' }
 ];
