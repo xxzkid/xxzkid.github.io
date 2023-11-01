@@ -40,5 +40,6 @@ window.audios = [
   { name: '让泪化作相思雨', artist: '南合文斗', url: './music/南合文斗-让泪化作相思雨.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
   { name: '奔跑', artist: '羽泉', url: './music/羽泉-奔跑.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
   { name: '下一个天亮', artist: '郭静', url: './music/郭静-下一个天亮.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
-  { name: '做你的爱人', artist: '饶天亮', url: './music/饶天亮-做你的爱人.mp3', cover: '', lrc: '', theme: '#ebd0c2' }
+  { name: '做你的爱人', artist: '饶天亮', url: './music/饶天亮-做你的爱人.mp3', cover: '', lrc: '', theme: '#ebd0c2' },
+  { name: '万疆', artist: '李玉刚', url: './music/李玉刚-万疆.mp3', cover: '', lrc: '', theme: '#ebd0c2' }
 ];
