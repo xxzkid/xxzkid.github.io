@@ -29,7 +29,7 @@
 		  });
 		  
 		});
-		reader.readAsDataURL(f);
+		if (f) reader.readAsDataURL(f);
 	}
 	
 	function watermakImageWithText(originalImage, watermarkText) {
