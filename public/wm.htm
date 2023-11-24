@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+	<div>水印文字：<input id="watermarkText"></div>
+	<div><input type="file" id="file"></div>
+	<div><img id="originalImage" /></div>
+	<div><img id="watermakedImageWithText" /></div>
+	<script>
+	var file = document.getElementById('file')
+	file.addEventListener('change', function(e) {
+		var f = e.target.files[0]
+		console.log(f)
+		addWatermark(f)
+	})
+	
+	function addWatermark(f) {
+		var originalImage = document.getElementById('originalImage')
+		var watermakedImageWithText = document.getElementById('watermakedImageWithText')
+		
+		const reader = new FileReader();
+		reader.addEventListener("load", () => {
+		  originalImage.src = reader.result;
+		  
+		  originalImage.addEventListener('load', function() {
+			var watermarkText = document.getElementById('watermarkText').value;
+			watermakedImageWithText.src = watermakImageWithText(originalImage, watermarkText);
+		  });
+		  
+		});
+		reader.readAsDataURL(f);
+	}
+	
+	function watermakImageWithText(originalImage, watermarkText) {
+		var canvas = document.createElement("canvas");
+		var context = canvas.getContext("2d");
+		var canvasWidth = originalImage.width;
+		var canvasHeight = originalImage.height;
+		
+		canvas.width = canvasWidth;
+		canvas.height = canvasHeight;
+		
+		context.drawImage(originalImage, 0, 0, canvasWidth, canvasHeight);
+		
+		context.font = 'bold ' + (originalImage.height / 15) + 'px arial';
+		context.fillStyle = 'rgba(255, 0, 0, .2)';
+		context.textBaseline = 'bottom';
+		context.transform(1, 0.5, -0.5, 1, 0, -canvas.height / 2);
+		
+		var txtHeight = originalImage.height / 6;
+		var txt = Array(Math.ceil(canvas.width / context.measureText(watermarkText).width) * 2).join(watermarkText);
+		for (var i = 0; i < Math.ceil(canvas.height / txtHeight) * 2; i++) {
+			context.fillText(txt, 0, i * txtHeight);
+		}
+		return canvas.toDataURL();
+	}
+
+	</script>
+  </body>
+</html>
