@@ -75,16 +75,17 @@
   </div>
   <div class="mb10">当前播放歌曲：<span id="current-song" style="color: green;"></span></div>
   <div id="song-list" class="mb10"></div>
-  <div id="log" class="log mb10"></div>
   <div class="mb10">
     <button onclick="clearCache()">清除缓存</button>
   </div>
+  <div id="log" class="log mb10"></div>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
     var _modes = { '0': '顺序播放', '1': '随机播放', '2': '单曲播放' };
     const audioEl = document.getElementById('audio');
     const canvasEl = document.getElementById('canvas');
     const av = new AV(audioEl, canvasEl);
+    const cdn_url = 'https://cdn.jsdelivr.net/gh/xxzkid/xxzkid.github.io/public/';
 
     audioEl.onplay = function () {
       if (audioEl.src == '') {
@@ -112,7 +113,7 @@
     }
 
     const play = function (index) {
-      fetchAudio(audios[index].url, function (audio) {
+      fetchAudio(cdn_url + audios[index].url, function (audio) {
         if (audio.buffer) {
           audio = arrayBufferToBlob(audio.buffer, audio.type);
         }
