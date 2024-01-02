@@ -58,6 +58,11 @@
     .mb10 {
       margin-bottom: 10px;
     }
+
+    .breakline {
+      word-wrap:break-word;
+      word-break:break-all;
+    }
   </style>
 </head>
 
@@ -78,7 +83,7 @@
   <div class="mb10">
     <button onclick="clearCache()">清除缓存</button>
   </div>
-  <div id="log" class="log mb10"></div>
+  <div id="log" class="log mb10 breakline"></div>
   <script>
     var _current = 0, _play_list = [], _mode = 0;
     var _modes = { '0': '顺序播放', '1': '随机播放', '2': '单曲播放' };
