@@ -30,6 +30,7 @@
     </p>
     <p>
       <button onclick="getTimestamp()">GET TIMESTAMP</button>
+      <button onclick="convertTimestamp()">CONVERT TIMESTAMP</button>
     </p>
   </div>
   <div id="timestamp-output" style="margin: 20px"></div>
@@ -113,7 +114,11 @@
     var timestamp_output = document.getElementById("timestamp-output");
     function getTimestamp() {
       var ts = new Date().getTime();
-      timestamp_output.value = ts;
+      timestamp_input.value = ts;
+    }
+    function convertTimestamp() {
+      var input_value = timestamp_input.value;
+      timestamp_output = new Date(parseInt(timestamp_input.value)).toString();
     }
   </script>
   
