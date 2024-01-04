@@ -118,7 +118,7 @@
     }
     function convertTimestamp() {
       var input_value = timestamp_input.value;
-      timestamp_output = new Date(parseInt(timestamp_input.value)).toString();
+      timestamp_output.value = new Date(parseInt(timestamp_input.value)).toString();
     }
   </script>
   
