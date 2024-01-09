@@ -34,6 +34,8 @@
   </div>
   <div id="log" class="log mb10 breakline"></div>
   <script>
+    const cdn_url = 'https://cdn.jsdelivr.net/gh/xxzkid/xxzkid.github.io/public/';
+    
     var clearCache = function () {
       localforage.clear().then(function () {
         console.log('clear cache');
@@ -86,7 +88,8 @@
       audio: [],
       customAudioType: {
         'custom': function (audioElement, audio, player) {
-          fetchAudio(audio.url, function (_audio) {
+          var target_url = audio.url.indexOf('http:') > -1 || audio.url.indexOf('https:') > -1 ? audio.url : cdn_url + audio.url;
+          fetchAudio(target_url, function (_audio) {
             if (_audio.buffer) {
               _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
             }
