@@ -128,9 +128,10 @@
       console.log('keyword:', keyword);
       request({
         method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
         params: {
-          keywords: keyword
+          keywords: keyword,
+          limit: 30
         }
       }).then((res) => {
         var result = JSON.parse(res);
