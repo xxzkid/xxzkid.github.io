@@ -25,21 +25,42 @@
       word-break:break-all;
     }
   </style>
+  <script>
+    var request = function(body) {
+      return fetch('https://http1.idingdang.org/x', {
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify(body)
+      }).then((res) => res.text());
+    }
+  </script>
 </head>
 
 <body>
+  <div id="search">
+    <input type="text" id="keyword"/>
+    <button onclick="search()">search</button>
+    <button onclick="clearSearch()">clear</button>
+  </div>
+  <div id="search-result" class="log mb10 breakline">
+  </div>
   <div id="aplayer"></div>
   <div class="mb10">
     <button onclick="clearCache()">清除缓存</button>
+    <button onclick="clearLog()">清除日志</button>
   </div>
   <div id="log" class="log mb10 breakline"></div>
   <script>
     const cdn_url = 'https://cdn.jsdelivr.net/gh/xxzkid/xxzkid.github.io/public/';
     
-    var clearCache = function () {
+    var clearCache = function() {
       localforage.clear().then(function () {
         console.log('clear cache');
       });
+    }
+
+    var clearLog = function() {
+      document.getElementById('log').innerText = '';
     }
     
     var fetchAudio = function (url, callback) {
@@ -83,7 +104,7 @@
     window.ap = new APlayer({
       container: document.getElementById('aplayer'),
       listFolded: false,
-      listMaxHeight: 500,
+      fixed: true,
       lrcType: 3,
       audio: [],
       customAudioType: {
@@ -99,6 +120,89 @@
         }
       }
     });
+
+    var search = function() {
+      var keyword = document.getElementById('keyword').value;
+      if (keyword == '') {
+        return;
+      }
+      console.log('keyword:', keyword);
+      request({
+        method: 'GET',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+        params: {
+          keywords: keyword
+        }
+      }).then((res) => {
+        var result = JSON.parse(res);
+        if (result.status == 200) {
+          var data = result.data;
+          if (data.code == 200) {
+            if (data.result && data.result.songs) {
+              var songs = data.result.songs;
+              var html = '<ul>';
+              for (var i = 0; i < songs.length; i++) {
+                var song = songs[i];
+                html += '<li>{name} {artists} <button onclick="addToPlaylist(this)" data-id="{id}" data-name="{name}" data-artist="{artists}">add</button></li>'
+                .replace(/{id}/g, song.id).replace(/{name}/g, song.name).replace(/{artists}/g, song.artists[0].name);
+              }
+              html += '</ul>';
+              document.getElementById('search-result').innerHTML = html;
+            } else {
+              document.getElementById('search-result').innerText = '未找到结果';
+            }
+          } else {
+            console.log('请求错误2');
+          }
+        } else {
+          console.log('请求错误1');
+          window.ap.notice('请求错误');
+        }
+      })
+    }
+
+    var clearSearch = function() {
+      document.getElementById('keyword').value = '';
+      document.getElementById('search-result').innerText = '';
+    }
+
+    var addToPlaylist = function(obj) {
+      var id = obj.getAttribute('data-id');
+      var name = obj.getAttribute('data-name');
+      var artists = obj.getAttribute('data-artist');
+      request({
+        "method":"GET",
+        "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
+        "params": {
+            "id": id
+        }
+      }).then((res) => {
+        var result = JSON.parse(res);
+        if (result.status == 200) {
+          var data = result.data;
+          if (data.code == 200) {
+            if (data.data) {
+              window.ap.list.add([{
+                name: name, 
+                artist: artists, 
+                url: data.data[0].url, 
+                cover: '', 
+                lrc: '', 
+                theme: '#ebd0c2', 
+                type: 'custom'
+              }]);
+            } else {
+              window.ap.notice('获取歌曲播放地址失败');
+            }
+          } else {
+            console.log('请求错误2');
+          }
+        } else {
+          console.log('请求错误1');
+          window.ap.notice('请求错误');
+        }
+      })
+    }
   </script>
   <script>
     function load_script(path) {
