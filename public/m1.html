@@ -128,7 +128,7 @@
       console.log('keyword:', keyword);
       request({
         method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
         params: {
           keywords: keyword,
           limit: 30
@@ -203,8 +203,7 @@
         }
       })
     }
-  </script>
-  <script>
+    
     function load_script(path) {
       var script_el = document.createElement('script');
       var new_path = '';
