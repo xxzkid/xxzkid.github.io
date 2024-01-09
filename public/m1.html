@@ -94,6 +94,7 @@
               _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
             }
             audioElement.src = URL.createObjectURL(_audio);
+            audioElement.play();
           })
         }
       }
