@@ -20,6 +20,10 @@
       margin-bottom: 10px;
     }
 
+    .ml10 {
+      margin-left: 10px;
+    }
+
     .breakline {
       word-wrap:break-word;
       word-break:break-all;
@@ -39,7 +43,7 @@
 <body>
   <div id="search">
     <input type="text" id="keyword"/>
-    <button onclick="search()">search</button>
+    <button onclick="search(0)">search</button>
     <button onclick="clearSearch()">clear</button>
   </div>
   <div id="search-result" class="log mb10 breakline">
@@ -104,6 +108,7 @@
     window.ap = new APlayer({
       container: document.getElementById('aplayer'),
       listFolded: false,
+      listMaxHeight: 90,
       lrcType: 3,
       audio: [],
       customAudioType: {
@@ -120,18 +125,18 @@
       }
     });
 
-    var search = function() {
+    var search = function(offset) {
       var keyword = document.getElementById('keyword').value;
       if (keyword == '') {
         return;
       }
-      console.log('keyword:', keyword);
       request({
         method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
         params: {
           keywords: keyword,
-          limit: 30
+          offset: offset,
+          limit: 10
         }
       }).then((res) => {
         var result = JSON.parse(res);
@@ -147,6 +152,12 @@
                 .replace(/{id}/g, song.id).replace(/{name}/g, song.name).replace(/{artists}/g, song.artists[0].name);
               }
               html += '</ul>';
+              if (data.result.hasMore) {
+                if (offset - songs.length >= 0) {
+                  html += '<button class="ml10" onclick="search(' + (offset - songs.length) + ')">prev</button>'
+                }
+                html += '<button class="ml10" onclick="search(' + (offset + songs.length) + ')">next</button>'
+              }
               document.getElementById('search-result').innerHTML = html;
             } else {
               document.getElementById('search-result').innerText = '未找到结果';
@@ -181,16 +192,19 @@
         if (result.status == 200) {
           var data = result.data;
           if (data.code == 200) {
-            if (data.data) {
+            if (data.data && data.data.length > 0 && data.data[0].url != null) {
               window.ap.list.add([{
                 name: name, 
                 artist: artists, 
                 url: data.data[0].url, 
-                cover: '', 
+                cover: './music/bg1.jpg', 
                 lrc: '', 
-                theme: '#ebd0c2', 
+                theme: '#ebd0c2',
                 type: 'custom'
               }]);
+              console.log(window.ap.list.length - 1);
+              window.ap.list.switch(window.ap.list.length - 1);
+              window.ap.play();
             } else {
               window.ap.notice('获取歌曲播放地址失败');
             }
