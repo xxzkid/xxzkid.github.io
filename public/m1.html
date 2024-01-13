@@ -54,13 +54,31 @@
   <div id="search-result" class="log mb10 breakline">
   </div>
   <div id="aplayer"></div>
+  <div>
+    CDN: 
+    <select id="cdnlist" onchange="cdnlistselect(this)">
+      <option>testingcf.jsdelivr.net</option>
+      <option>gcore.jsdelivr.net</option>
+      <option>cdn.jsdelivr.net</option>
+    </select>
+    <input type="text" id="cdn" value="testingcf.jsdelivr.net" />
+  </div>
   <div class="mb10">
     <button onclick="clearCache()">清除缓存</button>
     <button onclick="clearLog()">清除日志</button>
   </div>
   <div id="log" class="log mb10 breakline"></div>
   <script>
-    const cdn_url = 'https://cdn.jsdelivr.net/gh/xxzkid/xxzkid.github.io/public/';
+    const cdnlistselect = function(selectObject) {
+      document.getElementById('cdn').value = selectObject.value;
+    }
+    const cdn_url = function() {
+      var cdn = document.getElementById('cdn').value;
+      if (cdn == '') {
+        cdn = 'cdn.jsdelivr.net';
+      }
+      return 'https://' + cdn + '/gh/xxzkid/xxzkid.github.io/public/';
+    }
     
     var clearCache = function() {
       localforage.clear().then(function () {
@@ -118,7 +136,7 @@
       audio: [],
       customAudioType: {
         'custom': function (audioElement, audio, player) {
-          var target_url = audio.url.indexOf('http:') > -1 || audio.url.indexOf('https:') > -1 ? audio.url : cdn_url + audio.url;
+          var target_url = audio.url.indexOf('http:') > -1 || audio.url.indexOf('https:') > -1 ? audio.url : cdn_url() + audio.url;
           fetchAudio(target_url, function (_audio) {
             if (_audio.buffer) {
               _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
@@ -204,7 +222,7 @@
                 name: name, 
                 artist: artists, 
                 url: data.data[0].url.replace(/http\:/g, 'https:'), 
-                cover: cdn_url + './music/bg1.jpg', 
+                cover: cdn_url() + './music/bg1.jpg', 
                 lrc: '', 
                 theme: '#ebd0c2',
                 type: 'custom'
