@@ -42,6 +42,11 @@
 
 <body>
   <div id="search">
+    <select id="br">
+      <option>320</option>
+      <option>192</option>
+      <option>128</option>
+    </select>
     <input type="text" id="keyword"/>
     <button onclick="search(0)">search</button>
     <button onclick="clearSearch()">clear</button>
@@ -181,11 +186,13 @@
       var id = obj.getAttribute('data-id');
       var name = obj.getAttribute('data-name');
       var artists = obj.getAttribute('data-artist');
+      var br = document.getElementById('br').value;
       request({
         "method":"GET",
         "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
         "params": {
-            "id": id
+            "id": id,
+            "br": (parseInt(br) * 1000) + ""
         }
       }).then((res) => {
         var result = JSON.parse(res);
@@ -196,14 +203,14 @@
               window.ap.list.add([{
                 name: name, 
                 artist: artists, 
-                url: data.data[0].url, 
-                cover: './music/bg1.jpg', 
+                url: data.data[0].url.replace(/http\:/g, 'https:'), 
+                cover: cdn_url + './music/bg1.jpg', 
                 lrc: '', 
                 theme: '#ebd0c2',
                 type: 'custom'
               }]);
-              console.log(window.ap.list.length - 1);
-              window.ap.list.switch(window.ap.list.length - 1);
+              console.log(window.ap.list.audios.length - 1);
+              window.ap.list.switch(window.ap.list.audios.length - 1);
               window.ap.play();
             } else {
               window.ap.notice('获取歌曲播放地址失败');
