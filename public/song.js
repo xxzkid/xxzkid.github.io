@@ -42,5 +42,14 @@ window.audios = [
   { name: '下一个天亮', artist: '郭静', url: './music/郭静-下一个天亮.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '做你的爱人', artist: '饶天亮', url: './music/饶天亮-做你的爱人.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '万疆', artist: '李玉刚', url: './music/李玉刚-万疆.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
-  { name: '奇迹再现', artist: '毛华锋', url: './music/奇迹再现-毛华锋.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' }
+  { name: '奇迹再现', artist: '毛华锋', url: './music/奇迹再现-毛华锋.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '小酒窝', artist: '蔡卓妍,林俊杰', url: './music/小酒窝-蔡卓妍,林俊杰.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '因为爱情', artist: '陈奕迅,王菲', url: './music/因为爱情-陈奕迅,王菲.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '好心分手', artist: '卢巧音', url: './music/好心分手-卢巧音.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '铁血丹心', artist: '罗文,甄妮', url: './music/铁血丹心-罗文,甄妮.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '美丽的神话', artist: '成龙,金喜善', url: './music/美丽的神话-成龙,金喜善.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '今天你要嫁给我', artist: '蔡依林,陶喆', url: './music/今天你要嫁给我-蔡依林,陶喆.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '只要有你', artist: '那英,孙楠', url: './music/只要有你-那英,孙楠.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '现代爱情故事', artist: '许秋怡,张智霖', url: './music/现代爱情故事-许秋怡,张智霖.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '风吹麦浪', artist: '李健,孙俪', url: './music/风吹麦浪-李健,孙俪.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' }
 ];
