@@ -171,8 +171,14 @@
               var html = '<ul>';
               for (var i = 0; i < songs.length; i++) {
                 var song = songs[i];
+                var artists = [];
+                if (song.artists) {
+                  for (var idx in song.artists) {
+                    artists.push(song.artists[idx].name);
+                  }
+                }
                 html += '<li>{name} {artists} <button onclick="addToPlaylist(this)" data-id="{id}" data-name="{name}" data-artist="{artists}">add</button></li>'
-                .replace(/{id}/g, song.id).replace(/{name}/g, song.name).replace(/{artists}/g, song.artists[0].name);
+                .replace(/{id}/g, song.id).replace(/{name}/g, song.name).replace(/{artists}/g, artists.join(','));
               }
               html += '</ul>';
               if (data.result.hasMore) {
