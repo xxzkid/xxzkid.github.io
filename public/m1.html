@@ -210,7 +210,7 @@
                   id: id, 
                   name: splits[1].trim(), 
                   artists: [{name: splits[0].trim()}], 
-                  url: 'https://slider.kz/' + url
+                  url: url.indexOf('http') == 0 ? url: 'https://slider.kz/' + url
                 });
               }
               render_search_html(songs, channel, false);
@@ -268,7 +268,7 @@
         window.ap.list.add([{
           name: name, 
           artist: artists, 
-          url: data.data[0].url.replace(/http\:/g, 'https:'), 
+          url: url.replace(/http\:/g, 'https:'), 
           cover: cdn_url() + './music/bg1.jpg', 
           lrc: '', 
           theme: '#ebd0c2',
