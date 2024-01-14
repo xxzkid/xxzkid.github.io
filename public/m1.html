@@ -42,6 +42,10 @@
 
 <body>
   <div id="search">
+    <select id="channel">
+      <option value="1">slider.kz</option>
+      <option value="2">163.com</option>
+    </select>
     <select id="br">
       <option>320</option>
       <option>192</option>
@@ -148,57 +152,103 @@
       }
     });
 
+    var render_search_html = function(songs, channel, offset, hasMore) {
+      var html = '<ul>';
+      for (var i = 0; i < songs.length; i++) {
+        var song = songs[i];
+        var artists = [];
+        if (song.artists) {
+          for (var idx in song.artists) {
+            artists.push(song.artists[idx].name);
+          }
+        }
+        html += '<li>{name} {artists} <button onclick="addToPlaylist(this)" data-id="{id}" data-name="{name}" data-artist="{artists}" data-url="{url}" data-channel="{channel}">add</button></li>'
+          .replace(/{id}/g, song.id)
+          .replace(/{name}/g, song.name)
+          .replace(/{artists}/g, artists.join(','))
+          .replace(/{url}/g, song.url ? song.url : "")
+          .replace(/{channel}/g, channel);
+      }
+      html += '</ul>';
+      if (hasMore) {
+        if (offset - songs.length >= 0) {
+          html += '<button class="ml10" onclick="search(' + (offset - songs.length) + ')">prev</button>'
+        }
+        html += '<button class="ml10" onclick="search(' + (offset + songs.length) + ')">next</button>'
+      }
+      document.getElementById('search-result').innerHTML = html;
+    }
+
     var search = function(offset) {
+      var channel = document.getElementById('channel').value;
       var keyword = document.getElementById('keyword').value;
       if (keyword == '') {
         return;
       }
-      request({
-        method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
-        params: {
-          keywords: keyword,
-          offset: offset,
-          limit: 10
-        }
-      }).then((res) => {
-        var result = JSON.parse(res);
-        if (result.status == 200) {
-          var data = result.data;
-          if (data.code == 200) {
-            if (data.result && data.result.songs) {
-              var songs = data.result.songs;
-              var html = '<ul>';
-              for (var i = 0; i < songs.length; i++) {
-                var song = songs[i];
-                var artists = [];
-                if (song.artists) {
-                  for (var idx in song.artists) {
-                    artists.push(song.artists[idx].name);
-                  }
-                }
-                html += '<li>{name} {artists} <button onclick="addToPlaylist(this)" data-id="{id}" data-name="{name}" data-artist="{artists}">add</button></li>'
-                .replace(/{id}/g, song.id).replace(/{name}/g, song.name).replace(/{artists}/g, artists.join(','));
+      if (channel == 1) {
+        request({
+          method: 'GET',
+          url: 'https://slider.kz/vk_auth.php',
+          params: {
+            q: keyword
+          }
+        }).then((res) => {
+          var result = JSON.parse(res);
+          if (result.status == 200) {
+            var data = result.data;
+            if (data.audios) {
+              var audios = data.audios[""];
+              var songs = [];
+              for (var idx in audios) {
+                var item = audios[idx];
+                var id = item['id'];
+                var tit_art = item['tit_art'];
+                var url = item['url'];
+
+                var splits = tit_art.split('-');
+                songs.push({
+                  id: id, 
+                  name: splits[1].trim(), 
+                  artists: [{name: splits[0].trim()}], 
+                  url: 'https://slider.kz/' + url
+                });
               }
-              html += '</ul>';
-              if (data.result.hasMore) {
-                if (offset - songs.length >= 0) {
-                  html += '<button class="ml10" onclick="search(' + (offset - songs.length) + ')">prev</button>'
-                }
-                html += '<button class="ml10" onclick="search(' + (offset + songs.length) + ')">next</button>'
-              }
-              document.getElementById('search-result').innerHTML = html;
-            } else {
-              document.getElementById('search-result').innerText = '未找到结果';
+              render_search_html(songs, channel, false);
             }
           } else {
-            console.log('请求错误2');
+            console.log('请求错误1');
+            window.ap.notice('请求错误');
           }
-        } else {
-          console.log('请求错误1');
-          window.ap.notice('请求错误');
-        }
-      })
+        });
+      } else if (channel == 2) {
+        request({
+          method: 'GET',
+          url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
+          params: {
+            keywords: keyword,
+            offset: offset,
+            limit: 10
+          }
+        }).then((res) => {
+          var result = JSON.parse(res);
+          if (result.status == 200) {
+            var data = result.data;
+            if (data.code == 200) {
+              if (data.result && data.result.songs) {
+                var songs = data.result.songs;
+                render_search_html(songs, channel, offset, data.result.hasMore);
+              } else {
+                document.getElementById('search-result').innerText = '未找到结果';
+              }
+            } else {
+              console.log('请求错误2');
+            }
+          } else {
+            console.log('请求错误1');
+            window.ap.notice('请求错误');
+          }
+        });
+      }
     }
 
     var clearSearch = function() {
@@ -210,43 +260,61 @@
       var id = obj.getAttribute('data-id');
       var name = obj.getAttribute('data-name');
       var artists = obj.getAttribute('data-artist');
+      var url = obj.getAttribute('data-url');
+      var channel = obj.getAttribute('data-channel');
       var br = document.getElementById('br').value;
-      request({
-        "method":"GET",
-        "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
-        "params": {
-            "id": id,
-            "br": (parseInt(br) * 1000) + ""
-        }
-      }).then((res) => {
-        var result = JSON.parse(res);
-        if (result.status == 200) {
-          var data = result.data;
-          if (data.code == 200) {
-            if (data.data && data.data.length > 0 && data.data[0].url != null) {
-              window.ap.list.add([{
-                name: name, 
-                artist: artists, 
-                url: data.data[0].url.replace(/http\:/g, 'https:'), 
-                cover: cdn_url() + './music/bg1.jpg', 
-                lrc: '', 
-                theme: '#ebd0c2',
-                type: 'custom'
-              }]);
-              console.log(window.ap.list.audios.length - 1);
-              window.ap.list.switch(window.ap.list.audios.length - 1);
-              window.ap.play();
+
+      if (channel == 1) {
+        window.ap.list.add([{
+          name: name, 
+          artist: artists, 
+          url: data.data[0].url.replace(/http\:/g, 'https:'), 
+          cover: cdn_url() + './music/bg1.jpg', 
+          lrc: '', 
+          theme: '#ebd0c2',
+          type: 'custom'
+        }]);
+        console.log(window.ap.list.audios.length - 1);
+        window.ap.list.switch(window.ap.list.audios.length - 1);
+        window.ap.play();
+      } else if (channel == 2) {
+        request({
+          "method":"GET",
+          "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
+          "params": {
+              "id": id,
+              "br": (parseInt(br) * 1000) + ""
+          }
+        }).then((res) => {
+          var result = JSON.parse(res);
+          if (result.status == 200) {
+            var data = result.data;
+            if (data.code == 200) {
+              if (data.data && data.data.length > 0 && data.data[0].url != null) {
+                window.ap.list.add([{
+                  name: name, 
+                  artist: artists, 
+                  url: data.data[0].url.replace(/http\:/g, 'https:'), 
+                  cover: cdn_url() + './music/bg1.jpg', 
+                  lrc: '', 
+                  theme: '#ebd0c2',
+                  type: 'custom'
+                }]);
+                console.log(window.ap.list.audios.length - 1);
+                window.ap.list.switch(window.ap.list.audios.length - 1);
+                window.ap.play();
+              } else {
+                window.ap.notice('获取歌曲播放地址失败');
+              }
             } else {
-              window.ap.notice('获取歌曲播放地址失败');
+              console.log('请求错误2');
             }
           } else {
-            console.log('请求错误2');
+            console.log('请求错误1');
+            window.ap.notice('请求错误');
           }
-        } else {
-          console.log('请求错误1');
-          window.ap.notice('请求错误');
-        }
-      })
+        });
+      }
     }
     
     function load_script(path) {
