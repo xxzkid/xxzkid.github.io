@@ -95,19 +95,20 @@
     }
     
     var fetchAudio = function (url, callback) {
-      localforage.getItem(url).then(audio => {
+      var key = url.substring(url.lastIndexOf('/'));
+      localforage.getItem(key).then(audio => {
         if (audio) {
-          console.log(url + " exist");
+          console.log(key + " exist.");
           callback(audio);
         } else {
           console.log(url + " doesn't exist");
           fetch(url).then(res => res.blob())
             .then(blob => {
               const type = blob.type;
-              console.log(url + ' fetch ok');
+              console.log(url + ' fetch ok.');
               blobToArrayBuffer(blob).then(buffer => {
                 localforage
-                  .setItem(url, { buffer, type })
+                  .setItem(key, { buffer, type })
                   .then(audio => {
                     callback(audio);
                   });
