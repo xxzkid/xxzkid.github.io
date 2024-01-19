@@ -37,6 +37,23 @@
         body: JSON.stringify(body)
       }).then((res) => res.text());
     }
+    function toast(options) {
+      var msg = options['msg'];
+      var duration = options['duration'];
+    	duration = isNaN(duration) ? 3000 : duration;
+    	var m = document.createElement('div');
+    	m.innerHTML = msg;
+    	m.style.cssText = "font-family:siyuan;max-width:60%;min-width: 100px;padding:0 14px;height: 40px;color:#ffffff;line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 5%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 176, 175,.7);font-size: 16px;";
+    	document.body.appendChild(m);
+      setTimeout(function() {
+    		var d = 0.5;
+    		m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+    		m.style.opacity = '0';
+    		setTimeout(function() {
+    			document.body.removeChild(m)
+    		}, d * 1000);
+    	}, duration);
+    }
   </script>
 </head>
 
@@ -218,7 +235,7 @@
             }
           } else {
             console.log('请求错误1');
-            window.ap.notice('请求错误');
+            toast({msg: '请求错误'});
           }
         });
       } else if (channel == 2) {
@@ -246,7 +263,7 @@
             }
           } else {
             console.log('请求错误1');
-            window.ap.notice('请求错误');
+            toast({msg: '请求错误'});
           }
         });
       }
@@ -305,14 +322,14 @@
                 window.ap.list.switch(window.ap.list.audios.length - 1);
                 window.ap.play();
               } else {
-                window.ap.notice('获取歌曲播放地址失败');
+                toast({msg: '获取歌曲播放地址失败'});
               }
             } else {
               console.log('请求错误2');
             }
           } else {
             console.log('请求错误1');
-            window.ap.notice('请求错误');
+            toast({msg: '请求错误'});
           }
         });
       }
