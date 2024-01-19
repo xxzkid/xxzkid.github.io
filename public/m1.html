@@ -169,6 +169,10 @@
         }
       }
     });
+    window.ap.on('listswitch', function(e) {
+      var audio = window.ap3.list.audios[e.index];
+      document.title = audio.name + ' - ' + audio.artist;
+    });
 
     var render_search_html = function(songs, channel, offset, hasMore) {
       var html = '<ul>';
