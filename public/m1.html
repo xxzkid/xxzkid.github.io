@@ -61,7 +61,6 @@
   <div id="search">
     <select id="channel">
       <option value="2">163.com</option>
-      <option value="1">slider.kz</option>
     </select>
     <select id="br">
       <option>320</option>
@@ -109,6 +108,50 @@
 
     var clearLog = function() {
       document.getElementById('log').innerText = '';
+    }
+
+    var fetchLrc = function(name, fn) {
+      request({
+        method: 'GET',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+        params: {
+          keywords: name
+        }
+      }).then((res) => {
+        var result = JSON.parse(res);
+        if (result.status == 200) {
+          var data = result.data;
+          if (data.code == 200) {
+            console.log();
+            if (data.result.songs && data.result.songs.length > 0) {
+              var id = data.result.songs[0].id;
+              request({
+                method: 'GET',
+                url: 'https://neteast-cloud-music-api-heroku.vercel.app/lyric',
+                params: {
+                  id: id
+                }
+              }).then((res) => {
+                var result = JSON.parse(res);
+                if (result.status == 200) {
+                  var data = result.data;
+                  if (data.code == 200) {
+                    fn && fn(data.lrc.lyric);
+                  } else {
+                    toast({msg: 'data code : ' + data.code});
+                  }
+                }  else {
+                  toast({msg: 'result status : ' + result.status});
+                }
+              });
+            }
+          } else {
+            toast({msg: 'data code : ' + data.code});
+          }
+        } else {
+          toast({msg: 'result status : ' + result.status});
+        }
+      })
     }
     
     var fetchAudio = function (url, callback) {
@@ -173,6 +216,27 @@
       var audio = window.ap.list.audios[e.index];
       document.title = audio.name + ' - ' + audio.artist;
     });
+    window.ap.on('play', function(e) {
+      var song = window.ap.list.audios[window.ap.list.index];
+      if (song.lrc == '') {
+        fetchLrc(song.name, (lyric) => {
+          song.lrc = lyric;
+          window.ap.lrc.parsed[0] = window.ap.lrc.parse(lyric);
+          var html = '';
+          for (var index in window.ap.lrc.parsed[0]) {
+            var value = window.ap.lrc.parsed[0][index];
+            if (index == 0) {
+              html += '<p class="aplayer-lrc-current">' + value[1] + '</p>';
+            } else {
+              html += '<p>' + value[1] + '</p>';
+            }
+          }
+          window.ap.lrc.container.innerHTML = html;
+          window.ap.lrc.update(0);
+          window.ap.lrc.current = window.ap.lrc.parsed[0];
+        });
+      }
+    });
 
     var render_search_html = function(songs, channel, offset, hasMore) {
       var html = '<ul>';
@@ -207,42 +271,7 @@
       if (keyword == '') {
         return;
       }
-      if (channel == 1) {
-        request({
-          method: 'GET',
-          url: 'https://slider.kz/vk_auth.php',
-          params: {
-            q: keyword
-          }
-        }).then((res) => {
-          var result = JSON.parse(res);
-          if (result.status == 200) {
-            var data = result.data;
-            if (data.audios) {
-              var audios = data.audios[""];
-              var songs = [];
-              for (var idx in audios) {
-                var item = audios[idx];
-                var id = item['id'];
-                var tit_art = item['tit_art'];
-                var url = item['url'];
-
-                var splits = tit_art.split('-');
-                songs.push({
-                  id: id, 
-                  name: splits[1].trim(), 
-                  artists: [{name: splits[0].trim()}], 
-                  url: url.indexOf('http') == 0 ? url: 'https://slider.kz/' + url
-                });
-              }
-              render_search_html(songs, channel, false);
-            }
-          } else {
-            console.log('请求错误1');
-            toast({msg: '请求错误'});
-          }
-        });
-      } else if (channel == 2) {
+      if (channel == 2) {
         request({
           method: 'GET',
           url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
@@ -263,11 +292,10 @@
                 document.getElementById('search-result').innerText = '未找到结果';
               }
             } else {
-              console.log('请求错误2');
+              console.log('data failed : ' + data.code);
             }
           } else {
-            console.log('请求错误1');
-            toast({msg: '请求错误'});
+            toast({msg: 'reqwuest failed : ' + result.status});
           }
         });
       }
@@ -286,20 +314,7 @@
       var channel = obj.getAttribute('data-channel');
       var br = document.getElementById('br').value;
 
-      if (channel == 1) {
-        window.ap.list.add([{
-          name: name, 
-          artist: artists, 
-          url: url.replace(/http\:/g, 'https:'), 
-          cover: cdn_url() + './music/bg1.jpg', 
-          lrc: '', 
-          theme: '#ebd0c2',
-          type: 'custom'
-        }]);
-        console.log(window.ap.list.audios.length - 1);
-        window.ap.list.switch(window.ap.list.audios.length - 1);
-        window.ap.play();
-      } else if (channel == 2) {
+      if (channel == 2) {
         request({
           "method":"GET",
           "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
@@ -329,11 +344,10 @@
                 toast({msg: '获取歌曲播放地址失败'});
               }
             } else {
-              console.log('请求错误2');
+              toast({msg: 'data failed : ' + data.code});
             }
           } else {
-            console.log('请求错误1');
-            toast({msg: '请求错误'});
+            toast({msg: 'request failed : ' + result.status});
           }
         });
       }
