@@ -54,6 +54,21 @@
     		}, d * 1000);
     	}, duration);
     }
+    function filter(array, fn) {
+      var newArray = [];
+      for (var i = 0; i < array.length; i++) {
+        fn && fn(array[i]) && newArray.push(array[i]);
+      }
+      return newArray;
+    }
+    function contains(array, fn) {
+      for (var i = 0; i < array.length; i++) {
+        if (fn && fn(array[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
   </script>
 </head>
 
@@ -110,21 +125,31 @@
       document.getElementById('log').innerText = '';
     }
 
-    var fetchLrc = function(name, fn) {
+    var fetchLrc = function(song, fn) {
       request({
         method: 'GET',
         url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
         params: {
-          keywords: name
+          keywords: song.name
         }
       }).then((res) => {
         var result = JSON.parse(res);
         if (result.status == 200) {
           var data = result.data;
           if (data.code == 200) {
-            console.log();
             if (data.result.songs && data.result.songs.length > 0) {
-              var id = data.result.songs[0].id;
+              var firstArtist = song.artist.split(',')[0];
+              var id = '';
+              for (var idx in data.result.songs) {
+                var _song = data.result.songs[idx];
+                if (_song.name == song.name && contains(_song.artists, function (art) {return art.name == firstArtist})) {
+                  id = _song.id;
+                  break;
+                }
+              }
+              if (id == '') {
+                id = data.result.songs[0].id;
+              }
               request({
                 method: 'GET',
                 url: 'https://neteast-cloud-music-api-heroku.vercel.app/lyric',
@@ -219,7 +244,7 @@
     window.ap.on('play', function(e) {
       var song = window.ap.list.audios[window.ap.list.index];
       if (song.lrc == '') {
-        fetchLrc(song.name, (lyric) => {
+        fetchLrc(song, (lyric) => {
           song.lrc = lyric;
           window.ap.lrc.parsed[0] = window.ap.lrc.parse(lyric);
           var html = '';
