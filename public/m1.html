@@ -125,66 +125,74 @@
       document.getElementById('log').innerText = '';
     }
 
-    var fetchLrc = function(song, fn) {
+    var fetchSearchLyric = function(song, fn) {
+      if (song.id == null) {
+        request({
+          method: 'GET',
+          url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+          params: {
+            keywords: song.name
+          }
+        }).then((res) => {
+          var result = JSON.parse(res);
+          if (result.status == 200) {
+            var data = result.data;
+            if (data.code == 200) {
+              if (data.result && data.result.songs && data.result.songs.length > 0) {
+                var firstArtist = song.artist.split(',')[0];
+                var id = '';
+                for (var idx in data.result.songs) {
+                  var _song = data.result.songs[idx];
+                  if (_song.name == song.name && contains(_song.artists, function (art) {return art.name == firstArtist})) {
+                    id = _song.id;
+                    break;
+                  }
+                }
+                if (id == '') {
+                  id = data.result.songs[0].id;
+                }
+                fetchLyric(id, fn);
+              }
+            } else {
+              toast({msg: 'data code : ' + data.code});
+            }
+          } else {
+            toast({msg: 'result status : ' + result.status});
+          }
+        });
+      } else {
+        fetchLyric(song.id, fn);
+      }
+    }
+
+    function fetchLyric(id, fn) {
       request({
         method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+        url: 'https://neteast-cloud-music-api-heroku.vercel.app/lyric',
         params: {
-          keywords: song.name
+          id: id
         }
       }).then((res) => {
         var result = JSON.parse(res);
         if (result.status == 200) {
           var data = result.data;
           if (data.code == 200) {
-            if (data.result.songs && data.result.songs.length > 0) {
-              var firstArtist = song.artist.split(',')[0];
-              var id = '';
-              for (var idx in data.result.songs) {
-                var _song = data.result.songs[idx];
-                if (_song.name == song.name && contains(_song.artists, function (art) {return art.name == firstArtist})) {
-                  id = _song.id;
-                  break;
-                }
-              }
-              if (id == '') {
-                id = data.result.songs[0].id;
-              }
-              request({
-                method: 'GET',
-                url: 'https://neteast-cloud-music-api-heroku.vercel.app/lyric',
-                params: {
-                  id: id
-                }
-              }).then((res) => {
-                var result = JSON.parse(res);
-                if (result.status == 200) {
-                  var data = result.data;
-                  if (data.code == 200) {
-                    fn && fn(data.lrc.lyric);
-                  } else {
-                    toast({msg: 'data code : ' + data.code});
-                  }
-                }  else {
-                  toast({msg: 'result status : ' + result.status});
-                }
-              });
-            }
+            fn && fn(data.lrc.lyric);
           } else {
             toast({msg: 'data code : ' + data.code});
           }
-        } else {
+        }  else {
           toast({msg: 'result status : ' + result.status});
         }
-      })
+      });
     }
     
-    var fetchAudio = function (url, callback) {
+    var fetchAudio = function (url, fn) {
       var key = url.substring(url.lastIndexOf('/'));
       localforage.getItem(key).then(audio => {
         if (audio) {
           console.log(key + " exist.");
-          callback(audio);
+          fn(audio);
         } else {
           console.log(url + " doesn't exist");
           fetch(url).then(res => res.blob())
@@ -195,7 +203,7 @@
                 localforage
                   .setItem(key, { buffer, type })
                   .then(audio => {
-                    callback(audio);
+                    fn(audio);
                   });
               });
             });
@@ -242,28 +250,35 @@
       document.title = audio.name + ' - ' + audio.artist;
     });
     window.ap.on('play', function(e) {
-      var song = window.ap.list.audios[window.ap.list.index];
+      var index = window.ap.list.index;
+      var song = window.ap.list.audios[index];
       if (song.lrc == '') {
-        fetchLrc(song, (lyric) => {
+        fetchSearchLyric(song, (lyric) => {
           song.lrc = lyric;
-          window.ap.lrc.parsed[0] = window.ap.lrc.parse(lyric);
-          var html = '';
-          for (var index in window.ap.lrc.parsed[0]) {
-            var value = window.ap.lrc.parsed[0][index];
-            if (index == 0) {
-              html += '<p class="aplayer-lrc-current">' + value[1] + '</p>';
-            } else {
-              html += '<p>' + value[1] + '</p>';
-            }
-          }
-          window.ap.lrc.container.innerHTML = html;
-          window.ap.lrc.update(0);
-          window.ap.lrc.current = window.ap.lrc.parsed[0];
+          updateLyric(song.lrc, index);
         });
+      } else {
+        updateLyric(song.lrc, index);
       }
     });
 
-    var render_search_html = function(songs, channel, offset, hasMore) {
+    function updateLyric(lyric, index) {
+      window.ap.lrc.parsed[index] = window.ap.lrc.parse(lyric);
+      var html = '';
+      for (var idx in window.ap.lrc.parsed[index]) {
+        var value = window.ap.lrc.parsed[index][idx];
+        if (idx == 0) {
+          html += '<p class="aplayer-lrc-current">' + value[1] + '</p>';
+        } else {
+          html += '<p>' + value[1] + '</p>';
+        }
+      }
+      window.ap.lrc.container.innerHTML = html;
+      window.ap.lrc.update(0);
+      window.ap.lrc.current = window.ap.lrc.parsed[index];
+    }
+
+    var renderSearchHtml = function(songs, channel, offset, hasMore) {
       var html = '<ul>';
       for (var i = 0; i < songs.length; i++) {
         var song = songs[i];
@@ -312,7 +327,7 @@
             if (data.code == 200) {
               if (data.result && data.result.songs) {
                 var songs = data.result.songs;
-                render_search_html(songs, channel, offset, data.result.hasMore);
+                renderSearchHtml(songs, channel, offset, data.result.hasMore);
               } else {
                 document.getElementById('search-result').innerText = '未找到结果';
               }
@@ -360,9 +375,9 @@
                   cover: cdn_url() + './music/bg1.jpg', 
                   lrc: '', 
                   theme: '#ebd0c2',
-                  type: 'custom'
+                  type: 'custom',
+                  id: id
                 }]);
-                console.log(window.ap.list.audios.length - 1);
                 window.ap.list.switch(window.ap.list.audios.length - 1);
                 window.ap.play();
               } else {
