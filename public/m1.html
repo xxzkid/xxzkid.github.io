@@ -248,6 +248,7 @@
     window.ap.on('listswitch', function(e) {
       var audio = window.ap.list.audios[e.index];
       document.title = audio.name + ' - ' + audio.artist;
+      window.ap.play();
     });
     window.ap.on('play', function(e) {
       var index = window.ap.list.index;
@@ -379,7 +380,6 @@
                   id: id
                 }]);
                 window.ap.list.switch(window.ap.list.audios.length - 1);
-                window.ap.play();
               } else {
                 toast({msg: '获取歌曲播放地址失败'});
               }

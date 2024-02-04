@@ -3154,9 +3154,9 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             
             <tag> java </tag>
             
-            <tag> 设备 </tag>
-            
             <tag> 正则表达式 </tag>
+            
+            <tag> 设备 </tag>
             
         </tags>
         
@@ -3319,27 +3319,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> javascript </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[任意进制的转换]]></title>
       <url>/2013/java-any-hex-convert/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
@@ -3358,6 +3337,27 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> 10进制 </tag>
             
             <tag> 36进制 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> javascript </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
             
         </tags>
         
