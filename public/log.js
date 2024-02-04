@@ -6,7 +6,7 @@ console.log = function () {
 }
 console.error = function () {
   _console_error(...arguments);
-  _append_log(...arguments);
+  //_append_log(...arguments);
 }
 const _append_log = function () {
   const log_el = document.createElement('div');
