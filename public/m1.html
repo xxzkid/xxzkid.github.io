@@ -430,6 +430,11 @@
             div.style = 'float: left; margin-right: 8px;'
             var text = document.createElement('span');
             text.innerText = k;
+            text.addEventListener('click', function(e) {
+              var innerText = this.innerText;
+              document.getElementById('keyword').value = innerText;
+              search(0);
+            });
             div.appendChild(text);
             var remove = document.createElement('button');
             remove.style = 'margin-left: 5px;';
