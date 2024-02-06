@@ -2,7 +2,7 @@ const _console_log = console.log;
 const _console_error = console.error;
 console.log = function () {
   _console_log(...arguments);
-  _append_log(...arguments);
+  //_append_log(...arguments);
 }
 console.error = function () {
   _console_error(...arguments);
