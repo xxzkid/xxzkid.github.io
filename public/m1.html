@@ -118,6 +118,9 @@
       }
       return 'https://' + cdn + '/gh/xxzkid/xxzkid.github.io/public/';
     }
+    const api_url = function() {
+      return 'https://netease-cloud-music-api-ten-umber.vercel.app';
+    }
     
     var clearCache = function() {
       localforage.clear().then(function () {
@@ -133,7 +136,7 @@
       if (song.id == null) {
         request({
           method: 'GET',
-          url: 'https://neteast-cloud-music-api-heroku.vercel.app/search/suggest',
+          url: api_url() + '/search/suggest',
           params: {
             keywords: song.name
           }
@@ -172,7 +175,7 @@
     function fetchLyric(id, fn) {
       request({
         method: 'GET',
-        url: 'https://neteast-cloud-music-api-heroku.vercel.app/lyric',
+        url: api_url() + '/lyric',
         params: {
           id: id
         }
@@ -319,7 +322,7 @@
       if (channel == 2) {
         request({
           method: 'GET',
-          url: 'https://neteast-cloud-music-api-heroku.vercel.app/search',
+          url: api_url() + '/search',
           params: {
             keywords: keyword,
             offset: offset,
@@ -363,7 +366,7 @@
       if (channel == 2) {
         request({
           "method":"GET",
-          "url": "https://neteast-cloud-music-api-heroku.vercel.app/song/url",
+          "url": api_url() + "/song/url",
           "params": {
               "id": id,
               "br": (parseInt(br) * 1000) + ""
