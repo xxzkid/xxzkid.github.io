@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -85,6 +86,9 @@
     <input type="text" id="keyword"/>
     <button onclick="search(0)">search</button>
     <button onclick="clearSearch()">clear</button>
+    <div id="search-history">
+    </div>
+    <div style="clear: both;"></div>
   </div>
   <div id="search-result" class="log mb10 breakline">
   </div>
@@ -328,6 +332,7 @@
             if (data.code == 200) {
               if (data.result && data.result.songs) {
                 var songs = data.result.songs;
+                addKeyword(keyword);
                 renderSearchHtml(songs, channel, offset, data.result.hasMore);
               } else {
                 document.getElementById('search-result').innerText = '未找到结果';
@@ -408,6 +413,66 @@
       }
     }
     load_script('./song.js');
+
+    var searchHistoryKey = function () {
+      return 'search-history';;
+    }
+
+    var listSearchKeyword = function() {
+      var key = searchHistoryKey();
+      localforage.getItem(key).then((kw) => {
+        var searchHistory = document.getElementById('search-history');
+        searchHistory.innerHTML = '';
+        if (kw && kw.length > 0) {
+          for (var idx in kw) {
+            var k = kw[idx];
+            var div = document.createElement('div');
+            div.style = 'float: left; margin-right: 8px;'
+            var text = document.createElement('span');
+            text.innerText = k;
+            div.appendChild(text);
+            var remove = document.createElement('button');
+            remove.style = 'margin-left: 5px;';
+            remove.setAttribute('data-k', k);
+            remove.innerText = 'x';
+            remove.addEventListener('click', function(e) {
+              var datak = this.getAttribute('data-k');
+              localforage.getItem(key).then((kw) => {
+                var indexOf = kw.indexOf(datak);
+                kw.splice(indexOf, 1);
+                localforage.setItem(key, kw).then((v) => {
+                  listSearchKeyword();
+                });
+              })
+            });
+            div.appendChild(remove);
+            searchHistory.appendChild(div);
+          }
+        }
+      });
+    }
+
+    var addKeyword = function(keyword) {
+      var key = searchHistoryKey();
+      localforage.getItem(key).then((kw) => {
+        if (kw) {
+          if (!contains(kw, e => e == keyword)) {
+              kw.push(keyword);
+              localforage.setItem(key, kw).then((v) => {
+                listSearchKeyword();
+              });
+          }
+        } else {
+          localforage.setItem(key, [keyword]).then((v) => {
+            listSearchKeyword();
+          });
+        }
+      })
+    }
+
+    document.addEventListener('DOMContentLoaded', function(e) {
+      listSearchKeyword();
+    });
   </script>
 </body>
 
