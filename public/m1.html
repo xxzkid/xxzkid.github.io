@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./music/APlayer.min.css">
   <script src="./music/APlayer.min.js"></script>
-  
+
   <script src="./localforage.min.js"></script>
   <script src="./log.js"></script>
   <style>
@@ -25,34 +25,34 @@
     }
 
     .breakline {
-      word-wrap:break-word;
-      word-break:break-all;
+      word-wrap: break-word;
+      word-break: break-all;
     }
   </style>
   <script>
-    var request = function(body) {
+    var request = function (body) {
       return fetch('https://http1.idingdang.org/x', {
         method: 'POST',
-        headers: {'content-type': 'application/json'},
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify(body)
       }).then((res) => res.text());
     }
     function toast(options) {
       var msg = options['msg'];
       var duration = options['duration'];
-    	duration = isNaN(duration) ? 3000 : duration;
-    	var m = document.createElement('div');
-    	m.innerHTML = msg;
-    	m.style.cssText = "font-family:siyuan;max-width:60%;min-width: 100px;padding:0 14px;height: 40px;color:#ffffff;line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 5%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 176, 175,.7);font-size: 16px;";
-    	document.body.appendChild(m);
-      setTimeout(function() {
-    		var d = 0.5;
-    		m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
-    		m.style.opacity = '0';
-    		setTimeout(function() {
-    			document.body.removeChild(m)
-    		}, d * 1000);
-    	}, duration);
+      duration = isNaN(duration) ? 3000 : duration;
+      var m = document.createElement('div');
+      m.innerHTML = msg;
+      m.style.cssText = "font-family:siyuan;max-width:60%;min-width: 100px;padding:0 14px;height: 40px;color:#ffffff;line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 5%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 176, 175,.7);font-size: 16px;";
+      document.body.appendChild(m);
+      setTimeout(function () {
+        var d = 0.5;
+        m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+        m.style.opacity = '0';
+        setTimeout(function () {
+          document.body.removeChild(m)
+        }, d * 1000);
+      }, duration);
     }
     function filter(array, fn) {
       var newArray = [];
@@ -69,6 +69,12 @@
       }
       return false;
     }
+    function trim(str) {
+      if (str == null) {
+        return '';
+      }
+      return str.toString().replace(/^\s+|\s+$/gm, '');
+    }
   </script>
 </head>
 
@@ -76,13 +82,14 @@
   <div id="search">
     <select id="channel">
       <option value="2">163.com</option>
+      <option value="3">kugou.com</option>
     </select>
     <select id="br">
       <option>320</option>
       <option>192</option>
       <option>128</option>
     </select>
-    <input type="text" id="keyword"/>
+    <input type="text" id="keyword" />
     <button onclick="search(0)">search</button>
     <button onclick="clearSearch()">clear</button>
     <div id="search-history">
@@ -93,7 +100,7 @@
   </div>
   <div id="aplayer"></div>
   <div>
-    CDN: 
+    CDN:
     <select id="cdnlist" onchange="cdnlistselect(this)">
       <option value="testingcf.jsdelivr.net">testingcf.jsdelivr.net</option>
       <option value="gcore.jsdelivr.net">gcore.jsdelivr.net</option>
@@ -107,33 +114,37 @@
   </div>
   <div id="log" class="log mb10 breakline"></div>
   <script>
-    const cdnlistselect = function(selectObject) {
+    const cdnlistselect = function (selectObject) {
       document.getElementById('cdn').value = selectObject.value;
     }
-    const cdn_url = function() {
+    const cdn_url = function () {
       var cdn = document.getElementById('cdn').value;
-      if (cdn == '') {
+      if (trim(cdn) == '') {
         cdn = 'cdn.jsdelivr.net';
       }
       return 'https://' + cdn + '/gh/xxzkid/xxzkid.github.io/public/';
     }
-    const api_url = function() {
+    const api_url = function (channel) {
       // return 'https://neteast-cloud-music-api-heroku.vercel.app';
-      return 'https://netease-cloud-music-api-three-omega-46.vercel.app';
+      if (channel == null || channel == 2) {
+        return 'https://netease-cloud-music-api-three-omega-46.vercel.app';
+      } else if (channel == 3) {
+        return 'https://dataiqs.com';
+      }
     }
-    
-    var clearCache = function() {
+
+    var clearCache = function () {
       localforage.clear().then(function () {
         console.log('clear cache');
       });
     }
 
-    var clearLog = function() {
+    var clearLog = function () {
       document.getElementById('log').innerText = '';
     }
 
-    var fetchSearchLyric = function(song, fn) {
-      if (song.id == null) {
+    var fetchSearchLyric = function (song, fn) {
+      if (trim(song.id) == '') {
         request({
           method: 'GET',
           url: api_url() + '/search/suggest',
@@ -150,7 +161,7 @@
                 var id = '';
                 for (var idx in data.result.songs) {
                   var _song = data.result.songs[idx];
-                  if (_song.name == song.name && contains(_song.artists, function (art) {return art.name == firstArtist})) {
+                  if (_song.name == song.name && contains(_song.artists, function (art) { return art.name == firstArtist })) {
                     id = _song.id;
                     break;
                   }
@@ -161,10 +172,10 @@
                 fetchLyric(id, fn);
               }
             } else {
-              toast({msg: 'data code : ' + data.code});
+              toast({ msg: 'data code : ' + data.code });
             }
           } else {
-            toast({msg: 'result status : ' + result.status});
+            toast({ msg: 'result status : ' + result.status });
           }
         });
       } else {
@@ -186,14 +197,14 @@
           if (data.code == 200) {
             fn && fn(data.lrc.lyric);
           } else {
-            toast({msg: 'data code : ' + data.code});
+            toast({ msg: 'data code : ' + data.code });
           }
-        }  else {
-          toast({msg: 'result status : ' + result.status});
+        } else {
+          toast({ msg: 'result status : ' + result.status });
         }
       });
     }
-    
+
     var fetchAudio = function (url, fn) {
       var key = url.substring(url.lastIndexOf('/'));
       localforage.getItem(key).then(audio => {
@@ -252,15 +263,15 @@
         }
       }
     });
-    window.ap.on('listswitch', function(e) {
+    window.ap.on('listswitch', function (e) {
       var audio = window.ap.list.audios[e.index];
       document.title = audio.name + ' - ' + audio.artist;
       window.ap.play();
     });
-    window.ap.on('play', function(e) {
+    window.ap.on('play', function (e) {
       var index = window.ap.list.index;
       var song = window.ap.list.audios[index];
-      if (song.lrc == '') {
+      if (trim(song.lrc) == '') {
         fetchSearchLyric(song, (lyric) => {
           song.lrc = lyric;
           updateLyric(song.lrc, index);
@@ -286,7 +297,10 @@
       window.ap.lrc.current = window.ap.lrc.parsed[index];
     }
 
-    var renderSearchHtml = function(songs, channel, offset, hasMore) {
+    /**
+     * {id:'', name:'', artists:[{name: ''}], url:''}
+     */
+    var renderSearchHtml = function (songs, channel, offset, hasMore) {
       var html = '<ul>';
       for (var i = 0; i < songs.length; i++) {
         var song = songs[i];
@@ -313,7 +327,7 @@
       document.getElementById('search-result').innerHTML = html;
     }
 
-    var search = function(offset) {
+    var search = function (offset) {
       var channel = document.getElementById('channel').value;
       var keyword = document.getElementById('keyword').value;
       if (keyword == '') {
@@ -344,18 +358,59 @@
               console.log('data failed : ' + data.code);
             }
           } else {
-            toast({msg: 'reqwuest failed : ' + result.status});
+            toast({ msg: 'reqwuest failed : ' + result.status });
           }
         });
       }
+      else if (channel == 3) {
+        request({
+          method: 'GET',
+          url: api_url(channel) + '/api/kgmusic/',
+          params: {
+            msg: keyword,
+            type: 'song',
+            n: 0,
+            page: 1,
+            count: 10
+          }
+        }).then((res) => {
+          var result = JSON.parse(res);
+          if (result.status == 200) {
+            var data = result.data;
+            if (data.code == 200) {
+              var song = data.data;
+              addKeyword(keyword);
+              var songs = [];
+              if (song.song_url.indexOf('.mp3') > -1) {
+                var split = song.name.split('-');
+                var name = trim(split[1]);
+                var artists = [{name: trim(split[0])}];
+                var url = song.song_url;
+                var songs = [
+                  { id: '', name: name, artists: artists, url: url }
+                ]
+                renderSearchHtml(songs, channel, offset, false);
+              } else {
+                document.getElementById('search-result').innerText = '未找到结果或歌曲收费';
+              }
+            } else {
+              console.log('data failed : ' + data.code);
+            }
+          } else {
+            toast({ msg: 'request failed : ' + result.status });
+          }
+        });
+      } else {
+        toast({msg: 'not support channel ' + channel});
+      }
     }
 
-    var clearSearch = function() {
+    var clearSearch = function () {
       document.getElementById('keyword').value = '';
       document.getElementById('search-result').innerText = '';
     }
 
-    var addToPlaylist = function(obj) {
+    var addToPlaylist = function (obj) {
       var id = obj.getAttribute('data-id');
       var name = obj.getAttribute('data-name');
       var artists = obj.getAttribute('data-artist');
@@ -365,12 +420,12 @@
 
       if (channel == 2) {
         request({
-          "method":"GET",
+          "method": "GET",
           "url": api_url() + "/song/url",
           "params": {
-              "id": id,
-              "br": (parseInt(br) * 1000) + "",
-              "realIP": "116.25.146.177"
+            "id": id,
+            "br": (parseInt(br) * 1000) + "",
+            "realIP": "116.25.146.177"
           }
         }).then((res) => {
           var result = JSON.parse(res);
@@ -379,29 +434,43 @@
             if (data.code == 200) {
               if (data.data && data.data.length > 0 && data.data[0].url != null) {
                 window.ap.list.add([{
-                  name: name, 
-                  artist: artists, 
-                  url: data.data[0].url.replace(/http\:/g, 'https:'), 
-                  cover: cdn_url() + './music/bg1.jpg', 
-                  lrc: '', 
+                  name: name,
+                  artist: artists,
+                  url: data.data[0].url.replace(/http\:/g, 'https:'),
+                  cover: cdn_url() + './music/bg1.jpg',
+                  lrc: '',
                   theme: '#ebd0c2',
                   type: 'custom',
                   id: id
                 }]);
                 window.ap.list.switch(window.ap.list.audios.length - 1);
               } else {
-                toast({msg: '获取歌曲播放地址失败'});
+                toast({ msg: '获取歌曲播放地址失败' });
               }
             } else {
-              toast({msg: 'data failed : ' + data.code});
+              toast({ msg: 'data failed : ' + data.code });
             }
           } else {
-            toast({msg: 'request failed : ' + result.status});
+            toast({ msg: 'request failed : ' + result.status });
           }
         });
+      } else if (channel == 3) {
+        window.ap.list.add([{
+          name: name,
+          artist: artists,
+          url: url.replace(/http\:/g, 'https:'),
+          cover: cdn_url() + './music/bg1.jpg',
+          lrc: '',
+          theme: '#ebd0c2',
+          type: 'custom',
+          id: id
+        }]);
+        window.ap.list.switch(window.ap.list.audios.length - 1);
+      } else {
+        toast({msg: 'not support channel ' + channel})
       }
     }
-    
+
     function load_script(path) {
       var script_el = document.createElement('script');
       var new_path = '';
@@ -412,7 +481,7 @@
       }
       script_el.src = new_path;
       document.getElementsByTagName('head')[0].appendChild(script_el);
-      script_el.onload = function(e) {
+      script_el.onload = function (e) {
         window.ap.list.add(window.audios);
       }
     }
@@ -422,7 +491,7 @@
       return 'search-history';;
     }
 
-    var listSearchKeyword = function() {
+    var listSearchKeyword = function () {
       var key = searchHistoryKey();
       localforage.getItem(key).then((kw) => {
         var searchHistory = document.getElementById('search-history');
@@ -431,10 +500,10 @@
           for (var idx in kw) {
             var k = kw[idx];
             var div = document.createElement('div');
-            div.style = 'float: left; margin-right: 8px;'
+            div.style = 'float: left; margin-right: 8px; cursor: pointer;'
             var text = document.createElement('span');
             text.innerText = k;
-            text.addEventListener('click', function(e) {
+            text.addEventListener('click', function (e) {
               var innerText = this.innerText;
               document.getElementById('keyword').value = innerText;
               search(0);
@@ -444,7 +513,7 @@
             remove.style = 'margin-left: 5px;';
             remove.setAttribute('data-k', k);
             remove.innerText = 'x';
-            remove.addEventListener('click', function(e) {
+            remove.addEventListener('click', function (e) {
               var datak = this.getAttribute('data-k');
               localforage.getItem(key).then((kw) => {
                 var indexOf = kw.indexOf(datak);
@@ -461,15 +530,15 @@
       });
     }
 
-    var addKeyword = function(keyword) {
+    var addKeyword = function (keyword) {
       var key = searchHistoryKey();
       localforage.getItem(key).then((kw) => {
         if (kw) {
           if (!contains(kw, e => e == keyword)) {
-              kw.push(keyword);
-              localforage.setItem(key, kw).then((v) => {
-                listSearchKeyword();
-              });
+            kw.push(keyword);
+            localforage.setItem(key, kw).then((v) => {
+              listSearchKeyword();
+            });
           }
         } else {
           localforage.setItem(key, [keyword]).then((v) => {
@@ -479,7 +548,7 @@
       })
     }
 
-    document.addEventListener('DOMContentLoaded', function(e) {
+    document.addEventListener('DOMContentLoaded', function (e) {
       listSearchKeyword();
     });
   </script>
