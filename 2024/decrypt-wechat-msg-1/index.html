@@ -3,20 +3,20 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>mybatis3.5.x源码系列（1） | xxzkid | 我叫王也道长</title>
+    <title>解密Android某信聊天记录 | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
-<meta name="keywords" content="java,mybatis">
+    <meta name="description" content="解密Android某信聊天记录">
+<meta name="keywords" content="java,android,frida">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis3.5.x源码系列（1）">
-<meta property="og:url" content="https://xxzkid.github.io/2020/mybatis-source-01/index.html">
+<meta property="og:title" content="解密Android某信聊天记录">
+<meta property="og:url" content="https://xxzkid.github.io/2024/decrypt-wechat-msg-1/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
+<meta property="og:description" content="解密Android某信聊天记录">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-02-29T04:01:50.311Z">
+<meta property="og:updated_time" content="2024-02-29T04:01:50.307Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mybatis3.5.x源码系列（1）">
-<meta name="twitter:description" content="首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，Result">
+<meta name="twitter:title" content="解密Android某信聊天记录">
+<meta name="twitter:description" content="解密Android某信聊天记录">
     
 
     
@@ -228,7 +228,7 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><article id="post-mybatis-source-01" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-decrypt-wechat-msg-1" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -236,7 +236,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            mybatis3.5.x源码系列（1）
+            解密Android某信聊天记录
         </h1>
     
 
@@ -245,8 +245,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2020/mybatis-source-01/">
-            <time datetime="2020-03-20T10:00:00.000Z" itemprop="datePublished">2020-03-20</time>
+        <a href="/2024/decrypt-wechat-msg-1/">
+            <time datetime="2024-01-30T16:52:52.000Z" itemprop="datePublished">2024-01-30</time>
         </a>
     </div>
 
@@ -254,13 +254,13 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
+        <a class="article-category-link" href="/categories/frida/">frida</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/mybatis/">mybatis</a>
+        <a class="tag-link" href="/tags/android/">android</a>, <a class="tag-link" href="/tags/frida/">frida</a>, <a class="tag-link" href="/tags/java/">java</a>
     </div>
 
 						
@@ -272,42 +272,13 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <ol>
-<li>首先我们了解一下mybatis中的几个核心概念</li>
-</ol>
-<ul>
-<li>Configuration 配置，可以理解为mybatis的大管家，管理一切</li>
-<li>Environment 环境，这个主要负责数据源，事务管理器</li>
-<li>MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性</li>
-<li>Interceptor 拦截器，可以拦截Executor，ParameterHandler，ResultSetHandler，StatementHandler</li>
-<li>SqlSessionFactory SQL会话管理工厂类</li>
-<li>SqlSession SQL会话，定义了增，删，改，查，提交，回滚，获取java.sql.Connection，获取mapper</li>
-<li>MapperProxy mapper代理类，生成接口代理对象</li>
-<li>Executor 执行器，主要负责增，删，改，查，提交，回滚的执行</li>
-<li>ParameterHandler 参数处理器，主要负责参数设置</li>
-<li>ResultSetHandler 查询结果集处理器，用来封装ResultSet对应的结果</li>
-<li>StatementHandler Statement处理器，用来执行Statement相应的操作</li>
-</ul>
-<a id="more"></a>
-<p>带着上面的概念，我们开始我们的源码分析入门之旅</p>
-<ol>
-<li>首先我们要看看官方demo 打开<a href="https://mybatis.org/mybatis-3/zh/getting-started.html" target="_blank" rel="noopener">mybatis-3-getting-started</a></li>
-</ol>
-<p>例子：</p>
-<p>代码结构:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">  main</span><br><span class="line">    test</span><br><span class="line">      java</span><br><span class="line">        io.jsbxyyx</span><br><span class="line">          mapper</span><br><span class="line">            Blog.java</span><br><span class="line">            BlogMapper.java</span><br><span class="line">            BlogMapper.xml</span><br><span class="line">          Demo.java</span><br><span class="line">          mybatis-config.xml</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws IOException &#123;</span><br><span class="line">    String resource = &quot;io/jsbxyyx/mybatis-config.xml&quot;;</span><br><span class="line">    InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">    BlogMapper blogMapper = sqlSessionFactory.openSession().getMapper(BlogMapper.class);</span><br><span class="line">    Blog blog = blogMapper.selectBlog(1L);</span><br><span class="line">    System.out.println(blog);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="XML创建SqlSessionFactory"><a href="#XML创建SqlSessionFactory" class="headerlink" title="XML创建SqlSessionFactory"></a>XML创建SqlSessionFactory</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.SqlSessionFactoryBuilder#build(java.io.InputStream, java.lang.String, java.util.Properties)</span><br><span class="line">  》org.apache.ibatis.builder.xml.XMLConfigBuilder#parse()</span><br><span class="line">    》org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration(org.apache.ibatis.parsing.XNode root)</span><br><span class="line">  》org.apache.ibatis.session.SqlSessionFactoryBuilder#build(org.apache.ibatis.session.Configuration)</span><br></pre></td></tr></table></figure>
-<h3 id="核心方法org-apache-ibatis-builder-xml-XMLConfigBuilder-parseConfiguration"><a href="#核心方法org-apache-ibatis-builder-xml-XMLConfigBuilder-parseConfiguration" class="headerlink" title="核心方法org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration"></a>核心方法org.apache.ibatis.builder.xml.XMLConfigBuilder#parseConfiguration</h3><p>该方法会解析出properties，settings，typeAliases，plugins，objectFactory，objectWrapperFactory，reflectorFactory，environments，databaseIdProvider，typeHandlers，mappers</p>
-<h3 id="解析mappers"><a href="#解析mappers" class="headerlink" title="解析mappers"></a>解析mappers</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 这里解析mappers下的package标签，也就是包扫描，以及mapper标签</span><br><span class="line">org.apache.ibatis.builder.xml.XMLConfigBuilder#mapperElement(org.apache.ibatis.parsing.XNode parent)</span><br><span class="line">  》org.apache.ibatis.builder.xml.XMLStatementBuilder#parseStatementNode</span><br><span class="line">    》org.apache.ibatis.builder.MapperBuilderAssistant#addMappedStatement</span><br></pre></td></tr></table></figure>
-<p>解析mappers，创建MappedStatement并缓存到内存</p>
-<h2 id="打开session"><a href="#打开session" class="headerlink" title="打开session"></a>打开session</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSession()</span><br><span class="line">  》org.apache.ibatis.session.Configuration#getDefaultExecutorType()</span><br><span class="line">  》org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#openSessionFromDataSource(org.apache.ibatis.session.ExecutorType execType, org.apache.ibatis.session.TransactionIsolationLevel level, boolean autoCommit)</span><br><span class="line">    》org.apache.ibatis.session.defaults.DefaultSqlSessionFactory#getTransactionFactoryFromEnvironment(org.apache.ibatis.mapping.Environment)</span><br><span class="line">  》org.apache.ibatis.transaction.TransactionFactory#newTransaction(javax.sql.DataSource, org.apache.ibatis.session.TransactionIsolationLevel, boolean)</span><br><span class="line">    》org.apache.ibatis.transaction.jdbc.JdbcTransaction#JdbcTransaction(javax.sql.DataSource, org.apache.ibatis.session.TransactionIsolationLevel, boolean)</span><br><span class="line">  》org.apache.ibatis.session.Configuration#newExecutor(org.apache.ibatis.transaction.Transaction, org.apache.ibatis.session.ExecutorType)</span><br><span class="line">  》org.apache.ibatis.session.defaults.DefaultSqlSession#DefaultSqlSession(org.apache.ibatis.session.Configuration, org.apache.ibatis.executor.Executor, boolean)</span><br></pre></td></tr></table></figure>
-<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>获取数据源 =》开启事务 =》获取执行器 =》创建SqlSession</p>
-<h2 id="获取Mapper"><a href="#获取Mapper" class="headerlink" title="获取Mapper"></a>获取Mapper</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.Configuration#getMapper(java.lang.Class&lt;T&gt;, org.apache.ibatis.session.SqlSession)</span><br><span class="line">    》org.apache.ibatis.binding.MapperRegistry#getMapper(java.lang.Class&lt;T&gt;, org.apache.ibatis.session.SqlSession)</span><br><span class="line">      》org.apache.ibatis.binding.MapperProxyFactory#newInstance(org.apache.ibatis.session.SqlSession)</span><br><span class="line">        》java.lang.reflect.Proxy#newProxyInstance(java.lang.ClassLoader loader, java.lang.Class&lt;?&gt;[] interfaces, java.lang.reflect.InvocationHandler h)</span><br></pre></td></tr></table></figure>
-<h3 id="流程-1"><a href="#流程-1" class="headerlink" title="流程"></a>流程</h3><p>根据接口class =》创建JDK动态代理对象org.apache.ibatis.binding.MapperProxy（这就是为啥mybatis的mapper定义是接口的原因）</p>
-<h2 id="执行方法"><a href="#执行方法" class="headerlink" title="执行方法"></a>执行方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">io.jsbxyyx.mapper.BlogMapper#selectBlog</span><br><span class="line">  》org.apache.ibatis.binding.MapperProxy#invoke</span><br><span class="line">    》org.apache.ibatis.binding.MapperProxy#cachedInvoker</span><br><span class="line">      》org.apache.ibatis.binding.MapperMethod#MapperMethod(java.lang.Class&lt;?&gt; mapperInterface, java.lang.reflect.Method method, org.apache.ibatis.session.Configuration config)</span><br><span class="line">      》org.apache.ibatis.binding.MapperProxy.PlainMethodInvoker#invoke</span><br><span class="line">        》org.apache.ibatis.binding.MapperMethod#execute(org.apache.ibatis.session.SqlSession, java.lang.Object[] args)</span><br><span class="line">          》org.apache.ibatis.session.Configuration#getMappedStatement(java.lang.String statement)</span><br><span class="line">          》org.apache.ibatis.executor.Executor#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler)</span><br><span class="line">            》org.apache.ibatis.executor.CachingExecutor#createCacheKey(org.apache.ibatis.mapping.MappedStatement, java.lang.Object parameterObject, org.apache.ibatis.session.RowBounds, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">              》org.apache.ibatis.executor.BaseExecutor#query(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                》org.apache.ibatis.executor.BaseExecutor#queryFromDatabase(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                  》org.apache.ibatis.executor.SimpleExecutor#doQuery(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                    》org.apache.ibatis.executor.statement.RoutingStatementHandler#RoutingStatementHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                      》org.apache.ibatis.session.Configuration#newParameterHandler(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                        》org.apache.ibatis.scripting.LanguageDriver#createParameterHandler</span><br><span class="line">                        》org.apache.ibatis.plugin.InterceptorChain#pluginAll(parameterHandler)</span><br><span class="line">                      》org.apache.ibatis.session.Configuration#newResultSetHandler(org.apache.ibatis.executor.Executor, org.apache.ibatis.mapping.MappedStatement, org.apache.ibatis.session.RowBounds, org.apache.ibatis.executor.parameter.ParameterHandler, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)</span><br><span class="line">                        》org.apache.ibatis.executor.resultset.DefaultResultSetHandler</span><br><span class="line">                        》org.apache.ibatis.plugin.InterceptorChain#pluginAll(resultSetHandler)</span><br><span class="line">                      》org.apache.ibatis.plugin.InterceptorChain#pluginAll(statementHandler)</span><br><span class="line">                    》org.apache.ibatis.executor.SimpleExecutor#prepareStatement(org.apache.ibatis.executor.statement.StatementHandler, org.apache.ibatis.logging.Log)</span><br><span class="line">                      》org.apache.ibatis.transaction.Transaction#getConnection</span><br><span class="line">                        》org.apache.ibatis.transaction.jdbc.JdbcTransaction#openConnection</span><br><span class="line">                    》org.apache.ibatis.executor.statement.StatementHandler#query(java.sql.Statement, org.apache.ibatis.session.ResultHandler)</span><br><span class="line">                      》java.sql.PreparedStatement#execute</span><br><span class="line">                      》org.apache.ibatis.executor.resultset.DefaultResultSetHandler#handleResultSets(java.sql.Statement)</span><br></pre></td></tr></table></figure>
-<h3 id="流程-2"><a href="#流程-2" class="headerlink" title="流程"></a>流程</h3><p>动态代理MapperProxy =》创建MappedStatement缓存key =》获取Executor =》分别加载parameter，resultSet，statement插件 =》 获取java.sql.Connection =》获取java.sql.Statement =》执行sql =》处理结果集</p>
-<p>流程结束。</p>
-<p>期待下次更新咯。:-D</p>
+            <h1 id="解密Android某信聊天记录"><a href="#解密Android某信聊天记录" class="headerlink" title="解密Android某信聊天记录"></a>解密Android某信聊天记录</h1><a id="more"></a>
+<h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><p>frida, frida-tools, adb</p>
+<h1 id="获取密码"><a href="#获取密码" class="headerlink" title="获取密码"></a>获取密码</h1><p>h.js<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">console.log(&apos;script loaded successfully&apos;);</span><br><span class="line"></span><br><span class="line">function xx() &#123;</span><br><span class="line">    function strf(str, replacements) &#123;</span><br><span class="line">		return str.replace(/\$\&#123;\w+\&#125;/g, function(placeholderWithDelimiters) &#123;</span><br><span class="line">			var placeholderWithoutDelimiters = placeholderWithDelimiters.substring(2, placeholderWithDelimiters.length - 1);</span><br><span class="line">			var stringReplacement = replacements[placeholderWithoutDelimiters];</span><br><span class="line">			return stringReplacement;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    function x_db() &#123;</span><br><span class="line">        var String = Java.use(&quot;java.lang.String&quot;);</span><br><span class="line">        </span><br><span class="line">        var SQLiteDatabase = Java.use(&quot;com.tencent.wcdb.database.SQLiteDatabase&quot;);</span><br><span class="line">        SQLiteDatabase[&quot;openDatabase&quot;].overload(&apos;java.lang.String&apos;, &apos;[B&apos;, &apos;com.tencent.wcdb.database.SQLiteCipherSpec&apos;, &apos;com.tencent.wcdb.database.SQLiteDatabase$CursorFactory&apos;, &apos;int&apos;, &apos;com.tencent.wcdb.DatabaseErrorHandler&apos;, &apos;int&apos;).implementation = function (str, bArr, sQLiteCipherSpec, cursorFactory, i2, databaseErrorHandler, i3) &#123;</span><br><span class="line">            console.log(strf(&apos;str=$&#123;0&#125; bArr=$&#123;1&#125;&apos;, [str, bArr == null ? &quot;&quot; : String.$new(bArr)]));</span><br><span class="line">            var result = this[&quot;openDatabase&quot;](str, bArr, sQLiteCipherSpec, cursorFactory, i2, databaseErrorHandler, i3);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Java.perform(function () &#123;</span><br><span class="line">		x_db();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(xx, 0);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frida -U -l h.js --no-pause -f com.tencent.mm</span><br></pre></td></tr></table></figure>
+<h1 id="拉取数据库到本地"><a href="#拉取数据库到本地" class="headerlink" title="拉取数据库到本地"></a>拉取数据库到本地</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb pull /data/user/0/com.tencent.mm/MicroMsg/替换成你自己的字符串/EnMicroMsg.db .</span><br></pre></td></tr></table></figure>
+<h1 id="下载-sqlcipher"><a href="#下载-sqlcipher" class="headerlink" title="下载 sqlcipher"></a>下载 sqlcipher</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sqlcipher-shell64.exe EnMicroMsg.db</span><br><span class="line"></span><br><span class="line">sqlite&gt; PRAGMA key = &apos;你自己的密钥&apos;;</span><br><span class="line">sqlite&gt; PRAGMA cipher_use_hmac = off;</span><br><span class="line">sqlite&gt; PRAGMA kdf_iter = 4000;</span><br><span class="line">sqlite&gt; PRAGMA cipher_page_size = 1024;</span><br><span class="line">sqlite&gt; PRAGMA cipher_hmac_algorithm = HMAC_SHA1;</span><br><span class="line">sqlite&gt; PRAGMA cipher_kdf_algorithm = PBKDF2_HMAC_SHA1;</span><br><span class="line">sqlite&gt; ATTACH DATABASE &apos;plaintext.db&apos; AS plaintext KEY &apos;&apos;;</span><br><span class="line">sqlite&gt; SELECT sqlcipher_export(&apos;plaintext&apos;);</span><br><span class="line"></span><br><span class="line">sqlite&gt; DETACH DATABASE plaintext;</span><br></pre></td></tr></table></figure>
+<h1 id="下载DB-Browser-for-SQLite"><a href="#下载DB-Browser-for-SQLite" class="headerlink" title="下载DB Browser for SQLite"></a>下载DB Browser for SQLite</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择plaintext.db 就可以看到数据啦</span><br></pre></td></tr></table></figure>
 
 			
 			
@@ -405,8 +376,8 @@ var _hmt = _hmt || [];
 		本文由 <a href="/" target="_blank" title="xxzkid | 我叫王也道长">xxzkid | 我叫王也道长</a>创作，采用
 		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
 		可自由转载、引用，但需署名作者且注明文章出处。<br>
-		本文标题：<a href="/2020/mybatis-source-01/" target="_blank" title="mybatis3.5.x源码系列（1）">mybatis3.5.x源码系列（1）</a><br>
-		本文链接：<a href="/2020/mybatis-source-01/" target="_blank" title="mybatis3.5.x源码系列（1）">https://xxzkid.github.io/2020/mybatis-source-01/</a>
+		本文标题：<a href="/2024/decrypt-wechat-msg-1/" target="_blank" title="解密Android某信聊天记录">解密Android某信聊天记录</a><br>
+		本文链接：<a href="/2024/decrypt-wechat-msg-1/" target="_blank" title="解密Android某信聊天记录">https://xxzkid.github.io/2024/decrypt-wechat-msg-1/</a>
 	</div>
 	<div style="clear:both;height:0px;"></div>
 </div>
@@ -474,19 +445,19 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2020/mybatis-source-02/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2024/ubuntu2204-install-pyenv-1/" id="article-nav-newer" class="article-nav-link-wrap">
             <strong class="article-nav-caption">上一篇</strong>
             <div class="article-nav-title">
                 
-                    mybatis 3.5.x源码系列（2）
+                    Ubuntu22.04安装pyenv
                 
             </div>
         </a>
     
     
-        <a href="/2020/leetcode-0005/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2024/javascript-string-format-1/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">leetcode 0005 最长回文子串</div>
+            <div class="article-nav-title">JavaScript 实现 String format with ${}</div>
         </a>
     
 </nav>

@@ -32,6 +32,37 @@
     </entry>
     
     <entry>
+      <title><![CDATA[解密Android某信聊天记录]]></title>
+      <url>/2024/decrypt-wechat-msg-1/</url>
+      <content type="html"><![CDATA[<h1 id="解密Android某信聊天记录"><a href="#解密Android某信聊天记录" class="headerlink" title="解密Android某信聊天记录"></a>解密Android某信聊天记录</h1><a id="more"></a>
+<h1 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h1><p>frida, frida-tools, adb</p>
+<h1 id="获取密码"><a href="#获取密码" class="headerlink" title="获取密码"></a>获取密码</h1><p>h.js<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">console.log(&apos;script loaded successfully&apos;);</span><br><span class="line"></span><br><span class="line">function xx() &#123;</span><br><span class="line">    function strf(str, replacements) &#123;</span><br><span class="line">		return str.replace(/\$\&#123;\w+\&#125;/g, function(placeholderWithDelimiters) &#123;</span><br><span class="line">			var placeholderWithoutDelimiters = placeholderWithDelimiters.substring(2, placeholderWithDelimiters.length - 1);</span><br><span class="line">			var stringReplacement = replacements[placeholderWithoutDelimiters];</span><br><span class="line">			return stringReplacement;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    function x_db() &#123;</span><br><span class="line">        var String = Java.use(&quot;java.lang.String&quot;);</span><br><span class="line">        </span><br><span class="line">        var SQLiteDatabase = Java.use(&quot;com.tencent.wcdb.database.SQLiteDatabase&quot;);</span><br><span class="line">        SQLiteDatabase[&quot;openDatabase&quot;].overload(&apos;java.lang.String&apos;, &apos;[B&apos;, &apos;com.tencent.wcdb.database.SQLiteCipherSpec&apos;, &apos;com.tencent.wcdb.database.SQLiteDatabase$CursorFactory&apos;, &apos;int&apos;, &apos;com.tencent.wcdb.DatabaseErrorHandler&apos;, &apos;int&apos;).implementation = function (str, bArr, sQLiteCipherSpec, cursorFactory, i2, databaseErrorHandler, i3) &#123;</span><br><span class="line">            console.log(strf(&apos;str=$&#123;0&#125; bArr=$&#123;1&#125;&apos;, [str, bArr == null ? &quot;&quot; : String.$new(bArr)]));</span><br><span class="line">            var result = this[&quot;openDatabase&quot;](str, bArr, sQLiteCipherSpec, cursorFactory, i2, databaseErrorHandler, i3);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    Java.perform(function () &#123;</span><br><span class="line">		x_db();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(xx, 0);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frida -U -l h.js --no-pause -f com.tencent.mm</span><br></pre></td></tr></table></figure>
+<h1 id="拉取数据库到本地"><a href="#拉取数据库到本地" class="headerlink" title="拉取数据库到本地"></a>拉取数据库到本地</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb pull /data/user/0/com.tencent.mm/MicroMsg/替换成你自己的字符串/EnMicroMsg.db .</span><br></pre></td></tr></table></figure>
+<h1 id="下载-sqlcipher"><a href="#下载-sqlcipher" class="headerlink" title="下载 sqlcipher"></a>下载 sqlcipher</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sqlcipher-shell64.exe EnMicroMsg.db</span><br><span class="line"></span><br><span class="line">sqlite&gt; PRAGMA key = &apos;你自己的密钥&apos;;</span><br><span class="line">sqlite&gt; PRAGMA cipher_use_hmac = off;</span><br><span class="line">sqlite&gt; PRAGMA kdf_iter = 4000;</span><br><span class="line">sqlite&gt; PRAGMA cipher_page_size = 1024;</span><br><span class="line">sqlite&gt; PRAGMA cipher_hmac_algorithm = HMAC_SHA1;</span><br><span class="line">sqlite&gt; PRAGMA cipher_kdf_algorithm = PBKDF2_HMAC_SHA1;</span><br><span class="line">sqlite&gt; ATTACH DATABASE &apos;plaintext.db&apos; AS plaintext KEY &apos;&apos;;</span><br><span class="line">sqlite&gt; SELECT sqlcipher_export(&apos;plaintext&apos;);</span><br><span class="line"></span><br><span class="line">sqlite&gt; DETACH DATABASE plaintext;</span><br></pre></td></tr></table></figure>
+<h1 id="下载DB-Browser-for-SQLite"><a href="#下载DB-Browser-for-SQLite" class="headerlink" title="下载DB Browser for SQLite"></a>下载DB Browser for SQLite</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择plaintext.db 就可以看到数据啦</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> frida </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> android </tag>
+            
+            <tag> frida </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[JavaScript 实现 String format with ${}]]></title>
       <url>/2024/javascript-string-format-1/</url>
       <content type="html"><![CDATA[<h1 id="JavaScript-实现-String-format-with"><a href="#JavaScript-实现-String-format-with" class="headerlink" title="JavaScript 实现 String format with ${}"></a>JavaScript 实现 String format with ${}</h1><a id="more"></a>
@@ -2730,6 +2761,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[秒杀系统架构与实战]]></title>
       <url>/2016/miaosha-system/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 秒杀系统架构与实战</p>
@@ -2939,29 +2993,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> mysql-5.7.x </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
             
         </tags>
         
