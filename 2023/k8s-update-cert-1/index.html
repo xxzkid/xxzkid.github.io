@@ -5,18 +5,18 @@
     
     <title>Kubenetes更新证书 | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Kubenetes更新证书一、查看证书过期的时间1# kubeadm certs check-expiration 二、证书备份1# cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320 三、重新生成证书1# kubeadm certs renew all 四、重新生成配置文件1234# mkdir /etc/kubernetes/">
+    <meta name="description" content="Kubenetes更新证书">
 <meta name="keywords" content="java,kubernetes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubenetes更新证书">
 <meta property="og:url" content="https://xxzkid.github.io/2023/k8s-update-cert-1/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="Kubenetes更新证书一、查看证书过期的时间1# kubeadm certs check-expiration 二、证书备份1# cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320 三、重新生成证书1# kubeadm certs renew all 四、重新生成配置文件1234# mkdir /etc/kubernetes/">
+<meta property="og:description" content="Kubenetes更新证书">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-02-29T04:07:55.899Z">
+<meta property="og:updated_time" content="2024-02-29T04:09:11.614Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubenetes更新证书">
-<meta name="twitter:description" content="Kubenetes更新证书一、查看证书过期的时间1# kubeadm certs check-expiration 二、证书备份1# cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320 三、重新生成证书1# kubeadm certs renew all 四、重新生成配置文件1234# mkdir /etc/kubernetes/">
+<meta name="twitter:description" content="Kubenetes更新证书">
     
 
     
@@ -272,7 +272,8 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="Kubenetes更新证书"><a href="#Kubenetes更新证书" class="headerlink" title="Kubenetes更新证书"></a>Kubenetes更新证书</h1><h1 id="一、查看证书过期的时间"><a href="#一、查看证书过期的时间" class="headerlink" title="一、查看证书过期的时间"></a>一、查看证书过期的时间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs check-expiration</span><br></pre></td></tr></table></figure>
+            <h1 id="Kubenetes更新证书"><a href="#Kubenetes更新证书" class="headerlink" title="Kubenetes更新证书"></a>Kubenetes更新证书</h1><a id="more"></a>
+<h1 id="一、查看证书过期的时间"><a href="#一、查看证书过期的时间" class="headerlink" title="一、查看证书过期的时间"></a>一、查看证书过期的时间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs check-expiration</span><br></pre></td></tr></table></figure>
 <h1 id="二、证书备份"><a href="#二、证书备份" class="headerlink" title="二、证书备份"></a>二、证书备份</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320</span><br></pre></td></tr></table></figure>
 <h1 id="三、重新生成证书"><a href="#三、重新生成证书" class="headerlink" title="三、重新生成证书"></a>三、重新生成证书</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs renew all</span><br></pre></td></tr></table></figure>
 <h1 id="四、重新生成配置文件"><a href="#四、重新生成配置文件" class="headerlink" title="四、重新生成配置文件"></a>四、重新生成配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /etc/kubernetes/conf.20230320</span><br><span class="line"># mv /etc/kubernetes/*.conf /etc/kubernetes/conf.20230320</span><br><span class="line"></span><br><span class="line"># kubeadm init phase kubeconfig all</span><br></pre></td></tr></table></figure>
