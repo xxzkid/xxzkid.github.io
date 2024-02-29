@@ -10,5 +10,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://blog.uyiplus.com/sitemap.xml
-Sitemap: http://blog.uyiplus.com/baidusitemap.xml
+Sitemap: http://xxzkid.github.io/sitemap.xml
+Sitemap: http://xxzkid.github.io/baidusitemap.xml
