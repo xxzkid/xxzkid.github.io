@@ -270,21 +270,10 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <h1 id="Frida获取微信消息内容"><a href="#Frida获取微信消息内容" class="headerlink" title="Frida获取微信消息内容"></a>Frida获取微信消息内容</h1><h1 id="上一篇讲解了如何安装Frida"><a href="#上一篇讲解了如何安装Frida" class="headerlink" title="上一篇讲解了如何安装Frida"></a>上一篇讲解了如何安装Frida</h1><h1 id="获取微信消息内容"><a href="#获取微信消息内容" class="headerlink" title="获取微信消息内容"></a>获取微信消息内容</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var SQLiteDatabase = Java.use(&quot;com.tencent.wcdb.database.SQLiteDatabase&quot;);</span><br><span class="line">SQLiteDatabase[&quot;insert&quot;].implementation = function (str, str2, contentValues) &#123;</span><br><span class="line">    console.log(&apos;SQLiteDatabase.insert is called:&apos;, &apos;str=&apos;, str, &apos;str2=&apos;, str2, &apos;contentValues=&apos;, contentValues);</span><br><span class="line">    var result = this[&quot;insert&quot;](str, str2, contentValues);</span><br><span class="line">    console.log(&apos;SQLiteDatabase.insert result=&apos;, result);</span><br><span class="line">    return result;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>str: 消息类型</p>
-<ul>
-<li>message: 普通消息 AppMessage: 小程序消息</li>
-</ul>
-<p>contentValues: sql参数键值对 </p>
-<ul>
-<li>content: 消息内容</li>
-</ul>
-
-			
-			
-			
-			
+            <p><h1 id="Frida获取微信消息内容"><a href="#Frida获取微信消息内容" class="headerlink" title="Frida获取微信消息内容"></a>Frida获取微信消息内容</h1></p>
+            <p class="article-more-link">
+                <a href="/2023/frida-wechat-get-msg-1/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
