@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                76
+                77
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -227,6 +227,90 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-k8s-update-cert-1" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2023/k8s-update-cert-1/">Kubenetes更新证书</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2023/k8s-update-cert-1/">
+            <time datetime="2023-03-27T10:23:11.000Z" itemprop="datePublished">2023-03-27</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/kubernetes/">kubernetes</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="Kubenetes更新证书"><a href="#Kubenetes更新证书" class="headerlink" title="Kubenetes更新证书"></a>Kubenetes更新证书</h1><h1 id="一、查看证书过期的时间"><a href="#一、查看证书过期的时间" class="headerlink" title="一、查看证书过期的时间"></a>一、查看证书过期的时间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs check-expiration</span><br></pre></td></tr></table></figure>
+<h1 id="二、证书备份"><a href="#二、证书备份" class="headerlink" title="二、证书备份"></a>二、证书备份</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320</span><br></pre></td></tr></table></figure>
+<h1 id="三、重新生成证书"><a href="#三、重新生成证书" class="headerlink" title="三、重新生成证书"></a>三、重新生成证书</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs renew all</span><br></pre></td></tr></table></figure>
+<h1 id="四、重新生成配置文件"><a href="#四、重新生成配置文件" class="headerlink" title="四、重新生成配置文件"></a>四、重新生成配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /etc/kubernetes/conf.20230320</span><br><span class="line"># mv /etc/kubernetes/*.conf /etc/kubernetes/conf.20230320</span><br><span class="line"></span><br><span class="line"># kubeadm init phase kubeconfig all</span><br></pre></td></tr></table></figure>
+<h1 id="五、重启kubelet和更新配置"><a href="#五、重启kubelet和更新配置" class="headerlink" title="五、重启kubelet和更新配置"></a>五、重启kubelet和更新配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># systemctl restart kubelet</span><br><span class="line"></span><br><span class="line"># cp /etc/kubernetes/admin.conf ~/.kube/config</span><br></pre></td></tr></table></figure>
+
+			
+			
+			
+			
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-cs-float-store-1" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -943,85 +1027,6 @@ var _hmt = _hmt || [];
 <p>示例 2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;cbbd&quot;</span><br><span class="line">输出: &quot;bb&quot;</span><br></pre></td></tr></table></figure></p></p>
             <p class="article-more-link">
                 <a href="/2020/leetcode-0005/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="9780609372"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-leetcode-0004" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2020/leetcode-0004/">leetcode 0004 寻找两个有序数组的中位数</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2020/leetcode-0004/">
-            <time datetime="2020-02-14T15:04:00.000Z" itemprop="datePublished">2020-02-14</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/leetcode/">leetcode</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/leetcode/">leetcode</a>
-    </div>
-
-						
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。</p>
-<p>请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。</p>
-<p>你可以假设 nums1 和 nums2 不会同时为空。<br></p>
-            <p class="article-more-link">
-                <a href="/2020/leetcode-0004/#more">查看更多</a>
             </p>
         
         </div>

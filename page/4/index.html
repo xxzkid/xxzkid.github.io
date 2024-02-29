@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                76
+                77
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -227,6 +227,83 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-servicecomb-saga-1" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/servicecomb-saga-1/">servicecomb-saga omega分析</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/servicecomb-saga-1/">
+            <time datetime="2018-11-16T22:39:11.000Z" itemprop="datePublished">2018-11-16</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/saga/">saga</a>, <a class="tag-link" href="/tags/分布式事务/">分布式事务</a>
+    </div>
+
+						
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><p>在微服务热火朝天的时代，分布式事务变的更加急迫，那么如果解决分布式事务是一个一直以来的难题，今天我们来介绍一个保证最终一致性的分布式事务的框架servicecomb-saga。</p></p>
+            <p class="article-more-link">
+                <a href="/2018/servicecomb-saga-1/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2328510744730535"
+     data-ad-slot="9780609372"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-canal-quickstart" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -905,86 +982,6 @@ var _hmt = _hmt || [];
 <h3 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1. 下载安装包"></a>1. 下载安装包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-3.2.10.tar.gz</span><br></pre></td></tr></table></figure></p>
             <p class="article-more-link">
                 <a href="/2017/redis-single-install/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="9780609372"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-java-app-log" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/java-app-log/">Java 应用中的日志</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/java-app-log/">
-            <time datetime="2017-09-17T03:18:38.000Z" itemprop="datePublished">2017-09-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/log/">log</a>
-    </div>
-
-						
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><p>这篇文章主要讲解 Java 应用中的日志</p>
-<p>日志在应用程序中是非常非常重要的，好的日志信息能有助于我们在程序出现 BUG 时能快速进行定位，并能找出其中的原因。</p>
-<p>但是，很多介绍 AOP 的地方都采用日志来作为介绍，实际上日志要采用切面的话是极其不科学的！对于日志来说，只是在方法开始、结束、异常时输出一些什么，那是绝对不够的，这样的日志对于日志分析没有任何意义。如果在方法的开始和结束整个日志，那方法中呢？如果方法中没有日志的话，那就完全失去了日志的意义！如果应用出现问题要查找由什么原因造成的，也没有什么作用。这样的日志还不如不用！</p>
-<p>希望藉以本文能让应用程序的开发人员能更加重视日志，能在应用中输出有意义的日志。<br></p>
-            <p class="article-more-link">
-                <a href="/2017/java-app-log/#more">查看更多</a>
             </p>
         
         </div>
