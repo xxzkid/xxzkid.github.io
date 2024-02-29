@@ -32,6 +32,31 @@
     </entry>
     
     <entry>
+      <title><![CDATA[Frida 使用小技巧]]></title>
+      <url>/2024/frida-use-1/</url>
+      <content type="html"><![CDATA[<h1 id="Frida-使用小技巧"><a href="#Frida-使用小技巧" class="headerlink" title="Frida 使用小技巧"></a>Frida 使用小技巧</h1><a id="more"></a>
+<h1 id="类字段赋值"><a href="#类字段赋值" class="headerlink" title="类字段赋值"></a>类字段赋值</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var o = Java.use(&quot;com.tencent.mm.o&quot;).$new();</span><br><span class="line">o.a.value = 1;</span><br></pre></td></tr></table></figure>
+<h1 id="静态方法调用"><a href="#静态方法调用" class="headerlink" title="静态方法调用"></a>静态方法调用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var String = Java.use(&quot;java.lang.String&quot;);</span><br><span class="line">var o_class = Java.use(&quot;com.tencent.mm.o&quot;);</span><br><span class="line">o_class.b.overload(&apos;java.lang.String&apos;).call(this, String.$new(&quot;111&quot;));</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> frida </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> frida </tag>
+            
+            <tag> python </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[解密Android某信聊天记录]]></title>
       <url>/2024/decrypt-wechat-msg-1/</url>
       <content type="html"><![CDATA[<h1 id="解密Android某信聊天记录"><a href="#解密Android某信聊天记录" class="headerlink" title="解密Android某信聊天记录"></a>解密Android某信聊天记录</h1><a id="more"></a>
