@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>base64</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div>
+      输入：<textarea id="input"></textarea>
+      <button onclick="base64Encode(this)">encode</button>
+    </div>
+    <div>
+      输入图片: <input type="file" onchange="selectFile(this)">
+    </div>
+    <div>
+      输出：<textarea id="output"></textarea>
+      <button onclick="base64Decode(this)">decode</button>
+    </div>
+    <script src="base64.js"></script>
+    <script>
+      function selectFile(obj) {
+        var file = obj.files[0];
+        var reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onloadend = function(e) {
+					var base64Data = e.target.result;
+					document.getElementById('output').value = base64Data;
+				}
+      }
+      function base64Encode(obj) {
+        var input = document.getElementById('input').value;
+        var str = new Base64().encode(input);
+        document.getElementById('output').value = str;
+      }
+      function base64Decode(obj) {
+        var output = document.getElementById('output').value;
+        var str = new Base64().decode(output);
+        document.getElementById('input').value = str;
+      }
+    </script>
+  </body>
+</html>
