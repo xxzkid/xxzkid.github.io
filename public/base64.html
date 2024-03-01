@@ -22,11 +22,11 @@
       function selectFile(obj) {
         var file = obj.files[0];
         var reader = new FileReader();
-				reader.readAsDataURL(file);
-				reader.onloadend = function(e) {
-					var base64Data = e.target.result;
-					document.getElementById('output').value = base64Data;
-				}
+        reader.readAsDataURL(file);
+        reader.onloadend = function(e) {
+          var base64Data = e.target.result;
+          document.getElementById('output').value = base64Data;
+        }
       }
       function base64Encode(obj) {
         var input = document.getElementById('input').value;
