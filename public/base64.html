@@ -7,15 +7,28 @@
   </head>
   <body>
     <div>
-      输入：<textarea id="input"></textarea>
-      <button onclick="base64Encode(this)">encode</button>
+      <div>输入：</div>
+      <div>
+        <textarea id="input" rows="15" cols="80"></textarea>
+      </div>
+      <div>
+        <button onclick="base64Encode(this)">encode</button>
+      </div>
     </div>
     <div>
-      输入图片: <input type="file" onchange="selectFile(this)">
+      <div>输入图片: </div>
+      <div>
+        <input type="file" onchange="selectFile(this)">
+      </div>
     </div>
     <div>
-      输出：<textarea id="output"></textarea>
-      <button onclick="base64Decode(this)">decode</button>
+      <div>输出：</div>
+      <div>
+        <textarea id="output" rows="15" cols="80"></textarea>
+      </div>
+      <div>
+        <button onclick="base64Decode(this)">decode</button>
+      </div>
     </div>
     <script src="base64.js"></script>
     <script>
