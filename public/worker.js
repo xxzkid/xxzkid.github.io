@@ -4,7 +4,7 @@ addEventListener('fetch', event => {
 })
 
 function cors(req, res) {
-  res.headers.set("Access-Control-Allow-Origin", req.headers.origin || '*');
+  res.headers.set("Access-Control-Allow-Origin", req.headers.get('origin') || '*');
   res.headers.set("Access-Control-Allow-Credentials", "true");
   res.headers.set("Access-Control-Max-Age", "86400");
   res.headers.set("Access-Control-Allow-Methods", "OPTIONS, HEAD, GET, POST, PUT, DELETE");
