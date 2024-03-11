@@ -19,45 +19,52 @@ function buf2hex(buf) {
 
 async function handle(event) {
   let req = event.request;
-  if (req.method === 'OPTIONS') {
-    let res = Response.json({})
-    cors(req, res);
-    return res;
-  } else if (req.method !== 'POST') {
-    let res = Response.json({status: 200})
-    cors(req, res);
-    return res;
-  }
-
-  let body = await req.json();
-  console.log(body);
+  let req_url = new URL(req.url);
+  if (req_url.pathname == '/x') {
+    if (req.method === 'OPTIONS') {
+      let res = Response.json({})
+      cors(req, res);
+      return res;
+    } else if (req.method !== 'POST') {
+      let res = Response.json({status: 200})
+      cors(req, res);
+      return res;
+    }
   
-  let method = body["method"] || "GET";
-  let url = body["url"];
-  let headers = body["headers"] || {};
-  let params = body["params"] || {};
-  let data = body["data"];
-  let b = headers["b"] || "";
-
-  let fetchResponse = await fetch(url + (url.indexOf("?") > -1 ? "&" : "?") + new URLSearchParams(params), {
-    method: method,
-    headers: headers,
-    body: data
-  });
-  let fetchResponseStatus = fetchResponse.status;
-  let fetchResponseHeaders = Object.fromEntries(fetchResponse.headers);
-
-  let fetchData;
-  if (b === "1") {
-    fetchData = buf2hex(await fetchResponse.arrayBuffer());
-  } else {
-    fetchData = await fetchResponse.text();
+    let body = await req.json();
+    
+    let method = body["method"] || "GET";
+    let url = body["url"];
+    let headers = body["headers"] || {};
+    let params = body["params"] || {};
+    let data = body["data"];
+    let b = headers["b"] || "";
+  
+    let fetchResponse = await fetch(url + (url.indexOf("?") > -1 ? "&" : "?") + new URLSearchParams(params), {
+      method: method,
+      headers: headers,
+      body: data
+    });
+    let fetchResponseStatus = fetchResponse.status;
+    let fetchResponseHeaders = Object.fromEntries(fetchResponse.headers);
+  
+    let fetchData;
+    if (b === "1") {
+      fetchData = buf2hex(await fetchResponse.arrayBuffer());
+    } else {
+      fetchData = await fetchResponse.text();
+    }
+    let res = Response.json({
+      status: fetchResponseStatus, 
+      headers: fetchResponseHeaders,
+      data: fetchData
+    });
+    cors(req, res);
+    return res;
+  } else if (req_url.pathname == '/s') {
+    let req_params = new URLSearchParams(req_url.search.slice(1));
+    let durl = req_params.get('durl');
+    return fetch(durl);
   }
-  let res = Response.json({
-    status: fetchResponseStatus, 
-    headers: fetchResponseHeaders,
-    data: fetchData
-  });
-  cors(req, res);
-  return res;
+  return Response.json({status: 400});
 }
