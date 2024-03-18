@@ -205,7 +205,7 @@
       });
     }
 
-    var fetchAudio = function (url, fn) {
+    var fetchAudio = function (url, name, fn) {
       var key = url.substring(url.lastIndexOf('/'));
       localforage.getItem(key).then(audio => {
         if (audio) {
@@ -219,7 +219,7 @@
               console.log(url + ' fetch ok.');
               blobToArrayBuffer(blob).then(buffer => {
                 localforage
-                  .setItem(key, { buffer, type })
+                  .setItem(key, { buffer, type, name })
                   .then(audio => {
                     fn(audio);
                   });
@@ -253,7 +253,8 @@
       customAudioType: {
         'custom': function (audioElement, audio, player) {
           var target_url = audio.url.indexOf('http:') > -1 || audio.url.indexOf('https:') > -1 ? audio.url : cdn_url() + audio.url;
-          fetchAudio(target_url, function (_audio) {
+          var name = audio.name + "-" + audio.artist;
+          fetchAudio(target_url, name, function (_audio) {
             if (_audio.buffer) {
               _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
             }
