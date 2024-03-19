@@ -120,6 +120,9 @@ CryptoJS.mode.ECB = (function () {
 
   return ECB;
 }());
+window.module = window.module || {
+    exports: {}
+};
 module.exports = {
   CryptoJS: CryptoJS
 }
