@@ -5,18 +5,18 @@
     
     <title>JavaScript 实现 String format with ${} | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="JavaScript 实现 String format with ${}">
+    <meta name="description" content="JavaScript 实现 String format with ${} 12345678910function str_format(str, replacements) &amp;#123;	return str.replace(/\$\&amp;#123;\w+\&amp;#125;/g, function(placeholderWithDelimiters) &amp;#123;		var placeholderWith">
 <meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 实现 String format with ${}">
 <meta property="og:url" content="https://xxzkid.github.io/2024/javascript-string-format-1/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="JavaScript 实现 String format with ${}">
+<meta property="og:description" content="JavaScript 实现 String format with ${} 12345678910function str_format(str, replacements) &amp;#123;	return str.replace(/\$\&amp;#123;\w+\&amp;#125;/g, function(placeholderWithDelimiters) &amp;#123;		var placeholderWith">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-03-19T04:00:57.290Z">
+<meta property="og:updated_time" content="2024-03-19T04:01:45.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 实现 String format with ${}">
-<meta name="twitter:description" content="JavaScript 实现 String format with ${}">
+<meta name="twitter:description" content="JavaScript 实现 String format with ${} 12345678910function str_format(str, replacements) &amp;#123;	return str.replace(/\$\&amp;#123;\w+\&amp;#125;/g, function(placeholderWithDelimiters) &amp;#123;		var placeholderWith">
     
 
     
@@ -272,8 +272,9 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="JavaScript-实现-String-format-with"><a href="#JavaScript-实现-String-format-with" class="headerlink" title="JavaScript 实现 String format with ${}"></a>JavaScript 实现 String format with ${}</h1><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function str_format(str, replacements) &#123;</span><br><span class="line">	return str.replace(/\$\&#123;\w+\&#125;/g, function(placeholderWithDelimiters) &#123;</span><br><span class="line">		var placeholderWithoutDelimiters = placeholderWithDelimiters.substring(2, placeholderWithDelimiters.length - 1);</span><br><span class="line">		var stringReplacement = replacements[placeholderWithoutDelimiters] || placeholderWithDelimiters;</span><br><span class="line">		return stringReplacement;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(str_format(&apos;$&#123;name&#125; is cat&apos;, &#123;name: &apos;tom&apos;&#125;))</span><br><span class="line"></span><br><span class="line">console.log(str_format(&apos;$&#123;0&#125; is cat&apos;, [&apos;tom&apos;]))</span><br></pre></td></tr></table></figure>
+            <p>JavaScript 实现 String format with ${}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function str_format(str, replacements) &#123;</span><br><span class="line">	return str.replace(/\$\&#123;\w+\&#125;/g, function(placeholderWithDelimiters) &#123;</span><br><span class="line">		var placeholderWithoutDelimiters = placeholderWithDelimiters.substring(2, placeholderWithDelimiters.length - 1);</span><br><span class="line">		var stringReplacement = replacements[placeholderWithoutDelimiters] || placeholderWithDelimiters;</span><br><span class="line">		return stringReplacement;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(str_format(&apos;$&#123;name&#125; is cat&apos;, &#123;name: &apos;tom&apos;&#125;))</span><br><span class="line">console.log(str_format(&apos;$&#123;0&#125; is cat&apos;, [&apos;tom&apos;]))</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 
 			
 			
