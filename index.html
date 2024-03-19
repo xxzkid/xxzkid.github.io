@@ -348,7 +348,8 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="Ubuntu22-04安装pyenv"><a href="#Ubuntu22-04安装pyenv" class="headerlink" title="Ubuntu22.04安装pyenv"></a>Ubuntu22.04安装pyenv</h1></p>
+            <p><p>Ubuntu22.04安装pyenv</p>
+<h1 id="下载pyenv-配置环境变量"><a href="#下载pyenv-配置环境变量" class="headerlink" title="下载pyenv 配置环境变量"></a>下载pyenv 配置环境变量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/pyenv/pyenv.git ~/.pyenv</span><br><span class="line"></span><br><span class="line">cd ~/.pyenv &amp;&amp; src/configure &amp;&amp; make -C src</span><br><span class="line"></span><br><span class="line">echo &apos;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&apos; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &apos;command -v pyenv &gt;/dev/null || export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&apos; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &apos;eval &quot;$(pyenv init -)&quot;&apos; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">. ~/.bashrc</span><br></pre></td></tr></table></figure></p>
             <p class="article-more-link">
                 <a href="/2024/ubuntu2204-install-pyenv-1/#more">查看更多</a>
             </p>
