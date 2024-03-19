@@ -5,18 +5,18 @@
     
     <title>安装PaddleSpeech | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="安装PaddleSpeech">
+    <meta name="description" content="安装PaddleSpeech 前提条件python: 3.8.10 1pip install paddlepaddle==2.4.2 安装PaddleSpeech12345git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeechcd PaddleSpeechpip install pytest-runner -i https://p">
 <meta name="keywords" content="paddlespeech,paddle">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安装PaddleSpeech">
 <meta property="og:url" content="https://xxzkid.github.io/2024/paddlespeech-install-1/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="安装PaddleSpeech">
+<meta property="og:description" content="安装PaddleSpeech 前提条件python: 3.8.10 1pip install paddlepaddle==2.4.2 安装PaddleSpeech12345git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeechcd PaddleSpeechpip install pytest-runner -i https://p">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-03-19T04:02:09.224Z">
+<meta property="og:updated_time" content="2024-03-19T04:03:08.925Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="安装PaddleSpeech">
-<meta name="twitter:description" content="安装PaddleSpeech">
+<meta name="twitter:description" content="安装PaddleSpeech 前提条件python: 3.8.10 1pip install paddlepaddle==2.4.2 安装PaddleSpeech12345git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeechcd PaddleSpeechpip install pytest-runner -i https://p">
     
 
     
@@ -272,10 +272,11 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="安装PaddleSpeech"><a href="#安装PaddleSpeech" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><a id="more"></a>
+            <p>安装PaddleSpeech</p>
 <h1 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h1><p>python: 3.8.10</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install paddlepaddle==2.4.2</span><br></pre></td></tr></table></figure>
-<h1 id="安装PaddleSpeech-1"><a href="#安装PaddleSpeech-1" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeech</span><br><span class="line">cd PaddleSpeech</span><br><span class="line">pip install pytest-runner -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple </span><br><span class="line">pip install uvicorn==0.18.3</span><br></pre></td></tr></table></figure>
+<h1 id="安装PaddleSpeech"><a href="#安装PaddleSpeech" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeech</span><br><span class="line">cd PaddleSpeech</span><br><span class="line">pip install pytest-runner -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple </span><br><span class="line">pip install uvicorn==0.18.3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME</span><br><span class="line">wget -P data https://paddlespeech.bj.bcebos.com/Parakeet/tools/nltk_data.tar.gz</span><br><span class="line">tar zxvf data/nltk_data.tar.gz</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cd PaddleSpeech</span><br><span class="line">paddlespeech_server start --config_file ./paddlespeech/server/conf/application.yaml</span><br><span class="line"></span><br><span class="line">出现以下输出，表示服务开启成功</span><br><span class="line">INFO:     Started server process [4697]</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [server.py:75] Started server process [4697]</span><br><span class="line">INFO:     Waiting for application startup.</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [on.py:47] Waiting for application startup.</span><br><span class="line">INFO:     Application startup complete.</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [on.py:61] Application startup complete.</span><br><span class="line">INFO:     Uvicorn running on http://0.0.0.0:8090 (Press CTRL+C to quit)</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [server.py:212] Uvicorn running on http://0.0.0.0:8090 (Press CTRL+C to quit)</span><br></pre></td></tr></table></figure>
 

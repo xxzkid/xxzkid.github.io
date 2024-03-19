@@ -138,10 +138,11 @@
     <entry>
       <title><![CDATA[安装PaddleSpeech]]></title>
       <url>/2024/paddlespeech-install-1/</url>
-      <content type="html"><![CDATA[<h1 id="安装PaddleSpeech"><a href="#安装PaddleSpeech" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><a id="more"></a>
+      <content type="html"><![CDATA[<p>安装PaddleSpeech</p>
 <h1 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h1><p>python: 3.8.10</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install paddlepaddle==2.4.2</span><br></pre></td></tr></table></figure>
-<h1 id="安装PaddleSpeech-1"><a href="#安装PaddleSpeech-1" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeech</span><br><span class="line">cd PaddleSpeech</span><br><span class="line">pip install pytest-runner -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple </span><br><span class="line">pip install uvicorn==0.18.3</span><br></pre></td></tr></table></figure>
+<h1 id="安装PaddleSpeech"><a href="#安装PaddleSpeech" class="headerlink" title="安装PaddleSpeech"></a>安装PaddleSpeech</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone -b r1.2 https://gitee.com/paddlepaddle/PaddleSpeech</span><br><span class="line">cd PaddleSpeech</span><br><span class="line">pip install pytest-runner -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line">pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple </span><br><span class="line">pip install uvicorn==0.18.3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME</span><br><span class="line">wget -P data https://paddlespeech.bj.bcebos.com/Parakeet/tools/nltk_data.tar.gz</span><br><span class="line">tar zxvf data/nltk_data.tar.gz</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cd PaddleSpeech</span><br><span class="line">paddlespeech_server start --config_file ./paddlespeech/server/conf/application.yaml</span><br><span class="line"></span><br><span class="line">出现以下输出，表示服务开启成功</span><br><span class="line">INFO:     Started server process [4697]</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [server.py:75] Started server process [4697]</span><br><span class="line">INFO:     Waiting for application startup.</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [on.py:47] Waiting for application startup.</span><br><span class="line">INFO:     Application startup complete.</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [on.py:61] Application startup complete.</span><br><span class="line">INFO:     Uvicorn running on http://0.0.0.0:8090 (Press CTRL+C to quit)</span><br><span class="line">[2022-07-29 14:19:03] [INFO] [server.py:212] Uvicorn running on http://0.0.0.0:8090 (Press CTRL+C to quit)</span><br></pre></td></tr></table></figure>
 ]]></content>
@@ -2822,29 +2823,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[测试支付图片]]></title>
-      <url>/2016/test-pay-pic/</url>
-      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
-]]></content>
-      
-        <categories>
-            
-            <category> other </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 测试 </tag>
-            
-            <tag> 支付 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[秒杀系统架构与实战]]></title>
       <url>/2016/miaosha-system/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 秒杀系统架构与实战</p>
@@ -3027,6 +3005,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> 乐观锁 </tag>
             
             <tag> redis </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[测试支付图片]]></title>
+      <url>/2016/test-pay-pic/</url>
+      <content type="html"><![CDATA[<p>如果觉得有帮助，可以扫描下面的二维码请我喝茶哦！<br><a id="more"></a><br><img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimwf047j205g05gq3i.jpg" alt=""> <img src="http://ww1.sinaimg.cn/large/afc434bdgy1firimbxo1aj205k05mt99.jpg" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> other </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+            <tag> 支付 </tag>
             
         </tags>
         
