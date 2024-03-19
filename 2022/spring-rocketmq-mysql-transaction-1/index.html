@@ -5,18 +5,18 @@
     
     <title>Spring解决RocketMQ发消息与MySQL事务一致性 | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Spring解决RocketMQ发消息与MySQL事务一致性">
+    <meta name="description" content="Spring解决RocketMQ发消息与MySQL事务一致性 场景 用户订单并支付 发送消息开通查看文章权限">
 <meta name="keywords" content="java,rocketmq,spring">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring解决RocketMQ发消息与MySQL事务一致性">
 <meta property="og:url" content="https://xxzkid.github.io/2022/spring-rocketmq-mysql-transaction-1/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="Spring解决RocketMQ发消息与MySQL事务一致性">
+<meta property="og:description" content="Spring解决RocketMQ发消息与MySQL事务一致性 场景 用户订单并支付 发送消息开通查看文章权限">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-03-19T04:03:38.994Z">
+<meta property="og:updated_time" content="2024-03-19T04:04:22.535Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring解决RocketMQ发消息与MySQL事务一致性">
-<meta name="twitter:description" content="Spring解决RocketMQ发消息与MySQL事务一致性">
+<meta name="twitter:description" content="Spring解决RocketMQ发消息与MySQL事务一致性 场景 用户订单并支付 发送消息开通查看文章权限">
     
 
     
@@ -272,12 +272,13 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="Spring解决RocketMQ发消息与MySQL事务一致性"><a href="#Spring解决RocketMQ发消息与MySQL事务一致性" class="headerlink" title="Spring解决RocketMQ发消息与MySQL事务一致性"></a>Spring解决RocketMQ发消息与MySQL事务一致性</h1><a id="more"></a>
+            <p>Spring解决RocketMQ发消息与MySQL事务一致性</p>
 <h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
 <li>用户订单并支付</li>
-<li>发送消息开通查看文章权限</li>
-</ol>
+<li>发送消息开通查看文章权限<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 伪代码</span><br><span class="line">@Transactional(rollbackFor=Exception.class)</span><br><span class="line">public void pay(long uid, String orderNO) &#123;</span><br><span class="line">  Order order = orderService.selectOrder(uid, orderNO)</span><br><span class="line">  if (order != null) &#123;</span><br><span class="line">    String status = &quot;paid&quot;;</span><br><span class="line">    orderDao.updateStatus(uid, orderNo, status);</span><br><span class="line">    </span><br><span class="line">    rocketMQTemplate.send(&quot;order:status&quot;, message(uid, orderNo, order.itemId, status));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class OrderStatusArticleListener implements RocketMQListener &#123;</span><br><span class="line">    public void onMessage(message) &#123;</span><br><span class="line">        Order order = orderService.selectOrder(message.uid, message.orderNo)</span><br><span class="line">        if (order == null) &#123;</span><br><span class="line">           throw new RuntimeException(&quot;order not found. &quot; + message.orderNo)</span><br><span class="line">        &#125;</span><br><span class="line">        if (order.status != &quot;paid&quot;) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;order not paid. &quot; + message.orderNo)</span><br><span class="line">        &#125;</span><br><span class="line">        // 授权</span><br><span class="line">        articleService.authorize(message.uid, message.itemId)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 <p>上面的例子中会出现消费者查询订单的时候是未支付的状态。</p>
 <p>为什么会这样呢？</p>
 <p>这是因为我们在spring的事务中同步发送消息导致事务还没有提交。消息已经到了消费者端开始消费了。</p>
