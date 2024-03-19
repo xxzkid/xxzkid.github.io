@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>crypto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div>
+      <div>输入：</div>
+      <div>
+        文本：<input id="input" style="min-width: 60%;">
+      </div>
+      <div>
+        key: <input id="key">
+      </div>
+      <div>
+        iv: <input id="iv">
+      </div>
+      <div>
+        <button onclick="encrypt(this)">encode</button>
+      </div>
+    </div>
+    <div>
+      <div>输出：</div>
+      <div>
+        <input id="output" style="min-width: 60%;">
+      </div>
+      <div>
+        <button onclick="decrypt(this)">decode</button>
+      </div>
+    </div>
+    <script src="base64.js"></script>
+    <script src="crypto.js"></script>
+    <script>
+      function encrypt(obj) {
+        var input = document.getElementById('input').value;
+        var key = document.getElementById('key').value;
+        var iv = document.getElementById('iv').value;
+        
+        var str_ = CryptoJS.enc.Utf8.parse(input);
+        var key_ = CryptoJS.enc.Utf8.parse(key);
+        var iv_ = CryptoJS.enc.Utf8.parse(iv);
+
+        var encrypted = CryptoJS.AES.encrypt(str_, key_, {
+          iv: iv_,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        var encrypted_str = encrypted.toString();
+        document.getElementById('output').value = encrypted_str;
+      }
+      function decrypt(obj) {
+        var output = document.getElementById('output').value;
+        var key = document.getElementById('key').value;
+        var iv = document.getElementById('iv').value;
+        
+        var str_ = output.replace(/\-/g, '+').replace(/\_/g, '/').replace(/\$/g, '=');
+        var key_ = CryptoJS.enc.Utf8.parse(key);
+        var iv_ = CryptoJS.enc.Utf8.parse(iv);
+
+        var decrypt_ = CryptoJS.AES.decrypt(str_, key_, {
+            iv: iv_,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        });
+        var decrypted_str = decrypt_.toString(CryptoJS.enc.Utf8);
+        document.getElementById('input').value = decrypted_str.toString();
+      }
+    </script>
+  </body>
+</html>
