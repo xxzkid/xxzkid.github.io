@@ -41,14 +41,14 @@ async function _handle(req, method, url, headers, params, data, remoteUrl) {
   if (b === "1") {
     let res = new Response(fetchResponse.body, {
       status: fetchResponse.status, 
-      headers: fetchResponse.headers,
+      headers: Object.fromEntries(fetchResponse.headers),
     });
     cors(req, res);
     return res;
   }
   let res = Response.json({
     status: fetchResponse.status, 
-    headers: fetchResponse.headers,
+    headers: Object.fromEntries(fetchResponse.headers),
     data: await fetchResponse.text()
   });
   cors(req, res);
@@ -76,7 +76,7 @@ async function gh_download(user, path, token) {
   return gh_resp;
 }
 
-async function gh(method, user, path, raw) {
+async function gh(method, user, path, raw, sha) {
   if (method == null || method == '') {
     return Response.json({status: 400});
   }
@@ -89,7 +89,8 @@ async function gh(method, user, path, raw) {
     repo: gh_repo,
     path: gh_new_path,
     message: 'cf',
-    content: raw == '' ? null : raw
+    content: raw == '' ? null : raw,
+    sha: sha,
   });
   let gh_resp = await fetch(gh_url, {
     method: method,
@@ -98,7 +99,7 @@ async function gh(method, user, path, raw) {
       'X-GitHub-Api-Version': '2022-11-28',
       'Authorization': 'Bearer ' + gh_token,
     },
-    body: method == 'GET' ? null : gh_body
+    body: method == 'PUT' ? gh_body : null
   });
   return gh_resp;
 }
@@ -118,8 +119,24 @@ async function gh_response_handle(url, obj) {
     }
     return new_obj;
   } else if (url == '/sync') {
-    let new_obj = {};
-    new_obj['name'] = obj['content'] ? obj['content']['name'] : null;
+    let new_obj = {
+      name: '',
+      sha: '',
+    };
+    if (obj['content']) {
+      new_obj['name'] = obj['content']['name'];
+      new_obj['sha'] = obj['content']['sha'];
+    }
+    return new_obj;
+  } else if (url == '/get') {
+    let new_obj = {
+      name: '',
+      sha: '',
+    };
+    if (obj) {
+      new_obj['name'] = obj['name'];
+      new_obj['sha'] = obj['sha'];
+    }
     return new_obj;
   }
   return obj;
@@ -156,7 +173,7 @@ async function do_get(req) {
     let fetchResponse = await fetch(durl);
     let res = new Response(fetchResponse.body, {
       status: fetchResponse.status,
-      headers: fetchResponse.headers,
+      headers: Object.fromEntries(fetchResponse.headers),
     });
     cors(req, res);
     return res;
@@ -182,6 +199,7 @@ async function do_post(req) {
     let cookie = headers['cookie'] || headers['Cookie'] || "";
     let title = data['title'];
     let raw = data['raw'];
+    let sha = data['sha'];
     let zlib_user = await get_zlib_user(cookie);
     
     let gh_method = '';
@@ -201,7 +219,7 @@ async function do_post(req) {
       }
       user = zlib_user['email'];
       gh_method = 'PUT';
-    } else if (url == '/list') {
+    } else if (url == '/list' || url == '/get') {
       if (zlib_user == null) {
         let res = Response.json({status: 403});
         cors(req, res);
@@ -220,7 +238,7 @@ async function do_post(req) {
       let gh_resp = await gh_download(user, title, token);
       let res = new Response(gh_resp.body, {
         status: gh_resp.status,
-        headers: gh_resp.headers
+        headers: Object.fromEntries(gh_resp.headers)
       });
       cors(req, res);
       return res;
@@ -230,21 +248,12 @@ async function do_post(req) {
       cors(req, res);
       return res;
     }
-    let gh_resp = await gh(gh_method, user, title, raw);
-    let res = null;
-    if (gh_method == 'GET') {
-      res = Response.json({
-        status: gh_resp.status,
-        headers: gh_resp.headers,
-        data: await gh_response_handle(url, await gh_resp.json())
-      });
-    } else {
-      res = Response.json({
-        status: gh_resp.status,
-        headers: gh_resp.headers,
-        data: await gh_response_handle(url, await gh_resp.json())
-      });
-    }
+    let gh_resp = await gh(gh_method, user, title, raw, sha);
+    let res = Response.json({
+      status: gh_resp.status,
+      headers: Object.fromEntries(gh_resp.headers),
+      data: await gh_response_handle(url, await gh_resp.json())
+    });
     cors(req, res);
     return res;
   } else if (req_url.pathname == '/x') {
