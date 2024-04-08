@@ -53,5 +53,6 @@ window.audios = [
   { name: '现代爱情故事', artist: '许秋怡,张智霖', url: './music/现代爱情故事-许秋怡,张智霖.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '风吹麦浪', artist: '李健,孙俪', url: './music/风吹麦浪-李健,孙俪.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '你总要学会往前走', artist: '任夏', url: './music/你总要学会往前走-任夏.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
-  { name: '一笑江湖', artist: '闻人听書', url: './music/一笑江湖-闻人听書.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' }
+  { name: '一笑江湖', artist: '闻人听書', url: './music/一笑江湖-闻人听書.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '天行九歌', artist: '霍尊', url: './music/天行九歌-霍尊.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
 ];
