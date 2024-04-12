@@ -55,4 +55,5 @@ window.audios = [
   { name: '你总要学会往前走', artist: '任夏', url: './music/你总要学会往前走-任夏.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '一笑江湖', artist: '闻人听書', url: './music/一笑江湖-闻人听書.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '天行九歌', artist: '霍尊', url: './music/天行九歌-霍尊.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '月光', artist: '胡彦斌', url: './music/月光-胡彦斌.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
 ];
