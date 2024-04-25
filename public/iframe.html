@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <iframe src="" id="iframe"></iframe>
+  <script>
+    var iframe = document.getElementById('iframe');
+    var search = window.location.search;
+    if (search == "") {
+      alert('无效地址');
+      return;
+    }
+    iframe.src = search.substring(1);
+  </script>
+</body>
+</html>
