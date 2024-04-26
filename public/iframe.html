@@ -16,8 +16,10 @@
         alert('无效地址');
         return;
       }
-      iframe.src = search.substring(1);
-      iframe.style.height = (window.innerHeight - 100) + 'px';
+      var params = new URLSearchParams(search.substring(1));
+      iframe.src = params.get('url');
+      var height = params.get('height') || window.innerHeight - 50;
+      iframe.style.height = height + 'px';
     }
     load();
   </script>
