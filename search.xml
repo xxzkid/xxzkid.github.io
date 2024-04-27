@@ -3,6 +3,58 @@
   
     
     <entry>
+      <title><![CDATA[OllyICE_1.10 调试sqlite3]]></title>
+      <url>/2024/ollyice-debug-sqlite3/</url>
+      <content type="html"><![CDATA[<p>OllyICE_1.10 调试sqlite3</p>
+<p>下载 OllyICE <a href="https://tool.kanxue.com/index-detail-1.htm" target="_blank" rel="noopener">https://tool.kanxue.com/index-detail-1.htm</a></p>
+<p>下载 IDA <a href="https://tool.kanxue.com/index-detail-6.htm" target="_blank" rel="noopener">https://tool.kanxue.com/index-detail-6.htm</a></p>
+<a id="more"></a>
+<ol>
+<li><p>根据windows cpp编译sqlite3 生成的程序</p>
+</li>
+<li><p>打开OllyICE<br>File -》 Open -》选择sqlitetest.exe</p>
+</li>
+</ol>
+<p><img src="/public/images/ollyice-1.png" alt="ollyice-1.png"></p>
+<p>CTRL+G 输入sqlite3_open</p>
+<p><img src="/public/images/ollyice-2.png" alt="ollyice-2.png"></p>
+<p>可以看到特征码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">007FE2F0 &gt;/$  55            push    ebp</span><br><span class="line">007FE2F1  |.  8BEC          mov     ebp, esp</span><br><span class="line">007FE2F3  |.  8B55 0C       mov     edx, dword ptr [ebp+C]</span><br><span class="line">007FE2F6  |.  8B4D 08       mov     ecx, dword ptr [ebp+8]</span><br><span class="line">007FE2F9  |.  6A 00         push    0</span><br><span class="line">007FE2FB  |.  6A 06         push    6</span><br><span class="line">007FE2FD  |.  E8 CEFBFFFF   call    openDatabase</span><br><span class="line">007FE302  |.  83C4 08       add     esp, 8</span><br><span class="line">007FE305  |.  5D            pop     ebp</span><br><span class="line">007FE306  \.  C3            retn</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8B 4D 08 6A 00 6A 06 E8</span><br></pre></td></tr></table></figure>
+<p>接下来我们分析微信的dll</p>
+<p>找到微信的安装目录 C:\Program Files (x86)\Tencent\WeChat</p>
+<p>找到版本目录下面的WeChatWin.dll 拷贝一份到D:\debug\WeChatWin.dll</p>
+<p>我们打开IDA<br>New -》 选择D:\debug\WeChatWin.dll</p>
+<p>ALT + b</p>
+<p><img src="/public/images/ida-1.png" alt="ida-1.png"></p>
+<p><img src="/public/images/ida-2.png" alt="ida-2.png"></p>
+<p>双击进入</p>
+<p><img src="/public/images/ida-3.png" alt="ida-3.png"></p>
+<p>可以看到跟sqlitetest一样的代码</p>
+<p>到这里我们就发现如何找特征码了</p>
+]]></content>
+      
+        <categories>
+            
+            <category> c </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c/c++ </tag>
+            
+            <tag> 微信 </tag>
+            
+            <tag> PC微信 </tag>
+            
+            <tag> 微信机器人 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[window编译sqlite3]]></title>
       <url>/2024/window-cpp-compile-sqlite3/</url>
       <content type="html"><![CDATA[<p>windows cpp 编译sqlite3</p>
@@ -46,58 +98,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &quot;sqlite3.h&quot;</span><br><span class="line"></span><br><span class="line">int create(sqlite3** db) &#123;</span><br><span class="line">	int rc = sqlite3_open(&quot;test.db&quot;, db);</span><br><span class="line">	std::string sql = &quot;create table if not exists test(name text)&quot;;</span><br><span class="line">	rc = sqlite3_exec(*db, sql.c_str(), NULL, NULL, NULL);</span><br><span class="line">  std::cout &lt;&lt; &quot;rc:&quot; &lt;&lt; rc &lt;&lt; &quot;\n&quot;;</span><br><span class="line">	return rc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  std::cout &lt;&lt; &quot;Hello World!\n&quot;;</span><br><span class="line">	sqlite3* db = NULL;</span><br><span class="line">	int rc = create(&amp;db);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>visual studio 工具栏  -》 点击本地Windows调试器</p>
 <p>会看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br><span class="line">rc:0</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> c </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c/c++ </tag>
-            
-            <tag> 微信 </tag>
-            
-            <tag> PC微信 </tag>
-            
-            <tag> 微信机器人 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[OllyICE_1.10 调试sqlite3]]></title>
-      <url>/2024/ollyice-debug-sqlite3/</url>
-      <content type="html"><![CDATA[<p>OllyICE_1.10 调试sqlite3</p>
-<p>下载 OllyICE <a href="https://tool.kanxue.com/index-detail-1.htm" target="_blank" rel="noopener">https://tool.kanxue.com/index-detail-1.htm</a></p>
-<p>下载 IDA <a href="https://tool.kanxue.com/index-detail-6.htm" target="_blank" rel="noopener">https://tool.kanxue.com/index-detail-6.htm</a></p>
-<a id="more"></a>
-<ol>
-<li><p>根据windows cpp编译sqlite3 生成的程序</p>
-</li>
-<li><p>打开OllyICE<br>File -》 Open -》选择sqlitetest.exe</p>
-</li>
-</ol>
-<p><img src="/public/images/ollyice-1.png" alt="ollyice-1.png"></p>
-<p>CTRL+G 输入sqlite3_open</p>
-<p><img src="/public/images/ollyice-2.png" alt="ollyice-2.png"></p>
-<p>可以看到特征码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">007FE2F0 &gt;/$  55            push    ebp</span><br><span class="line">007FE2F1  |.  8BEC          mov     ebp, esp</span><br><span class="line">007FE2F3  |.  8B55 0C       mov     edx, dword ptr [ebp+C]</span><br><span class="line">007FE2F6  |.  8B4D 08       mov     ecx, dword ptr [ebp+8]</span><br><span class="line">007FE2F9  |.  6A 00         push    0</span><br><span class="line">007FE2FB  |.  6A 06         push    6</span><br><span class="line">007FE2FD  |.  E8 CEFBFFFF   call    openDatabase</span><br><span class="line">007FE302  |.  83C4 08       add     esp, 8</span><br><span class="line">007FE305  |.  5D            pop     ebp</span><br><span class="line">007FE306  \.  C3            retn</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8B 4D 08 6A 00 6A 06 E8</span><br></pre></td></tr></table></figure>
-<p>接下来我们分析微信的dll</p>
-<p>找到微信的安装目录 C:\Program Files (x86)\Tencent\WeChat</p>
-<p>找到版本目录下面的WeChatWin.dll 拷贝一份到D:\debug\WeChatWin.dll</p>
-<p>我们打开IDA<br>New -》 选择D:\debug\WeChatWin.dll</p>
-<p>ALT + b</p>
-<p><img src="/public/images/ida-1.png" alt="ida-1.png"></p>
-<p><img src="/public/images/ida-2.png" alt="ida-2.png"></p>
-<p>双击进入</p>
-<p><img src="/public/images/ida-3.png" alt="ida-3.png"></p>
-<p>可以看到跟sqlitetest一样的代码</p>
-<p>到这里我们就发现如何找特征码了</p>
 ]]></content>
       
         <categories>
