@@ -556,9 +556,9 @@ G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G
         
         <tags>
             
-            <tag> java </tag>
-            
             <tag> synchronize </tag>
+            
+            <tag> java </tag>
             
         </tags>
         
