@@ -58,4 +58,6 @@ window.audios = [
   { name: '月光', artist: '胡彦斌', url: './music/月光-胡彦斌.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '难却(DJ细霖版)', artist: '平生不晚', url: './music/难却(DJ细霖版)-平生不晚.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '落(花开花落日升日没)', artist: '唐伯虎Annie', url: './music/落(花开花落日升日没)-唐伯虎Annie.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '黄梅戏', artist: '慕容晓晓', url: './music/黄梅戏-慕容晓晓.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '处处吻', artist: '杨千嬅', url: './music/处处吻-杨千嬅.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
 ];
