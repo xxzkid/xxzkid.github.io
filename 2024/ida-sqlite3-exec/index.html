@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-6.png">
 <meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-7.png">
 <meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-8.png">
-<meta property="og:updated_time" content="2024-04-30T05:16:08.773Z">
+<meta property="og:updated_time" content="2024-04-30T05:22:11.145Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IDA定位PC微信sqlite3_exec">
 <meta name="twitter:description" content="IDA定位PC微信sqlite3_exec  定位自己写的程序">
@@ -288,9 +288,11 @@ var _hmt = _hmt || [];
 </ol>
 <p><img src="/public/images/sqlite3-0.png" alt="/public/images/sqlite3-0.png"></p>
 <a id="more"></a>
+<p><strong>开始找wechat的sqlite3_exec</strong></p>
 <ol>
-<li>思路<br>所有的数据库执行都必须要先创建数据库，那我们先看从创建数据库SQL开始找</li>
+<li>思路</li>
 </ol>
+<p>所有的数据库执行都必须要先创建数据库，那我们先看从创建数据库SQL开始找</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table if not exists ...</span><br></pre></td></tr></table></figure>
 <p><img src="/public/images/sqlite3-1.jpg" alt="/public/images/sqlite3-1.jpg"></p>
 <p>CTRL + F</p>
