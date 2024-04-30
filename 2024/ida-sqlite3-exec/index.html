@@ -3,20 +3,30 @@
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
-    <title>json取值方法 | xxzkid | 我叫王也道长</title>
+    <title>IDA定位PC微信sqlite3_exec | xxzkid | 我叫王也道长</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="本篇文章讲解json取值的两种方式 在js中有两种方式是用来取出json中的值">
-<meta name="keywords" content="javascript,json">
+    <meta name="description" content="IDA定位PC微信sqlite3_exec  定位自己写的程序">
+<meta name="keywords" content="c&#x2F;c++,微信,PC微信">
 <meta property="og:type" content="article">
-<meta property="og:title" content="json取值方法">
-<meta property="og:url" content="https://xxzkid.github.io/2014/json-get-value-method/index.html">
+<meta property="og:title" content="IDA定位PC微信sqlite3_exec">
+<meta property="og:url" content="https://xxzkid.github.io/2024/ida-sqlite3-exec/index.html">
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
-<meta property="og:description" content="本篇文章讲解json取值的两种方式 在js中有两种方式是用来取出json中的值">
+<meta property="og:description" content="IDA定位PC微信sqlite3_exec  定位自己写的程序">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-0.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-1.jpg">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-2.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-3.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-4.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-5.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-6.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-7.png">
+<meta property="og:image" content="https://xxzkid.github.io/public/images/sqlite3-8.png">
 <meta property="og:updated_time" content="2024-04-30T05:16:08.773Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="json取值方法">
-<meta name="twitter:description" content="本篇文章讲解json取值的两种方式 在js中有两种方式是用来取出json中的值">
+<meta name="twitter:title" content="IDA定位PC微信sqlite3_exec">
+<meta name="twitter:description" content="IDA定位PC微信sqlite3_exec  定位自己写的程序">
+<meta name="twitter:image" content="https://xxzkid.github.io/public/images/sqlite3-0.png">
     
 
     
@@ -228,7 +238,7 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><article id="post-json-get-value-method" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-ida-sqlite3-exec" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -236,7 +246,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            json取值方法
+            IDA定位PC微信sqlite3_exec
         </h1>
     
 
@@ -245,8 +255,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2014/json-get-value-method/">
-            <time datetime="2014-08-20T15:27:56.000Z" itemprop="datePublished">2014-08-20</time>
+        <a href="/2024/ida-sqlite3-exec/">
+            <time datetime="2024-04-30T08:00:00.000Z" itemprop="datePublished">2024-04-30</time>
         </a>
     </div>
 
@@ -254,13 +264,13 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/javascript/">javascript</a>
+        <a class="article-category-link" href="/categories/c/">c</a>
     </div>
 
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/javascript/">javascript</a>, <a class="tag-link" href="/tags/json/">json</a>
+        <a class="tag-link" href="/tags/PC微信/">PC微信</a>, <a class="tag-link" href="/tags/c-c/">c/c++</a>, <a class="tag-link" href="/tags/微信/">微信</a>
     </div>
 
 						
@@ -272,18 +282,32 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>本篇文章讲解json取值的两种方式</p>
-<p>在js中有两种方式是用来取出json中的值</p>
+            <p>IDA定位PC微信sqlite3_exec</p>
+<ol>
+<li>定位自己写的程序</li>
+</ol>
+<p><img src="/public/images/sqlite3-0.png" alt="/public/images/sqlite3-0.png"></p>
 <a id="more"></a>
 <ol>
-<li>.的方式取值(data.key)</li>
-<li>[]的方式取值(data[key])</li>
+<li>思路<br>所有的数据库执行都必须要先创建数据库，那我们先看从创建数据库SQL开始找</li>
 </ol>
-<p>看下面的一个例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> json=&#123;  </span><br><span class="line">    r1:<span class="string">'123'</span>,  </span><br><span class="line">    r2:<span class="string">'123'</span>,  </span><br><span class="line">    r3:<span class="string">'123'</span>,  </span><br><span class="line">    r4:<span class="string">'123'</span>,  </span><br><span class="line">    r5:<span class="string">'123'</span>,  </span><br><span class="line">    r6:<span class="string">'123'</span>,  </span><br><span class="line">    r7:<span class="string">'123'</span>,  </span><br><span class="line">    r8:<span class="string">'123'</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们要取出每一个元素，肯定最简单方法就是循环遍历了。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">1</span>;i&lt;=<span class="number">8</span>；i++)&#123;</span><br><span class="line">    <span class="comment">//但是这里如果使用第一种方式，这样调用是不行的，我们必须使用第二种方式调用。</span></span><br><span class="line">    <span class="comment">//var t = "r"+i;</span></span><br><span class="line">    <span class="comment">//var value = json.t;  // 但是你这样写是可以的:json."r1",就是不能进行变量的拼接</span></span><br><span class="line">    <span class="keyword">var</span> value = json[<span class="string">"r"</span>+i]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>就是这么简单，哈哈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table if not exists ...</span><br></pre></td></tr></table></figure>
+<p><img src="/public/images/sqlite3-1.jpg" alt="/public/images/sqlite3-1.jpg"></p>
+<p>CTRL + F</p>
+<p><img src="/public/images/sqlite3-2.png" alt="/public/images/sqlite3-2.png"></p>
+<p><img src="/public/images/sqlite3-3.png" alt="/public/images/sqlite3-3.png"></p>
+<p>鼠标放在黄色区域 按下x</p>
+<p><img src="/public/images/sqlite3-4.png" alt="/public/images/sqlite3-4.png"></p>
+<p><img src="/public/images/sqlite3-5.png" alt="/public/images/sqlite3-5.png"></p>
+<p><img src="/public/images/sqlite3-6.png" alt="/public/images/sqlite3-6.png"></p>
+<p>看call sub_10F20BF0 双击进去看看是怎么样的</p>
+<p><img src="/public/images/sqlite3-7.png" alt="/public/images/sqlite3-7.png"></p>
+<p>可以看到sqlite3_exec函数的结构</p>
+<p>sub_11E24F70 就是sqlite3_exec函数</p>
+<p><img src="/public/images/sqlite3-8.png" alt="/public/images/sqlite3-8.png"></p>
+<p>结论：</p>
+<p>10000000 是我的IDA的基址</p>
+<p>偏移 11E24F70 - 10000000 = 1E24F70</p>
 
 			
 			
@@ -382,8 +406,8 @@ var _hmt = _hmt || [];
 		本文由 <a href="/" target="_blank" title="xxzkid | 我叫王也道长">xxzkid | 我叫王也道长</a>创作，采用
 		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
 		可自由转载、引用，但需署名作者且注明文章出处。<br>
-		本文标题：<a href="/2014/json-get-value-method/" target="_blank" title="json取值方法">json取值方法</a><br>
-		本文链接：<a href="/2014/json-get-value-method/" target="_blank" title="json取值方法">https://xxzkid.github.io/2014/json-get-value-method/</a>
+		本文标题：<a href="/2024/ida-sqlite3-exec/" target="_blank" title="IDA定位PC微信sqlite3_exec">IDA定位PC微信sqlite3_exec</a><br>
+		本文链接：<a href="/2024/ida-sqlite3-exec/" target="_blank" title="IDA定位PC微信sqlite3_exec">https://xxzkid.github.io/2024/ida-sqlite3-exec/</a>
 	</div>
 	<div style="clear:both;height:0px;"></div>
 </div>
@@ -453,19 +477,10 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2014/java-checkcode/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    java验证码
-                
-            </div>
-        </a>
     
-    
-        <a href="/2014/jquery-build-form/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2024/ollyice-debug-sqlite3/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">jquery动态生成表单提交</div>
+            <div class="article-nav-title">OllyICE_1.10 调试sqlite3</div>
         </a>
     
 </nav>
