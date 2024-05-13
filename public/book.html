@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>book search</title>
+
+    <style>
+        .text-bold { font-weight: bold; }
+        .mb-50 {margin-bottom: 50px;}
+        .m5 {margin: 5px;}
+        .item-left { float: left; }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="keyword">
+        <button onclick="search()">搜索</button>
+    </div>
+    <div id="loading"></div>
+    <div id="result">
+
+    </div>
+
+    <script>
+        function search() {
+            var q = document.querySelector('#keyword').value;
+            if (q == null || q == '') {
+                alert('请输入关键词');
+                return;
+            }
+            var body = {
+                "method": "GET",
+                "url": "/s/" + encodeURIComponent(q),
+                "headers": {
+                    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                }
+            };
+            var loadingNode = document.querySelector('#loading');
+            loadingNode.innerText = '正在搜索...';
+            fetch('https://http2.idingdang.org/xbook', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(body)
+            }).then((res) => res.text()).then((resp) => {
+                loadingNode.innerText = '搜索完成';
+                var response = JSON.parse(resp);
+                var resultNode = document.querySelector('#result');
+                if (response.data && response.data.list && response.data.list.length > 0) {
+                    var list = response.data.list;
+                    var html = '';
+                    for (let idx in list) {
+                        let item = list[idx];
+                        html += `<div class="mb-50">
+                            <div class="item-left m5">
+                            <img src="${item.coverImage}">
+                            </div>
+                            <div class="item-right">
+                            <div><span>书名：</span><span class="text-bold">${item.title}</span></div>
+                            <div><span>作者：</span><span class="text-bold">${item.author}</span></div>
+                            <div><span>出版社：</span><span class="text-bold">${item.publisher}</span></div>
+                            <div><span>ISBN: </span><span class="text-bold">${item.isbn}</span></div>
+                            <div><span>格式：</span><span class="text-bold">${item.file}</span></div>
+                            <div><span>语言：</span><span class="text-bold">${item.language}</span></div>
+                            </div>
+                        </div>`
+                    }
+                    resultNode.innerHTML = html;
+                } else {
+                    resultNode.innerHTML = "<div>未搜索到结果</div>"
+                }
+                
+            });
+        }
+    </script>
+</body>
+
+</html>
