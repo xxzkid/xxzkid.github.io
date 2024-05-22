@@ -37,6 +37,12 @@
         body: JSON.stringify(body)
       }).then((res) => res.text());
     }
+    var handleData = function(data) {
+      if (typeof data === 'string') {
+        return JSON.parse(data);
+      }
+      return data;
+    }
     function toast(options) {
       var msg = options['msg'];
       var duration = options['duration'];
@@ -154,7 +160,7 @@
         }).then((res) => {
           var result = JSON.parse(res);
           if (result.status == 200) {
-            var data = result.data;
+            var data = handleData(result.data);
             if (data.code == 200) {
               if (data.result && data.result.songs && data.result.songs.length > 0) {
                 var firstArtist = song.artist.split(',')[0];
@@ -193,7 +199,7 @@
       }).then((res) => {
         var result = JSON.parse(res);
         if (result.status == 200) {
-          var data = result.data;
+          var data = handleData(result.data);
           if (data.code == 200) {
             fn && fn(data.lrc.lyric);
           } else {
@@ -346,7 +352,7 @@
         }).then((res) => {
           var result = JSON.parse(res);
           if (result.status == 200) {
-            var data = result.data;
+            var data = handleData(result.data);
             if (data.code == 200) {
               if (data.result && data.result.songs) {
                 var songs = data.result.songs;
@@ -377,7 +383,7 @@
         }).then((res) => {
           var result = JSON.parse(res);
           if (result.status == 200) {
-            var data = result.data;
+            var data = handleData(result.data);
             if (data.code == 200) {
               var song = data.data;
               addKeyword(keyword);
@@ -431,7 +437,7 @@
         }).then((res) => {
           var result = JSON.parse(res);
           if (result.status == 200) {
-            var data = result.data;
+            var data = handleData(result.data);
             if (data.code == 200) {
               if (data.data && data.data.length > 0 && data.data[0].url != null) {
                 window.ap.list.add([{
