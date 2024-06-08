@@ -262,12 +262,15 @@
           var target_url = audio.url.indexOf('http:') > -1 || audio.url.indexOf('https:') > -1 ? audio.url : cdn_url() + audio.url;
           var name = audio.name + "-" + audio.artist;
           fetchAudio(target_url, name, function (_audio) {
+            var _type = '';
+            let __audio = _audio;
             if (_audio.buffer) {
-              _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
+              _type = _audio.type;
+              __audio = arrayBufferToBlob(_audio.buffer, _audio.type);
             }
-            audioElement.src = URL.createObjectURL(_audio);
-            if (audio.url.indexOf('.mp3') == -1) {
-              audioElement.type = _audio.type;
+            audioElement.src = URL.createObjectURL(__audio);
+            if (target_url.indexOf('.mp3') == -1 && _type != '') {
+              audioElement.type = _type;
             }
             audioElement.play();
           })
