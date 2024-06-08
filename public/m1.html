@@ -266,6 +266,9 @@
               _audio = arrayBufferToBlob(_audio.buffer, _audio.type);
             }
             audioElement.src = URL.createObjectURL(_audio);
+            if (audio.url.indexOf('.mp3') == -1) {
+              audioElement.type = _audio.type;
+            }
             audioElement.play();
           })
         }
