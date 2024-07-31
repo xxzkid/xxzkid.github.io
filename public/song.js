@@ -60,4 +60,5 @@ window.audios = [
   { name: '落(花开花落日升日没)', artist: '唐伯虎Annie', url: './music/落(花开花落日升日没)-唐伯虎Annie.mp3', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '黄梅戏', artist: '慕容晓晓', url: './music/黄梅戏-慕容晓晓.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '处处吻', artist: '杨千嬅', url: './music/处处吻-杨千嬅.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '偏偏喜欢你', artist: '陈百强', url: './music/偏偏喜欢你-陈百强.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
 ];
