@@ -23,6 +23,10 @@
             
             <tag> spring-boot </tag>
             
+            <tag> spring </tag>
+            
+            <tag> mail </tag>
+            
         </tags>
         
     </entry>
