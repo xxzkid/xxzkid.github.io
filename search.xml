@@ -765,6 +765,8 @@
             
             <tag> rocketmq </tag>
             
+            <tag> spring-boot </tag>
+            
             <tag> spring </tag>
             
         </tags>
@@ -3349,6 +3351,8 @@ y_i=\sum_jw_jx_{ij}</script><ol>
             <tag> java </tag>
             
             <tag> spring-mvc </tag>
+            
+            <tag> spring </tag>
             
             <tag> test </tag>
             
