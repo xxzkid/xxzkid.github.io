@@ -3,6 +3,31 @@
   
     
     <entry>
+      <title><![CDATA[spring boot网易企业邮箱发邮件]]></title>
+      <url>/2024/spring-boot-163qy-mail/</url>
+      <content type="html"><![CDATA[<p>网易企业邮箱<br>SMTP: smtphz.qiye.163.com 25(不加密) 994(加密)<br><a id="more"></a></p>
+<p>spring boot配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  mail:</span><br><span class="line">    host: smtphz.qiye.163.com</span><br><span class="line">    port: 994</span><br><span class="line">    username: xxxxxx</span><br><span class="line">    password: xxxxxx</span><br><span class="line">    properties:</span><br><span class="line">      &quot;mail.smtp.auth&quot;: true</span><br><span class="line">      &quot;mail.smtp.ssl.enable&quot;: true</span><br><span class="line">      &quot;mail.smtp.starttls.enable&quot;: false</span><br><span class="line">      &quot;mail.smtp.starttls.required&quot;: false</span><br><span class="line">      &quot;mail.debug&quot;: true</span><br></pre></td></tr></table></figure></p>
+<p>备注：<br><strong>阿里云不允许25端口发送邮件</strong></p>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> springboot </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[5行代码带你自动刷短视频小姐姐截图]]></title>
       <url>/2024/python-adb-short-video/</url>
       <content type="html"><![CDATA[<h1 id="5行代码带你自动刷短视频小姐姐截图"><a href="#5行代码带你自动刷短视频小姐姐截图" class="headerlink" title="5行代码带你自动刷短视频小姐姐截图"></a>5行代码带你自动刷短视频小姐姐截图</h1><p>利用原来 android adb shell</p>
