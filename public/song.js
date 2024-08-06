@@ -61,4 +61,5 @@ window.audios = [
   { name: '黄梅戏', artist: '慕容晓晓', url: './music/黄梅戏-慕容晓晓.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '处处吻', artist: '杨千嬅', url: './music/处处吻-杨千嬅.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
   { name: '偏偏喜欢你', artist: '陈百强', url: './music/偏偏喜欢你-陈百强.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
+  { name: '红豆', artist: '王菲', url: './music/红豆-王菲.m4a', cover: './music/bg1.jpg', lrc: '', theme: '#ebd0c2', type: 'custom' },
 ];
