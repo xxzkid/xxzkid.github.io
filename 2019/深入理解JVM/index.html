@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="xxzkid | 我叫王也道长">
 <meta property="og:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2024-11-20T09:26:11.414Z">
+<meta property="og:updated_time" content="2024-11-20T09:36:49.828Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM">
 <meta name="twitter:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
@@ -410,12 +410,12 @@ var _hmt = _hmt || [];
     </div>
     
     <script type="text/javascript">
-		var html = ['<div style="width:194px; height:194px; float:left; margin: 0% 1%; margin-left: 12%;">',
+		var html = ['<div style="width:180px; height:180px; float:left; margin: 0% 1%;">',
 			'<img src="/public/images/zfb.png" id="zhifubao" title="支付宝"  alt="支付宝">',
 			'<span>支付宝 Alipay</span>',
 			'</div>',
-			'<div style="width:194px; height:194px; float: left;">',
-			'<img src="/public/images/wx.png" title="微信支付" id="weixin"  alt="微信支付">',
+			'<div style="width:180px; height:180px; float: left;">',
+			'<img src="/public/images/wx.png" title="微信支付" id="weixin" alt="微信支付">',
 			'<span>微信支付 WeChat Pay</span>',
 			'</div>',
       '<div style="clear:both;"></div>'].join('');
@@ -424,6 +424,7 @@ var _hmt = _hmt || [];
             $('#donate_board').addClass('hidden');
             $('#donate_guide').html(html).removeClass('hidden');
         }
+    $('#donate_board').addClass('hidden');
     $('#donate_guide').html(html).removeClass('hidden');
     </script>
 </div>
@@ -474,8 +475,8 @@ var _hmt = _hmt || [];
     margin-top: 80px;
 }
 #donate_guide{
-    height: 220px;
-    width: 80%;
+    height: 200px;
+    max-width: 100%;
     margin: 3% auto;
     padding: 5px;
 }
