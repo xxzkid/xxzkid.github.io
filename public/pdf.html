@@ -300,10 +300,10 @@
     }
 
     //pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf.worker.js"
+    var online = getUrlParam("online");
     pdfjsLib.getDocument({
       url: file,
-      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.489/cmaps/',
-      //cMapUrl: 'cmaps/',
+      cMapUrl: online == "0" ? 'cmaps/' : 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.489/cmaps/',
       cMapPacked: true,
     }).then((pdf) => {
       console.log('pdf ready');
