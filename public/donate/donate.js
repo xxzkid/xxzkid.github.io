@@ -1,6 +1,6 @@
 function init() {
   var img = document.createElement('img')
-  img.src = "donate.png"
+  img.src = "wx.png"
   img.alt = "支持"
   img.style.maxWidth = "98%"
   document.querySelector('#qrcode-donate').appendChild(img)
