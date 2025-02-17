@@ -3,11 +3,9 @@
   
     
     <entry>
-      <title></title>
+      <title><![CDATA[Apache Artemis安装]]></title>
       <url>/2025/apache-artemis-install/</url>
-      <content type="html"><![CDATA[<hr>
-<p>title: Apache Artemis安装<br>date: 2025-02-17 08:00:00.000<br>tags: [activemq,java] </p>
-<h2 id="categories-java"><a href="#categories-java" class="headerlink" title="categories: [java] "></a>categories: [java] </h2><p>apache artemis是新一代的apache activemq </p>
+      <content type="html"><![CDATA[<p>apache artemis是新一代的apache activemq </p>
 <a id="more"></a> 
 <p>安装过程 </p>
 <p>apache artemis是一个java程序，所以前提需要安装java，这里我们推荐jdk17 </p>
@@ -27,6 +25,20 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ./etc/bootstrap.xml</span><br><span class="line"></span><br><span class="line">&lt;binding name=&quot;artemis&quot; uri=&quot;http://0.0.0.0:8161&quot;&gt;</span><br></pre></td></tr></table></figure>
 ]]></content>
       
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> activemq </tag>
+            
+        </tags>
         
     </entry>
     
