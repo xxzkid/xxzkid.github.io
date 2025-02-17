@@ -3,6 +3,34 @@
   
     
     <entry>
+      <title></title>
+      <url>/2025/apache-artemis-install/</url>
+      <content type="html"><![CDATA[<hr>
+<p>title: Apache Artemis安装<br>date: 2025-02-17 08:00:00.000<br>tags: [activemq,java] </p>
+<h2 id="categories-java"><a href="#categories-java" class="headerlink" title="categories: [java] "></a>categories: [java] </h2><p>apache artemis是新一代的apache activemq </p>
+<a id="more"></a> 
+<p>安装过程 </p>
+<p>apache artemis是一个java程序，所以前提需要安装java，这里我们推荐jdk17 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/jdk17</span><br></pre></td></tr></table></figure>
+<p>下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O apache-artemis-2.39.0-bin.tar.gz https://www.apache.org/dyn/closer.cgi?filename=activemq/activemq-artemis/2.39.0/apache-artemis-2.39.0-bin.tar.gz&amp;action=download</span><br></pre></td></tr></table></figure>
+<p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf apache-artemis-2.39.0-bin.tar.gz</span><br><span class="line"></span><br><span class="line">cd apache-artemis-2.39.0</span><br></pre></td></tr></table></figure>
+<p>创建实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./bin/artemis create broker </span><br><span class="line"></span><br><span class="line">--user: </span><br><span class="line">What is the default username? </span><br><span class="line">admin (输入账号) </span><br><span class="line"></span><br><span class="line">--password: </span><br><span class="line">is mandatory with this configuration: </span><br><span class="line">What is the default password? </span><br><span class="line">(输入账号密码)</span><br></pre></td></tr></table></figure>
+<p>可选操作</p>
+<p>修改内存大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ./etc/artemis.profile</span><br><span class="line"></span><br><span class="line"># Java Opts</span><br></pre></td></tr></table></figure>
+<p>修改cors</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ./etc/jolokia-access.xml</span><br><span class="line"></span><br><span class="line">&lt;allow-origin&gt;*://*&lt;/allow-origin&gt;</span><br></pre></td></tr></table></figure>
+<p>修改console为可访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim ./etc/bootstrap.xml</span><br><span class="line"></span><br><span class="line">&lt;binding name=&quot;artemis&quot; uri=&quot;http://0.0.0.0:8161&quot;&gt;</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Linux安装mysql8压缩包版本]]></title>
       <url>/2024/linux-install-mysql8-zip/</url>
       <content type="html"><![CDATA[<h1 id="Linux安装mysql8压缩包版本"><a href="#Linux安装mysql8压缩包版本" class="headerlink" title="Linux安装mysql8压缩包版本"></a>Linux安装mysql8压缩包版本</h1><h2 id="下载mysql8"><a href="#下载mysql8" class="headerlink" title="下载mysql8"></a>下载mysql8</h2><a id="more"></a>
