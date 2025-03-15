@@ -4,31 +4,10 @@
 
     
     
-  <url>
-    <loc>https://xxzkid.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解JVM</title>
-        <pubTime>2019-06-30T14:40:52.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>jvm</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
     
   <url>
     <loc>https://xxzkid.github.io/2024/window-cpp-compile-sqlite3/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>window编译sqlite3</title>
@@ -53,30 +32,8 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2014/ueditor-use-and-config/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
-    <data>
-        <display>
-        <title>UEditor的使用</title>
-        <pubTime>2014-10-25T19:26:27.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>ueditor</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://xxzkid.github.io/2015/ueditor1-3-6-pic-upload/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>UEditor1.3.6图片上传</title>
@@ -97,8 +54,30 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2014/ueditor-use-and-config/</loc>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
+    <data>
+        <display>
+        <title>UEditor的使用</title>
+        <pubTime>2014-10-25T19:26:27.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>ueditor</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2024/ubuntu2204-install-pyenv-1/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>Ubuntu22.04安装pyenv</title>
@@ -121,18 +100,16 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2018/spring-scheduling-tasks/</loc>
-    <lastmod>2025-02-17T09:21:36.446Z</lastmod>
+    <loc>https://xxzkid.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/</loc>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
-        <title>spring定时任务调度</title>
-        <pubTime>2018-01-03T22:54:21.000Z</pubTime>
+        <title>深入理解JVM</title>
+        <pubTime>2019-06-30T14:40:52.000Z</pubTime>
         
         <tag>java</tag>
          
-        <tag>spring-boot</tag>
-         
-        <tag>spring</tag>
+        <tag>jvm</tag>
          
          
            
@@ -144,10 +121,9 @@
     </url>
 
     
-    
   <url>
     <loc>https://xxzkid.github.io/2022/spring-rocketmq-mysql-transaction-1/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>Spring解决RocketMQ发消息与MySQL事务一致性</title>
@@ -173,7 +149,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2017/spring-redis-question/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>谈谈spring-data-redis遇到的问题</title>
@@ -199,7 +175,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2015/spring-mvc-test-by-mock/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>spring mvc test by mock</title>
@@ -227,7 +203,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2017/spring-boot-send-mail/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>spring boot 发送邮件</title>
@@ -252,30 +228,8 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2024/python-adb-short-video/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
-    <data>
-        <display>
-        <title>5行代码带你自动刷短视频小姐姐截图</title>
-        <pubTime>2024-07-25T08:00:00.000Z</pubTime>
-        
-        <tag>android</tag>
-         
-        <tag>python</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="https://xxzkid.github.io/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://xxzkid.github.io/2024/spring-boot-file-upload/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
     <data>
         <display>
         <title>spring boot 文件上传与访问</title>
@@ -298,8 +252,58 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2018/spring-scheduling-tasks/</loc>
+    <lastmod>2025-03-15T09:27:50.240Z</lastmod>
+    <data>
+        <display>
+        <title>spring定时任务调度</title>
+        <pubTime>2018-01-03T22:54:21.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>spring-boot</tag>
+         
+        <tag>spring</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2016/spring-boot-build-restful-web-service/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
+    <data>
+        <display>
+        <title>spring-boot 构建一个restful的web服务</title>
+        <pubTime>2016-11-24T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>spring-boot</tag>
+         
+        <tag>spring</tag>
+         
+        <tag>restful</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2024/spring-boot-163qy-mail/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>spring boot网易企业邮箱发邮件</title>
@@ -325,7 +329,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2023/signoz-1/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>搭建可观测平台SigNoz</title>
@@ -348,8 +352,30 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2020/mybatis-source-02/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
+    <data>
+        <display>
+        <title>mybatis 3.5.x源码系列（2）</title>
+        <pubTime>2020-04-01T08:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>mybatis</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2019/seata-client-bootstrap/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>Seata 0.8.1~1.0.0客户端启动过程分析</title>
@@ -370,52 +396,8 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2018/servicecomb-saga-1/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
-    <data>
-        <display>
-        <title>servicecomb-saga omega分析</title>
-        <pubTime>2018-11-16T22:39:11.000Z</pubTime>
-        
-        <tag>saga</tag>
-         
-        <tag>分布式事务</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2017/rocketmq-01/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
-    <data>
-        <display>
-        <title>RocketMQ 入门</title>
-        <pubTime>2017-11-03T23:08:22.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>rocketmq</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://xxzkid.github.io/2017/rocketmq-02/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>rocketmq集群搭建</title>
@@ -436,8 +418,30 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2017/rocketmq-01/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
+    <data>
+        <display>
+        <title>RocketMQ 入门</title>
+        <pubTime>2017-11-03T23:08:22.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>rocketmq</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2017/redis-single-install/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>redis-3.2.10 单机安装</title>
@@ -457,7 +461,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2014/qqzone-comment-reply/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>模仿qq空间评论以及回复</title>
@@ -481,7 +485,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2017/python-simple-spider/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>python简易爬虫</title>
@@ -502,25 +506,21 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2016/spring-boot-build-restful-web-service/</loc>
-    <lastmod>2025-02-17T09:21:36.445Z</lastmod>
+    <loc>https://xxzkid.github.io/2024/python-adb-short-video/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
-        <title>spring-boot 构建一个restful的web服务</title>
-        <pubTime>2016-11-24T00:00:00.000Z</pubTime>
+        <title>5行代码带你自动刷短视频小姐姐截图</title>
+        <pubTime>2024-07-25T08:00:00.000Z</pubTime>
         
-        <tag>java</tag>
+        <tag>android</tag>
          
-        <tag>spring-boot</tag>
-         
-        <tag>spring</tag>
-         
-        <tag>restful</tag>
+        <tag>python</tag>
          
          
            
              
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+              <breadCrumb title="python" url="https://xxzkid.github.io/categories/python/"/>
           
         </display>
     </data>
@@ -528,19 +528,23 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2024/linux-find-large-file-1/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <loc>https://xxzkid.github.io/2024/pyside2-player-video-1/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
-        <title>Linux 查找大文件</title>
-        <pubTime>2024-02-18T11:33:12.000Z</pubTime>
+        <title>PySide2 播放视频</title>
+        <pubTime>2024-01-08T15:48:54.000Z</pubTime>
         
-        <tag>linux</tag>
+        <tag>python</tag>
+         
+        <tag>pyqt5</tag>
+         
+        <tag>pyside2</tag>
          
          
            
              
-              <breadCrumb title="linux" url="https://xxzkid.github.io/categories/linux/"/>
+              <breadCrumb title="python" url="https://xxzkid.github.io/categories/python/"/>
           
         </display>
     </data>
@@ -549,7 +553,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2020/pcwechat_helper/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>PC微信助手</title>
@@ -574,32 +578,8 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2024/pyside2-player-video-1/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>PySide2 播放视频</title>
-        <pubTime>2024-01-08T15:48:54.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>pyqt5</tag>
-         
-        <tag>pyside2</tag>
-         
-         
-           
-             
-              <breadCrumb title="python" url="https://xxzkid.github.io/categories/python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://xxzkid.github.io/2024/pcwechat-sqlite3-handle/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>查找PC微信数据库句柄</title>
@@ -625,7 +605,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2024/paddlespeech-install-1/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>安装PaddleSpeech</title>
@@ -647,7 +627,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2024/ollyice-debug-sqlite3/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>OllyICE_1.10 调试sqlite3</title>
@@ -672,8 +652,28 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2016/mysql-5-7-x-install/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
+    <data>
+        <display>
+        <title>mysql-5.7.x安装</title>
+        <pubTime>2016-11-30T00:00:00.000Z</pubTime>
+        
+        <tag>mysql-5.7.x</tag>
+         
+         
+           
+             
+              <breadCrumb title="mysql" url="https://xxzkid.github.io/categories/mysql/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2019/nacos-cluster-install-md/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>nacos集群安装</title>
@@ -694,28 +694,8 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2016/mysql-5-7-x-install/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>mysql-5.7.x安装</title>
-        <pubTime>2016-11-30T00:00:00.000Z</pubTime>
-        
-        <tag>mysql-5.7.x</tag>
-         
-         
-           
-             
-              <breadCrumb title="mysql" url="https://xxzkid.github.io/categories/mysql/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://xxzkid.github.io/2017/mysql-delete-or-update-foreign-key-data/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
         <title>mysql 有外键关联时删除数据</title>
@@ -736,16 +716,16 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2020/mybatis-source-01/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <loc>https://xxzkid.github.io/2018/servicecomb-saga-1/</loc>
+    <lastmod>2025-03-15T09:27:50.239Z</lastmod>
     <data>
         <display>
-        <title>mybatis3.5.x源码系列（1）</title>
-        <pubTime>2020-03-20T10:00:00.000Z</pubTime>
+        <title>servicecomb-saga omega分析</title>
+        <pubTime>2018-11-16T22:39:11.000Z</pubTime>
         
-        <tag>java</tag>
+        <tag>saga</tag>
          
-        <tag>mybatis</tag>
+        <tag>分布式事务</tag>
          
          
            
@@ -758,201 +738,23 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2020/mybatis-source-02/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <loc>https://xxzkid.github.io/2016/js-get-function-name/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
-        <title>mybatis 3.5.x源码系列（2）</title>
-        <pubTime>2020-04-01T08:00:00.000Z</pubTime>
+        <title>javascript获取函数名称、函数参数、对象属性名称的代码实例</title>
+        <pubTime>2016-01-24T00:00:00.000Z</pubTime>
         
-        <tag>java</tag>
+        <tag>javascript</tag>
          
-        <tag>mybatis</tag>
+        <tag>闭包</tag>
+         
+        <tag>xxzkid</tag>
          
          
            
              
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2017/mongodb-linux-install-tutorial/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>MongoDB  linux安装教程</title>
-        <pubTime>2017-08-18T00:00:00.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>mongodb</tag>
-         
-        <tag>安装</tag>
-         
-         
-           
-             
-              <breadCrumb title="mongodb" url="https://xxzkid.github.io/categories/mongodb/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2016/maven-repository/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>国内好用的maven仓库</title>
-        <pubTime>2016-11-23T22:58:32.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>maven</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2019/list-source/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>List接口源码分析</title>
-        <pubTime>2019-04-14T15:47:46.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2017/maven-package-execute-jar/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>maven 打包可执行jar</title>
-        <pubTime>2017-08-02T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>maven</tag>
-         
-        <tag>打包</tag>
-         
-        <tag>可执行jar</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2020/leetcode-0001/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>leetcode 0001 两数之和</title>
-        <pubTime>2020-02-14T15:01:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>leetcode</tag>
-         
-         
-           
-             
-              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2020/leetcode-0002/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>leetcode 0002 两数相加</title>
-        <pubTime>2020-02-14T15:02:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>leetcode</tag>
-         
-         
-           
-             
-              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2020/leetcode-0003/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>leetcode 0003 无重复字符的最长子串</title>
-        <pubTime>2020-02-14T15:03:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>leetcode</tag>
-         
-         
-           
-             
-              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2020/leetcode-0004/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>leetcode 0004 寻找两个有序数组的中位数</title>
-        <pubTime>2020-02-14T15:04:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>leetcode</tag>
-         
-         
-           
-             
-              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
+              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
           
         </display>
     </data>
@@ -961,7 +763,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2020/leetcode-0005/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
         <title>leetcode 0005 最长回文子串</title>
@@ -982,106 +784,16 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2018/lombok-quesion-1/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
+    <loc>https://xxzkid.github.io/2015/js-pic-preview/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
-        <title>记一次lombok的问题</title>
-        <pubTime>2018-04-04T21:32:38.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>lombok</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2017/linux-restart-java-application/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>linux重启java程序</title>
-        <pubTime>2017-09-02T06:49:33.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>shell</tag>
-         
-        <tag>脚本</tag>
-         
-         
-           
-             
-              <breadCrumb title="linux" url="https://xxzkid.github.io/categories/linux/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2024/linux-install-mysql8-zip/</loc>
-    <lastmod>2025-02-17T09:21:36.444Z</lastmod>
-    <data>
-        <display>
-        <title>Linux安装mysql8压缩包版本</title>
-        <pubTime>2024-09-10T00:00:00.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-        <tag>mysql</tag>
-         
-         
-           
-             
-              <breadCrumb title="mysql" url="https://xxzkid.github.io/categories/mysql/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2015/js-bigdecimal/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
-    <data>
-        <display>
-        <title>js Bigdecimal</title>
-        <pubTime>2015-12-08T16:44:07.000Z</pubTime>
+        <title>js实现图片预览</title>
+        <pubTime>2015-03-05T15:30:51.000Z</pubTime>
         
         <tag>javascript</tag>
          
-        <tag>bigdecimal</tag>
-         
-         
-           
-             
-              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2014/json-get-value-method/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
-    <data>
-        <display>
-        <title>json取值方法</title>
-        <pubTime>2014-08-20T15:27:56.000Z</pubTime>
-        
-        <tag>javascript</tag>
-         
-        <tag>json</tag>
+        <tag>预览</tag>
          
          
            
@@ -1095,7 +807,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2015/js-unicode-hex/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
         <title>js unicode编码与解码</title>
@@ -1120,62 +832,16 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2015/js-pic-preview/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
+    <loc>https://xxzkid.github.io/2014/json-get-value-method/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
-        <title>js实现图片预览</title>
-        <pubTime>2015-03-05T15:30:51.000Z</pubTime>
+        <title>json取值方法</title>
+        <pubTime>2014-08-20T15:27:56.000Z</pubTime>
         
         <tag>javascript</tag>
          
-        <tag>预览</tag>
-         
-         
-           
-             
-              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2016/js-get-function-name/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
-    <data>
-        <display>
-        <title>javascript获取函数名称、函数参数、对象属性名称的代码实例</title>
-        <pubTime>2016-01-24T00:00:00.000Z</pubTime>
-        
-        <tag>javascript</tag>
-         
-        <tag>闭包</tag>
-         
-        <tag>xxzkid</tag>
-         
-         
-           
-             
-              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2015/js-class/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
-    <data>
-        <display>
-        <title>js进行类型判断 Object.prototype.toString.call()</title>
-        <pubTime>2015-12-27T00:00:00.000Z</pubTime>
-        
-        <tag>javascript</tag>
-         
-        <tag>prototype</tag>
+        <tag>json</tag>
          
          
            
@@ -1189,7 +855,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2020/jvm-create-thread/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
         <title>JVM如何创建线程</title>
@@ -1211,7 +877,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2023/k8s-update-cert-1/</loc>
-    <lastmod>2025-02-17T09:21:36.443Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
         <title>Kubenetes更新证书</title>
@@ -1232,18 +898,104 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2014/jquery-build-form/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
+    <loc>https://xxzkid.github.io/2020/leetcode-0001/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
-        <title>jquery动态生成表单提交</title>
-        <pubTime>2014-08-20T15:11:19.000Z</pubTime>
+        <title>leetcode 0001 两数之和</title>
+        <pubTime>2020-02-14T15:01:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>leetcode</tag>
+         
+         
+           
+             
+              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2020/leetcode-0002/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>leetcode 0002 两数相加</title>
+        <pubTime>2020-02-14T15:02:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>leetcode</tag>
+         
+         
+           
+             
+              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2020/leetcode-0003/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>leetcode 0003 无重复字符的最长子串</title>
+        <pubTime>2020-02-14T15:03:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>leetcode</tag>
+         
+         
+           
+             
+              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2020/leetcode-0004/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>leetcode 0004 寻找两个有序数组的中位数</title>
+        <pubTime>2020-02-14T15:04:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>leetcode</tag>
+         
+         
+           
+             
+              <breadCrumb title="leetcode" url="https://xxzkid.github.io/categories/leetcode/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2015/js-bigdecimal/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>js Bigdecimal</title>
+        <pubTime>2015-12-08T16:44:07.000Z</pubTime>
         
         <tag>javascript</tag>
          
-        <tag>jquery</tag>
-         
-        <tag>form</tag>
+        <tag>bigdecimal</tag>
          
          
            
@@ -1256,217 +1008,223 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2013/javascript-jiujiuchengfabiao/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
+    <loc>https://xxzkid.github.io/2024/linux-find-large-file-1/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
     <data>
         <display>
-        <title>javascript写九九乘法表</title>
-        <pubTime>2013-03-10T00:00:00.000Z</pubTime>
+        <title>Linux 查找大文件</title>
+        <pubTime>2024-02-18T11:33:12.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="https://xxzkid.github.io/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2024/linux-install-mysql8-zip/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>Linux安装mysql8压缩包版本</title>
+        <pubTime>2024-09-10T00:00:00.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>mysql</tag>
+         
+         
+           
+             
+              <breadCrumb title="mysql" url="https://xxzkid.github.io/categories/mysql/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2017/linux-restart-java-application/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>linux重启java程序</title>
+        <pubTime>2017-09-02T06:49:33.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+        <tag>脚本</tag>
+         
+         
+           
+             
+              <breadCrumb title="linux" url="https://xxzkid.github.io/categories/linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2019/list-source/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>List接口源码分析</title>
+        <pubTime>2019-04-14T15:47:46.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2018/lombok-quesion-1/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>记一次lombok的问题</title>
+        <pubTime>2018-04-04T21:32:38.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>lombok</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2017/maven-package-execute-jar/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>maven 打包可执行jar</title>
+        <pubTime>2017-08-02T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>maven</tag>
+         
+        <tag>打包</tag>
+         
+        <tag>可执行jar</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2016/maven-repository/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>国内好用的maven仓库</title>
+        <pubTime>2016-11-23T22:58:32.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>maven</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2017/mongodb-linux-install-tutorial/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>MongoDB  linux安装教程</title>
+        <pubTime>2017-08-18T00:00:00.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>mongodb</tag>
+         
+        <tag>安装</tag>
+         
+         
+           
+             
+              <breadCrumb title="mongodb" url="https://xxzkid.github.io/categories/mongodb/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2020/mybatis-source-01/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>mybatis3.5.x源码系列（1）</title>
+        <pubTime>2020-03-20T10:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>mybatis</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2015/js-class/</loc>
+    <lastmod>2025-03-15T09:27:50.238Z</lastmod>
+    <data>
+        <display>
+        <title>js进行类型判断 Object.prototype.toString.call()</title>
+        <pubTime>2015-12-27T00:00:00.000Z</pubTime>
         
         <tag>javascript</tag>
+         
+        <tag>prototype</tag>
          
          
            
              
               <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2024/ida-sqlite3-exec/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>IDA定位PC微信sqlite3_exec</title>
-        <pubTime>2024-04-30T08:00:00.000Z</pubTime>
-        
-        <tag>c/c++</tag>
-         
-        <tag>微信</tag>
-         
-        <tag>PC微信</tag>
-         
-         
-           
-             
-              <breadCrumb title="c" url="https://xxzkid.github.io/categories/c/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2014/java-regex-class/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>正则表达式类</title>
-        <pubTime>2014-12-22T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>正则表达式</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2022/java-gc01/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>Java垃圾收集基础</title>
-        <pubTime>2022-07-22T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>gc</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2014/java-readline/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>java 文件读取，一行一行的读取</title>
-        <pubTime>2014-12-18T15:33:38.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2014/java-get-device-name/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>java 获取设备信息</title>
-        <pubTime>2014-12-10T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>设备</tag>
-         
-        <tag>正则表达式</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2022/java-g1/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>G1 垃圾收集器</title>
-        <pubTime>2022-07-23T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>gc</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2014/java-checkcode/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>java验证码</title>
-        <pubTime>2014-11-18T00:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>验证码</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2013/java-any-hex-convert/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>任意进制的转换</title>
-        <pubTime>2013-03-10T00:00:00.000Z</pubTime>
-        
-        <tag>10进制</tag>
-         
-        <tag>36进制</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://xxzkid.github.io/2018/java-agent-01/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
-    <data>
-        <display>
-        <title>java agent开发</title>
-        <pubTime>2018-03-22T21:28:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
           
         </display>
     </data>
@@ -1475,7 +1233,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2024/javascript-string-format-1/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
     <data>
         <display>
         <title>JavaScript 实现 String format with ${}</title>
@@ -1494,8 +1252,28 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2013/javascript-jiujiuchengfabiao/</loc>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
+    <data>
+        <display>
+        <title>javascript写九九乘法表</title>
+        <pubTime>2013-03-10T00:00:00.000Z</pubTime>
+        
+        <tag>javascript</tag>
+         
+         
+           
+             
+              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2017/java-startup-arguments/</loc>
-    <lastmod>2025-02-17T09:21:36.442Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
     <data>
         <display>
         <title>Java 启动参数</title>
@@ -1518,16 +1296,172 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2017/httpclient-cookie/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <loc>https://xxzkid.github.io/2014/java-regex-class/</loc>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
     <data>
         <display>
-        <title>httpclient使用cookie</title>
-        <pubTime>2017-09-15T01:30:18.000Z</pubTime>
+        <title>正则表达式类</title>
+        <pubTime>2014-12-22T00:00:00.000Z</pubTime>
         
-        <tag>httpclient</tag>
+        <tag>java</tag>
          
-        <tag>cookie</tag>
+        <tag>正则表达式</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2014/java-readline/</loc>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
+    <data>
+        <display>
+        <title>java 文件读取，一行一行的读取</title>
+        <pubTime>2014-12-18T15:33:38.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2014/java-get-device-name/</loc>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
+    <data>
+        <display>
+        <title>java 获取设备信息</title>
+        <pubTime>2014-12-10T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>设备</tag>
+         
+        <tag>正则表达式</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2014/jquery-build-form/</loc>
+    <lastmod>2025-03-15T09:27:50.237Z</lastmod>
+    <data>
+        <display>
+        <title>jquery动态生成表单提交</title>
+        <pubTime>2014-08-20T15:11:19.000Z</pubTime>
+        
+        <tag>javascript</tag>
+         
+        <tag>jquery</tag>
+         
+        <tag>form</tag>
+         
+         
+           
+             
+              <breadCrumb title="javascript" url="https://xxzkid.github.io/categories/javascript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2013/java-any-hex-convert/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>任意进制的转换</title>
+        <pubTime>2013-03-10T00:00:00.000Z</pubTime>
+        
+        <tag>10进制</tag>
+         
+        <tag>36进制</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2022/java-gc01/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>Java垃圾收集基础</title>
+        <pubTime>2022-07-22T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>gc</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2022/java-g1/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>G1 垃圾收集器</title>
+        <pubTime>2022-07-23T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>gc</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2014/java-checkcode/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>java验证码</title>
+        <pubTime>2014-11-18T00:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>验证码</tag>
          
          
            
@@ -1541,7 +1475,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2014/html5-audio-file-stream-play/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>html5 audio读取文件流播放音频</title>
@@ -1564,16 +1498,36 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2023/how-to-check-project-license-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <loc>https://xxzkid.github.io/2018/java-agent-01/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
-        <title>如何检查项目中用到的License</title>
-        <pubTime>2023-09-28T09:30:55.000Z</pubTime>
+        <title>java agent开发</title>
+        <pubTime>2018-03-22T21:28:00.000Z</pubTime>
         
         <tag>java</tag>
          
-        <tag>license</tag>
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2017/httpclient-cookie/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>httpclient使用cookie</title>
+        <pubTime>2017-09-15T01:30:18.000Z</pubTime>
+        
+        <tag>httpclient</tag>
+         
+        <tag>cookie</tag>
          
          
            
@@ -1587,7 +1541,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2017/how-to-fetch-1000w-from-db/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>如何从数据库加载1000w数据</title>
@@ -1612,23 +1566,45 @@
 
     
   <url>
-    <loc>https://xxzkid.github.io/2023/frida-install-config-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <loc>https://xxzkid.github.io/2024/ida-sqlite3-exec/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
-        <title>frida安装与配置</title>
-        <pubTime>2023-07-09T15:30:52.000Z</pubTime>
+        <title>IDA定位PC微信sqlite3_exec</title>
+        <pubTime>2024-04-30T08:00:00.000Z</pubTime>
         
-        <tag>frida</tag>
+        <tag>c/c++</tag>
          
-        <tag>python</tag>
+        <tag>微信</tag>
          
-        <tag>javascript</tag>
+        <tag>PC微信</tag>
          
          
            
              
-              <breadCrumb title="frida" url="https://xxzkid.github.io/categories/frida/"/>
+              <breadCrumb title="c" url="https://xxzkid.github.io/categories/c/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://xxzkid.github.io/2023/how-to-check-project-license-1/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>如何检查项目中用到的License</title>
+        <pubTime>2023-09-28T09:30:55.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>license</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
           
         </display>
     </data>
@@ -1637,7 +1613,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2023/github-pull-request-step-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>Github贡献PR六部曲</title>
@@ -1657,7 +1633,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2023/frida-wechat-get-msg-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>Frida获取微信消息内容</title>
@@ -1681,7 +1657,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2024/frida-use-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>Frida 使用小技巧</title>
@@ -1702,8 +1678,32 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2023/frida-install-config-1/</loc>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
+    <data>
+        <display>
+        <title>frida安装与配置</title>
+        <pubTime>2023-07-09T15:30:52.000Z</pubTime>
+        
+        <tag>frida</tag>
+         
+        <tag>python</tag>
+         
+        <tag>javascript</tag>
+         
+         
+           
+             
+              <breadCrumb title="frida" url="https://xxzkid.github.io/categories/frida/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2013/first-virus/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>第一个病毒</title>
@@ -1725,7 +1725,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2024/decrypt-wechat-msg-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.236Z</lastmod>
     <data>
         <display>
         <title>解密Android某信聊天记录</title>
@@ -1748,8 +1748,30 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2025/apache-artemis-install/</loc>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
+    <data>
+        <display>
+        <title>Apache Artemis安装</title>
+        <pubTime>2025-02-17T08:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>activemq</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2019/decision_tree/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>决策树</title>
@@ -1775,7 +1797,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2015/css-limit-hidden/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>CSS 限制字数，超出隐藏</title>
@@ -1799,7 +1821,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2022/cs-float-store-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>深入理解计算机浮点数存储</title>
@@ -1820,8 +1842,32 @@
 
     
   <url>
+    <loc>https://xxzkid.github.io/2025/chromedriver-download/</loc>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
+    <data>
+        <display>
+        <title>chrome-driver安装</title>
+        <pubTime>2025-03-15T08:00:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+        <tag>chromedriver</tag>
+         
+        <tag>selenium</tag>
+         
+         
+           
+             
+              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://xxzkid.github.io/2016/centos7-apache2-config-https/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>centos7上apache2配置https</title>
@@ -1845,7 +1891,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2018/canal-quickstart/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>canal快速开始</title>
@@ -1867,7 +1913,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2023/as-xposed-1/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>Android Studio搭建Xposed项目</title>
@@ -1889,31 +1935,10 @@
     </url>
 
     
-  <url>
-    <loc>https://xxzkid.github.io/2025/apache-artemis-install/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
-    <data>
-        <display>
-        <title>Apache Artemis安装</title>
-        <pubTime>2025-02-17T08:00:00.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>activemq</tag>
-         
-         
-           
-             
-              <breadCrumb title="java" url="https://xxzkid.github.io/categories/java/"/>
-          
-        </display>
-    </data>
-    </url>
-
     
   <url>
     <loc>https://xxzkid.github.io/2020/aqs-01/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>AbstractQueuedSynchronizer详解</title>
@@ -1935,7 +1960,7 @@
     
   <url>
     <loc>https://xxzkid.github.io/2013/2012-lqb-java/</loc>
-    <lastmod>2025-02-17T09:21:36.441Z</lastmod>
+    <lastmod>2025-03-15T09:27:50.235Z</lastmod>
     <data>
         <display>
         <title>2012蓝桥杯java高职题目分析</title>
@@ -1954,5 +1979,4 @@
     </data>
     </url>
 
-    
 </urlset>
