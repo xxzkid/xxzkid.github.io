@@ -15,6 +15,9 @@
 <p>编写配置文件</p>
 <p>vim /tmp/tinyproxy.conf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Port 8888</span><br><span class="line">Listen 0.0.0.0</span><br><span class="line">Timeout 600</span><br><span class="line"></span><br><span class="line">BindSame yes</span><br><span class="line">MaxClients 1024</span><br><span class="line">#Allow 0.0.0.0</span><br><span class="line">#Allow ::1</span><br><span class="line"></span><br><span class="line">DisableViaHeader Yes</span><br></pre></td></tr></table></figure></p>
 <p>启动程序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tinyproxy -d -c /tmp/tinyproxy.conf</span><br></pre></td></tr></table></figure></p>
+<p>验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ip=xx.xx.xxx.xxx</span><br><span class="line">curl --proxy http://$ip:8888 http://httpbin.org/ip</span><br></pre></td></tr></table></figure></p>
+<p>结果会返回代理服务器ip</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;origin&quot;: &quot;xx.xx.xxx.xxx&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
