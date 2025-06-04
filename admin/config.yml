@@ -64,3 +64,9 @@ collections:
         editor:
           preview: true
         fields: *ref_0
+      - name: s-x-index.html
+        label: ''
+        file: source/s/x/index.html
+        editor:
+          preview: true
+        fields: *ref_0
