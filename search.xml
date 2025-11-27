@@ -1127,33 +1127,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[Kubenetes更新证书]]></title>
-      <url>/2023/k8s-update-cert-1/</url>
-      <content type="html"><![CDATA[<h1 id="Kubenetes更新证书"><a href="#Kubenetes更新证书" class="headerlink" title="Kubenetes更新证书"></a>Kubenetes更新证书</h1><a id="more"></a>
-<h1 id="一、查看证书过期的时间"><a href="#一、查看证书过期的时间" class="headerlink" title="一、查看证书过期的时间"></a>一、查看证书过期的时间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs check-expiration</span><br></pre></td></tr></table></figure>
-<h1 id="二、证书备份"><a href="#二、证书备份" class="headerlink" title="二、证书备份"></a>二、证书备份</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp -rp /etc/kubernetes/ /etc/kubernetes/kubernetes.20230320</span><br></pre></td></tr></table></figure>
-<h1 id="三、重新生成证书"><a href="#三、重新生成证书" class="headerlink" title="三、重新生成证书"></a>三、重新生成证书</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubeadm certs renew all</span><br></pre></td></tr></table></figure>
-<h1 id="四、重新生成配置文件"><a href="#四、重新生成配置文件" class="headerlink" title="四、重新生成配置文件"></a>四、重新生成配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /etc/kubernetes/conf.20230320</span><br><span class="line"># mv /etc/kubernetes/*.conf /etc/kubernetes/conf.20230320</span><br><span class="line"># kubeadm init phase kubeconfig all</span><br></pre></td></tr></table></figure>
-<h1 id="五、重启kubelet和更新配置"><a href="#五、重启kubelet和更新配置" class="headerlink" title="五、重启kubelet和更新配置"></a>五、重启kubelet和更新配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># systemctl restart kubelet</span><br><span class="line"># cp /etc/kubernetes/admin.conf ~/.kube/config</span><br></pre></td></tr></table></figure>]]></content>
-      
-        <categories>
-            
-            <category> java </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> java </tag>
-            
-            <tag> kubernetes </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Kubernetes证书更新]]></title>
       <url>/2023/kubernetes-upadate-cert/</url>
       <content type="html"><![CDATA[<p>Kubernetes证书过期更新<br><a id="more"></a></p>
