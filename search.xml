@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title><![CDATA[minio 快速搭建]]></title>
+      <url>/2025/minio-quickstart/</url>
+      <content type="html"><![CDATA[<p>minio是一款分布式文件服务器，提供了文件储存与访问的能力。类似阿里云OSS服务。</p>
+<a id="more"></a>
+<p>环境准备</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git docker docker-compose</span><br></pre></td></tr></table></figure>
+<p>编写docker-compose.yaml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  minio:</span><br><span class="line">    container_name: minio</span><br><span class="line">    image: quay.io/minio/minio:RELEASE.2024-09-22T00-33-43Z</span><br><span class="line">    command: server /data --console-address &quot;:9001&quot;</span><br><span class="line">    #network_mode: host</span><br><span class="line">    environment:</span><br><span class="line">      MINIO_ROOT_USER: minioadmin</span><br><span class="line">      MINIO_ROOT_PASSWORD: minioadmin</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;./data:/data&quot;</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;9000:9000&quot;</span><br><span class="line">      - &quot;9001:9001&quot;</span><br><span class="line">    restart: always</span><br><span class="line">    extra_hosts:</span><br><span class="line">      - &quot;svc175:192.168.0.175&quot;</span><br></pre></td></tr></table></figure></p>
+<p>启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f docker-compose.yaml up -d</span><br></pre></td></tr></table></figure></p>
+<p>浏览器访问:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.0.175:9001</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        <categories>
+            
+            <category> java </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> java </tag>
+            
+            <tag> minio </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[minio数据迁移]]></title>
       <url>/2025/minio-data-migration/</url>
       <content type="html"><![CDATA[<p>minio服务器迁移，需要把原来的数据迁移到新的服务器上，minio官方给我们提供了mc的工具来进行迁移</p>
