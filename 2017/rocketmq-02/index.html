@@ -1,289 +1,177 @@
-<!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    
-    <title>rocketmq集群搭建 | xxzkid | 王也道长GO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq 单机搭建1. 安装包准备上传apache-rocketmq.tar.gz至/opt目录 http://download.csdn.net/download/xxzblog/10124706 机器ip：192.168.1.101">
-<meta name="keywords" content="java,rocketmq">
-<meta property="og:type" content="article">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>rocketmq集群搭建 | Apache王也道长</title><meta name="author" content="Apache王也道长"><meta name="copyright" content="Apache王也道长"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq 单机搭建1. 安装包准备上传apache-rocketmq.tar.gz至&#x2F;opt目录 http:&#x2F;&#x2F;download.csdn.net&#x2F;download&#x2F;xxzblog&#x2F;10124706 机器ip：192.168.1.101">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property="og:type" content="article">
 <meta property="og:title" content="rocketmq集群搭建">
-<meta property="og:url" content="https://xxzkid.github.io/2017/rocketmq-02/index.html">
-<meta property="og:site_name" content="xxzkid | 王也道长GO">
-<meta property="og:description" content="上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq 单机搭建1. 安装包准备上传apache-rocketmq.tar.gz至/opt目录 http://download.csdn.net/download/xxzblog/10124706 机器ip：192.168.1.101">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2025-12-09T05:22:56.853Z">
+<meta property="og:url" content="https://blog.123571.xyz/2017/rocketmq-02/index.html">
+<meta property="og:site_name" content="Apache王也道长">
+<meta property="og:description" content="上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq 单机搭建1. 安装包准备上传apache-rocketmq.tar.gz至&#x2F;opt目录 http:&#x2F;&#x2F;download.csdn.net&#x2F;download&#x2F;xxzblog&#x2F;10124706 机器ip：192.168.1.101">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.123571.xyz/img/avatar.jpg">
+<meta property="article:published_time" content="2017-11-19T15:44:28.000Z">
+<meta property="article:modified_time" content="2026-04-04T11:49:44.762Z">
+<meta property="article:author" content="Apache王也道长">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="rocketmq">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rocketmq集群搭建">
-<meta name="twitter:description" content="上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq 单机搭建1. 安装包准备上传apache-rocketmq.tar.gz至/opt目录 http://download.csdn.net/download/xxzblog/10124706 机器ip：192.168.1.101">
+<meta name="twitter:image" content="https://blog.123571.xyz/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "rocketmq集群搭建",
+  "url": "https://blog.123571.xyz/2017/rocketmq-02/",
+  "image": "https://blog.123571.xyz/img/avatar.jpg",
+  "datePublished": "2017-11-19T15:44:28.000Z",
+  "dateModified": "2026-04-04T11:49:44.762Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Apache王也道长",
+      "url": "https://blog.123571.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.123571.xyz/2017/rocketmq-02/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
     
-
-    
-
-    
-        <link rel="icon" href="/css/images/favicon.ico" />
-    
-
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
-    
-    
-    
-    
-    
-    
-
-
-
-<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?45b9df8a29658880761fe374a3d396a4";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<!-- google ads -->
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-2328510744730535",
-    enable_page_level_ads: true
-  });
-</script>
-<script async custom-element="amp-auto-ads"
-        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
-</script>
-<script>
-    $(function(){
-        $("img").each( (i,o) => {
-            var o = $(o);
-            // 判断图片的链接是否包含 sinaimg 关键字
-            if( o.attr("src").indexOf("sinaimg") > 0 ){
-                // 给这个标签加上 referrerPlicy 属性
-                o.attr("referrerpolicy","no-referrer");
-                // 备份图片的 src
-                var link = o.attr("src");
-                // 重新设置 src，让页面重新加载一次图片
-                o.attr("src",link);
-            }
-        });
-    });
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</head>
-
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
-        <amp-auto-ads type="adsense"
-              data-ad-client="ca-pub-2328510744730535">
-</amp-auto-ads>
-<header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">xxzkid | 王也道长GO</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">归档</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
-
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
-
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">归档</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
-
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">xxzkid | 王也道长GO</h2>
-            <h3 id="title">哈哈，程序员一枚</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
-            <a id="follow" target="_blank" href="https://github.com/jsbxyyx">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                99
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                111
-                <span>标签</span>
-            </div>
-        </div>
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
         
-        <div class="profile-block social-links">
-            <table>
-                <tr>
-                    
-                    
-                    <td>
-                        <a href="http://github.com/jsbxyyx" target="_blank" title="github" class=tooltip>
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </td>
-                    
-                    <td>
-                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
-                            <i class="fa fa-weibo"></i>
-                        </a>
-                    </td>
-                    
-                </tr>
-            </table>
-        </div>
-        
-        
-        <div class="profile-block">
-          <div>QQ群: 551304760</div>
-          <div>淘宝优惠券微信：jsbxyyx</div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-rocketmq-02" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
-        <h1 class="article-title" itemprop="name">
-            rocketmq集群搭建
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/rocketmq-02/">
-            <time datetime="2017-11-19T15:44:28.000Z" itemprop="datePublished">2017-11-19</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/rocketmq/">rocketmq</a>
-    </div>
-
-						
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq</p>
-<h2 id="单机搭建"><a href="#单机搭建" class="headerlink" title="单机搭建"></a>单机搭建</h2><h3 id="1-安装包准备"><a href="#1-安装包准备" class="headerlink" title="1. 安装包准备"></a>1. 安装包准备</h3><p>上传apache-rocketmq.tar.gz至/opt目录</p>
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'rocketmq集群搭建',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Apache王也道长</span></a><a class="nav-page-title" href="/"><span class="site-name">rocketmq集群搭建</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">rocketmq集群搭建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2017-11-19T15:44:28.000Z" title="发表于 2017-11-19 15:44:28">2017-11-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-04T11:49:44.762Z" title="更新于 2026-04-04 11:49:44">2026-04-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>上一章讲解了rocketmq的消息发送与接收，那么这篇文章讲解如何安装rocketmq</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><h2 id="单机搭建"><a href="#单机搭建" class="headerlink" title="单机搭建"></a>单机搭建</h2><h3 id="1-安装包准备"><a href="#1-安装包准备" class="headerlink" title="1. 安装包准备"></a>1. 安装包准备</h3><p>上传apache-rocketmq.tar.gz至/opt目录</p>
 <p><a href="">http://download.csdn.net/download/xxzblog/10124706</a></p>
 <p>机器ip：192.168.1.101</p>
-<a id="more"></a>
+<span id="more"></span>
 <h3 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">tar -xzf apache-rocketmq.tar.gz</span><br><span class="line">mv apache-rocketmq rocketmq</span><br><span class="line">mkdir /opt/rocketmq/logs</span><br><span class="line">cd /opt/rocketmq/bin &amp;&amp; dos2unix *</span><br></pre></td></tr></table></figure>
-<h3 id="3-环境配置"><a href="#3-环境配置" class="headerlink" title="3. 环境配置"></a>3. 环境配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cp /opt/rocketmq/conf/broker.conf /opt/rocketmq/conf/broker.properties</span><br><span class="line">echo "brokerIP1=192.168.1.101" &gt; /opt/rocketmq/conf/broker.properties</span><br><span class="line"></span><br><span class="line">vi /opt/rocketmq/mqnamesrv-start.sh</span><br><span class="line">export ROCKETMQ_HOME=/opt/rocketmq</span><br><span class="line">nohup sh /opt/rocketmq/bin/mqnamesrv &gt; /opt/rocketmq/logs/mqnamesrv.log 2&gt;&amp;1 &amp;</span><br><span class="line">:x</span><br><span class="line">chmod u+x /opt/rocketmq/mqnamesrv-start.sh</span><br><span class="line"></span><br><span class="line">vi /opt/rocketmq/mqbroker-start.sh</span><br><span class="line">export ROCKETMQ_HOME=/opt/rocketmq</span><br><span class="line">nohup sh /opt/rocketmq/bin/mqbroker -n 192.168.1.101:9876 -c /opt/rocketmq/conf/broker.properties &gt; /opt/rocketmq/logs/mqbroker.log 2&gt;&amp;1 &amp;</span><br><span class="line">:x</span><br><span class="line">chmod u+x /opt/rocketmq/mqbroker-start.sh</span><br></pre></td></tr></table></figure>
+<h3 id="3-环境配置"><a href="#3-环境配置" class="headerlink" title="3. 环境配置"></a>3. 环境配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cp /opt/rocketmq/conf/broker.conf /opt/rocketmq/conf/broker.properties</span><br><span class="line">echo &quot;brokerIP1=192.168.1.101&quot; &gt; /opt/rocketmq/conf/broker.properties</span><br><span class="line"></span><br><span class="line">vi /opt/rocketmq/mqnamesrv-start.sh</span><br><span class="line">export ROCKETMQ_HOME=/opt/rocketmq</span><br><span class="line">nohup sh /opt/rocketmq/bin/mqnamesrv &gt; /opt/rocketmq/logs/mqnamesrv.log 2&gt;&amp;1 &amp;</span><br><span class="line">:x</span><br><span class="line">chmod u+x /opt/rocketmq/mqnamesrv-start.sh</span><br><span class="line"></span><br><span class="line">vi /opt/rocketmq/mqbroker-start.sh</span><br><span class="line">export ROCKETMQ_HOME=/opt/rocketmq</span><br><span class="line">nohup sh /opt/rocketmq/bin/mqbroker -n 192.168.1.101:9876 -c /opt/rocketmq/conf/broker.properties &gt; /opt/rocketmq/logs/mqbroker.log 2&gt;&amp;1 &amp;</span><br><span class="line">:x</span><br><span class="line">chmod u+x /opt/rocketmq/mqbroker-start.sh</span><br></pre></td></tr></table></figure>
 <h2 id="集群搭建"><a href="#集群搭建" class="headerlink" title="集群搭建"></a>集群搭建</h2><h3 id="1-2同单机一样"><a href="#1-2同单机一样" class="headerlink" title="1, 2同单机一样"></a>1, 2同单机一样</h3><p>本文配置2m-noslave，机器ip：192.168.1.101，192.168.1.102</p>
 <h3 id="3-环境配置-1"><a href="#3-环境配置-1" class="headerlink" title="3.环境配置"></a>3.环境配置</h3><p>/opt/rocketmq/conf/2m-noslave/broker-a.properties</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>所属集群名字  </span><br><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line"><span class="meta">#</span>broker名字,注意此处不同的配置文件填写的不一样</span><br><span class="line">brokerName=broker-a</span><br><span class="line"><span class="meta">#</span>0 表示 Master,&gt;0 表示 Slave</span><br><span class="line">brokerId=0</span><br><span class="line"><span class="meta">#</span>nameServer地址,分号分割</span><br><span class="line">namesrvAddr=192.168.1.101:9876;192.168.1.102:9876</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>关键</span><br><span class="line">brokerIP1=192.168.1.101</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>在发送消息时,自动创建服务器不存在的topic,默认创建的队列数</span><br><span class="line">defaultTopicQueueNums=4</span><br><span class="line"><span class="meta">#</span>是否允许 Broker 自动创建Topic,建议线下开启,线上关闭</span><br><span class="line">autoCreateTopicEnable=true</span><br><span class="line"><span class="meta">#</span>是否允许 Broker 自动创建订阅组,建议线下开启,线上关闭</span><br><span class="line">autoCreateSubscriptionGroup=true</span><br><span class="line"><span class="meta">#</span>Broker 对外服务的监听端口</span><br><span class="line">listenPort=10911</span><br><span class="line"><span class="meta">#</span>删除文件时间点,默认凌晨 4点</span><br><span class="line">deleteWhen=04</span><br><span class="line"><span class="meta">#</span>文件保留时间,默认 48 小时</span><br><span class="line">fileReservedTime=48</span><br><span class="line"><span class="meta">#</span>commitLog每个文件的大小默认1G</span><br><span class="line">mapedFileSizeCommitLog=1073741824</span><br><span class="line"><span class="meta">#</span>ConsumeQueue每个文件默认存30W条,根据业务情况调整</span><br><span class="line">mapedFileSizeConsumeQueue=300000</span><br><span class="line"><span class="meta">#</span>destroyMapedFileIntervalForcibly=120000</span><br><span class="line"><span class="meta">#</span>redeleteHangedFileInterval=120000</span><br><span class="line"><span class="meta">#</span>检测物理文件磁盘空间</span><br><span class="line">diskMaxUsedSpaceRatio=88</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>这里是我的 日志配置</span><br><span class="line"><span class="meta">#</span>存储路径</span><br><span class="line">storePathRootDir=/opt/rocketmq/store</span><br><span class="line"><span class="meta">#</span>commitLog 存储路径</span><br><span class="line">storePathCommitLog=/opt/rocketmq/store/commitlog</span><br><span class="line"><span class="meta">#</span>消费队列存储路径存储路径</span><br><span class="line">storePathConsumeQueue=/opt/rocketmq/store/consumequeue</span><br><span class="line"><span class="meta">#</span>消息索引存储路径</span><br><span class="line">storePathIndex=/opt/rocketmq/store/index</span><br><span class="line"><span class="meta">#</span>checkpoint 文件存储路径</span><br><span class="line">storeCheckpoint=/opt/rocketmq/store/checkpoint</span><br><span class="line"><span class="meta">#</span>abort 文件存储路径</span><br><span class="line">abortFile=/opt/rocketmq/store/abort</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>限制的消息大小  </span><br><span class="line">maxMessageSize=65536</span><br><span class="line"><span class="meta">#</span>flushCommitLogLeastPages=4</span><br><span class="line"><span class="meta">#</span>flushConsumeQueueLeastPages=2</span><br><span class="line"><span class="meta">#</span>flushCommitLogThoroughInterval=10000</span><br><span class="line"><span class="meta">#</span>flushConsumeQueueThoroughInterval=60000</span><br><span class="line"><span class="meta">#</span>Broker 的角色</span><br><span class="line"><span class="meta">#</span>- ASYNC_MASTER 异步复制Master</span><br><span class="line"><span class="meta">#</span>- SYNC_MASTER 同步双写Master</span><br><span class="line"><span class="meta">#</span>- SLAVE</span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line"><span class="meta">#</span>刷盘方式</span><br><span class="line"><span class="meta">#</span>- ASYNC_FLUSH 异步刷盘</span><br><span class="line"><span class="meta">#</span>- SYNC_FLUSH 同步刷盘</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>checkTransactionMessageEnable=false</span><br><span class="line"><span class="meta">#</span>发消息线程池数量</span><br><span class="line"><span class="meta">#</span>sendMessageThreadPoolNums=128</span><br><span class="line"><span class="meta">#</span>拉消息线程池数量</span><br><span class="line"><span class="meta">#</span>pullMessageThreadPoolNums=128</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">所属集群名字</span>  </span><br><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">broker名字,注意此处不同的配置文件填写的不一样</span></span><br><span class="line">brokerName=broker-a</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">0 表示 Master,&gt;0 表示 Slave</span></span><br><span class="line">brokerId=0</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">nameServer地址,分号分割</span></span><br><span class="line">namesrvAddr=192.168.1.101:9876;192.168.1.102:9876</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关键</span></span><br><span class="line">brokerIP1=192.168.1.101</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">在发送消息时,自动创建服务器不存在的topic,默认创建的队列数</span></span><br><span class="line">defaultTopicQueueNums=4</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否允许 Broker 自动创建Topic,建议线下开启,线上关闭</span></span><br><span class="line">autoCreateTopicEnable=true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否允许 Broker 自动创建订阅组,建议线下开启,线上关闭</span></span><br><span class="line">autoCreateSubscriptionGroup=true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Broker 对外服务的监听端口</span></span><br><span class="line">listenPort=10911</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">删除文件时间点,默认凌晨 4点</span></span><br><span class="line">deleteWhen=04</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">文件保留时间,默认 48 小时</span></span><br><span class="line">fileReservedTime=48</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">commitLog每个文件的大小默认1G</span></span><br><span class="line">mapedFileSizeCommitLog=1073741824</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ConsumeQueue每个文件默认存30W条,根据业务情况调整</span></span><br><span class="line">mapedFileSizeConsumeQueue=300000</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">destroyMapedFileIntervalForcibly=120000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">redeleteHangedFileInterval=120000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">检测物理文件磁盘空间</span></span><br><span class="line">diskMaxUsedSpaceRatio=88</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">这里是我的 日志配置</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">存储路径</span></span><br><span class="line">storePathRootDir=/opt/rocketmq/store</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">commitLog 存储路径</span></span><br><span class="line">storePathCommitLog=/opt/rocketmq/store/commitlog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">消费队列存储路径存储路径</span></span><br><span class="line">storePathConsumeQueue=/opt/rocketmq/store/consumequeue</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">消息索引存储路径</span></span><br><span class="line">storePathIndex=/opt/rocketmq/store/index</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkpoint 文件存储路径</span></span><br><span class="line">storeCheckpoint=/opt/rocketmq/store/checkpoint</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">abort 文件存储路径</span></span><br><span class="line">abortFile=/opt/rocketmq/store/abort</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">限制的消息大小</span>  </span><br><span class="line">maxMessageSize=65536</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushCommitLogLeastPages=4</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushConsumeQueueLeastPages=2</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushCommitLogThoroughInterval=10000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushConsumeQueueThoroughInterval=60000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Broker 的角色</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- ASYNC_MASTER 异步复制Master</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SYNC_MASTER 同步双写Master</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SLAVE</span></span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">刷盘方式</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- ASYNC_FLUSH 异步刷盘</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SYNC_FLUSH 同步刷盘</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkTransactionMessageEnable=<span class="literal">false</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">发消息线程池数量</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">sendMessageThreadPoolNums=128</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">拉消息线程池数量</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">pullMessageThreadPoolNums=128</span></span><br></pre></td></tr></table></figure>
 <p>/opt/rocketmq/conf/2m-noslave/broker-b.properties</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>所属集群名字  </span><br><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line"><span class="meta">#</span>broker名字,注意此处不同的配置文件填写的不一样</span><br><span class="line">brokerName=broker-b</span><br><span class="line"><span class="meta">#</span>0 表示 Master,&gt;0 表示 Slave</span><br><span class="line">brokerId=0</span><br><span class="line"><span class="meta">#</span>nameServer地址,分号分割</span><br><span class="line">namesrvAddr=192.168.1.101:9876;192.168.1.102:9876</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>关键</span><br><span class="line">brokerIP1=192.168.1.102</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>在发送消息时,自动创建服务器不存在的topic,默认创建的队列数</span><br><span class="line">defaultTopicQueueNums=4</span><br><span class="line"><span class="meta">#</span>是否允许 Broker 自动创建Topic,建议线下开启,线上关闭</span><br><span class="line">autoCreateTopicEnable=true</span><br><span class="line"><span class="meta">#</span>是否允许 Broker 自动创建订阅组,建议线下开启,线上关闭</span><br><span class="line">autoCreateSubscriptionGroup=true</span><br><span class="line"><span class="meta">#</span>Broker 对外服务的监听端口</span><br><span class="line">listenPort=10911</span><br><span class="line"><span class="meta">#</span>删除文件时间点,默认凌晨 4点</span><br><span class="line">deleteWhen=04</span><br><span class="line"><span class="meta">#</span>文件保留时间,默认48小时</span><br><span class="line">fileReservedTime=48</span><br><span class="line"><span class="meta">#</span>commitLog每个文件的大小默认1G</span><br><span class="line">mapedFileSizeCommitLog=1073741824</span><br><span class="line"><span class="meta">#</span>ConsumeQueue每个文件默认存30W条,根据业务情况调整</span><br><span class="line">mapedFileSizeConsumeQueue=300000</span><br><span class="line"><span class="meta">#</span>destroyMapedFileIntervalForcibly=120000</span><br><span class="line"><span class="meta">#</span>redeleteHangedFileInterval=120000</span><br><span class="line"><span class="meta">#</span>检测物理文件磁盘空间</span><br><span class="line">diskMaxUsedSpaceRatio=88</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>这里是我的 日志配置</span><br><span class="line"><span class="meta">#</span>存储路径</span><br><span class="line">storePathRootDir=/opt/rocketmq/store</span><br><span class="line"><span class="meta">#</span>commitLog 存储路径</span><br><span class="line">storePathCommitLog=/opt/rocketmq/store/commitlog</span><br><span class="line"><span class="meta">#</span>消费队列存储路径存储路径</span><br><span class="line">storePathConsumeQueue=/opt/rocketmq/store/consumequeue</span><br><span class="line"><span class="meta">#</span>消息索引存储路径</span><br><span class="line">storePathIndex=/opt/rocketmq/store/index</span><br><span class="line"><span class="meta">#</span>checkpoint 文件存储路径</span><br><span class="line">storeCheckpoint=/opt/rocketmq/store/checkpoint</span><br><span class="line"><span class="meta">#</span>abort 文件存储路径</span><br><span class="line">abortFile=/opt/rocketmq/store/abort</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>限制的消息大小  </span><br><span class="line">maxMessageSize=65536</span><br><span class="line"><span class="meta">#</span>flushCommitLogLeastPages=4</span><br><span class="line"><span class="meta">#</span>flushConsumeQueueLeastPages=2</span><br><span class="line"><span class="meta">#</span>flushCommitLogThoroughInterval=10000</span><br><span class="line"><span class="meta">#</span>flushConsumeQueueThoroughInterval=60000</span><br><span class="line"><span class="meta">#</span>Broker 的角色</span><br><span class="line"><span class="meta">#</span>- ASYNC_MASTER 异步复制Master</span><br><span class="line"><span class="meta">#</span>- SYNC_MASTER 同步双写Master</span><br><span class="line"><span class="meta">#</span>- SLAVE</span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line"><span class="meta">#</span>刷盘方式</span><br><span class="line"><span class="meta">#</span>- ASYNC_FLUSH 异步刷盘</span><br><span class="line"><span class="meta">#</span>- SYNC_FLUSH 同步刷盘</span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>checkTransactionMessageEnable=false</span><br><span class="line"><span class="meta">#</span>发消息线程池数量</span><br><span class="line"><span class="meta">#</span>sendMessageThreadPoolNums=128</span><br><span class="line"><span class="meta">#</span>拉消息线程池数量</span><br><span class="line"><span class="meta">#</span>pullMessageThreadPoolNums=128</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">所属集群名字</span>  </span><br><span class="line">brokerClusterName=DefaultCluster</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">broker名字,注意此处不同的配置文件填写的不一样</span></span><br><span class="line">brokerName=broker-b</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">0 表示 Master,&gt;0 表示 Slave</span></span><br><span class="line">brokerId=0</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">nameServer地址,分号分割</span></span><br><span class="line">namesrvAddr=192.168.1.101:9876;192.168.1.102:9876</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关键</span></span><br><span class="line">brokerIP1=192.168.1.102</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">在发送消息时,自动创建服务器不存在的topic,默认创建的队列数</span></span><br><span class="line">defaultTopicQueueNums=4</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否允许 Broker 自动创建Topic,建议线下开启,线上关闭</span></span><br><span class="line">autoCreateTopicEnable=true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">是否允许 Broker 自动创建订阅组,建议线下开启,线上关闭</span></span><br><span class="line">autoCreateSubscriptionGroup=true</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Broker 对外服务的监听端口</span></span><br><span class="line">listenPort=10911</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">删除文件时间点,默认凌晨 4点</span></span><br><span class="line">deleteWhen=04</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">文件保留时间,默认48小时</span></span><br><span class="line">fileReservedTime=48</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">commitLog每个文件的大小默认1G</span></span><br><span class="line">mapedFileSizeCommitLog=1073741824</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ConsumeQueue每个文件默认存30W条,根据业务情况调整</span></span><br><span class="line">mapedFileSizeConsumeQueue=300000</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">destroyMapedFileIntervalForcibly=120000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">redeleteHangedFileInterval=120000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">检测物理文件磁盘空间</span></span><br><span class="line">diskMaxUsedSpaceRatio=88</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">这里是我的 日志配置</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">存储路径</span></span><br><span class="line">storePathRootDir=/opt/rocketmq/store</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">commitLog 存储路径</span></span><br><span class="line">storePathCommitLog=/opt/rocketmq/store/commitlog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">消费队列存储路径存储路径</span></span><br><span class="line">storePathConsumeQueue=/opt/rocketmq/store/consumequeue</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">消息索引存储路径</span></span><br><span class="line">storePathIndex=/opt/rocketmq/store/index</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkpoint 文件存储路径</span></span><br><span class="line">storeCheckpoint=/opt/rocketmq/store/checkpoint</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">abort 文件存储路径</span></span><br><span class="line">abortFile=/opt/rocketmq/store/abort</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">限制的消息大小</span>  </span><br><span class="line">maxMessageSize=65536</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushCommitLogLeastPages=4</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushConsumeQueueLeastPages=2</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushCommitLogThoroughInterval=10000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">flushConsumeQueueThoroughInterval=60000</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">Broker 的角色</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- ASYNC_MASTER 异步复制Master</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SYNC_MASTER 同步双写Master</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SLAVE</span></span><br><span class="line">brokerRole=ASYNC_MASTER</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">刷盘方式</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- ASYNC_FLUSH 异步刷盘</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">- SYNC_FLUSH 同步刷盘</span></span><br><span class="line">flushDiskType=ASYNC_FLUSH</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkTransactionMessageEnable=<span class="literal">false</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">发消息线程池数量</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">sendMessageThreadPoolNums=128</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">拉消息线程池数量</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">pullMessageThreadPoolNums=128</span></span><br></pre></td></tr></table></figure>
 <p>启动nameserver脚本[两台机器]</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/rocketmq/bin</span><br><span class="line">nohup sh mqnamesrv &amp;</span><br></pre></td></tr></table></figure>
 <p>启动BrokerServer</p>
@@ -296,297 +184,6 @@ var _hmt = _hmt || [];
 <p><a href="">http://download.csdn.net/download/xxzblog/10124810</a></p>
 <h3 id="2-启动脚本"><a href="#2-启动脚本" class="headerlink" title="2. 启动脚本"></a>2. 启动脚本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /opt/rocketmq-console/start.sh</span><br><span class="line">nohup java -jar rocketmq-console-ng-1.0.0.jar --server.port=12581 --rocketmq.config.namesrvAddr=192.168.1.101:9876,192.168.1.102:9876 &gt;/opt/rocketmq-console/run.log 2&gt;&amp;1 &amp;</span><br><span class="line">:x</span><br><span class="line">chmod u+x /opt/rocketmq-console/start.sh</span><br></pre></td></tr></table></figure>
 <h3 id="3-执行脚本"><a href="#3-执行脚本" class="headerlink" title="3. 执行脚本"></a>3. 执行脚本</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/rocketmq-console/start.sh</span><br></pre></td></tr></table></figure>
-<h3 id="4-验证是否成功"><a href="#4-验证是否成功" class="headerlink" title="4. 验证是否成功"></a>4. 验证是否成功</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览器打开:http://127.0.0.1:12581</span><br></pre></td></tr></table></figure>
+<h3 id="4-验证是否成功"><a href="#4-验证是否成功" class="headerlink" title="4. 验证是否成功"></a>4. 验证是否成功</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览器打开:http://127.0.0.1:12581</span><br></pre></td></tr></table></figure>
 <p>整个rocketmq搭建就结束了</p>
-
-			
-			
-				<div id="donate" style="text-align:center">
-					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
-	<div>如果您觉得文章有用或对您有帮助，欢迎通过以下方式赞助我。 ♪(＾∀＾●)ﾉ</div>
-    <div id="donate_board" class="donate_bar center">
-        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
-        <span class="donate_txt">
-            <br>
-           
-        </span>
-        <br>
-      </div>  
-    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
-		
-    </div>
-    
-    <script type="text/javascript">
-		var html = ['<div style="width:180px; height:180px; float:left; margin: 0% 1%;">',
-			'<img src="/public/images/zfb.png" id="zhifubao" title="支付宝 Alipay" alt="支付宝 Alipay">',
-			'<span>支付宝 Alipay</span>',
-			'</div>',
-			'<div style="width:180px; height:180px; float: left;">',
-			'<img src="/public/images/wx.png" title="微信 WeChat" id="weixin" alt="微信 WeChat">',
-			'<span>微信 WeChat</span>',
-			'</div>',
-      '<div style="clear:both;"></div>'].join('');
-        $('#weixin').hover()
-        document.getElementById('btn_donate').onclick = function(){
-            $('#donate_board').addClass('hidden');
-            $('#donate_guide').html(html).removeClass('hidden');
-        }
-    $('#donate_guide').html(html).removeClass('hidden');
-    </script>
-</div>
-<style>
-.donate_bar {
-    text-align: center;
-    margin-top: 3%;
-}
-.donate_bar2{
-    z-index: 9999;
-    text-align: center;
-    top: 50%;
-    left: 50%;
-    width: 660px;
-    height: 360px;
-    margin: -180px 0 30px -330px;
-    border-radius: 5px;
-    border: solid 2px #666;
-    background-color: #fff;
-    
-    box-shadow: 0 0 10px #666;
-}
-.donate_bar a.btn_donate {
-    display: inline-block;
-    width: 82px;
-    height: 82px;
-    margin-left: auto;
-    margin-right: auto;
-    background: url(/public/images/ds.jpg) no-repeat;
-    -webkit-transition: background 0s;
-    -moz-transition: background 0s;
-    -o-transition: background 0s;
-    -ms-transition: background 0s;
-    transition: background 0s
-}
-.donate_bar a.btn_donate:hover {
-    background-position: 0 -82px
-}
-.donate_bar .donate_txt {
-    display: block;
-    color: #9d9d9d;
-    font: 14px/2 "Microsoft Yahei"
-}
-.donate_bar.hidden{
-    display: none
-}
-.post-donate{
-    margin-top: 80px;
-}
-#donate_guide{
-    height: 235px;
-    max-width: 100%;
-    margin: 3% auto;
-    padding: 5px;
-}
-</style>
-
-				</div>
-			
-			
-				<div class="alert alert-success">
-	<div class="copyright-left">
-		<i class="fa fa-lightbulb-o"></i>
-		本文由 <a href="/" target="_blank" title="xxzkid | 王也道长GO">xxzkid | 王也道长GO</a>创作，采用
-		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
-		可自由转载、引用，但需署名作者且注明文章出处。<br>
-		本文标题：<a href="/2017/rocketmq-02/" target="_blank" title="rocketmq集群搭建">rocketmq集群搭建</a><br>
-		本文链接：<a href="/2017/rocketmq-02/" target="_blank" title="rocketmq集群搭建">https://xxzkid.github.io/2017/rocketmq-02/</a>
-	</div>
-	<div style="clear:both;height:0px;"></div>
-</div>
-
-
-<style>
-.alert {
-	width: 95%;
-    margin: 0 auto;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-.alert-success {
-    background-color: #f5f5f5;
-    padding: 7px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-@media (min-width: 768px)
-(index):495
-.copyright-left {
-    float: left;
-    width: 80%;
-}
-</style>
-				<style>
-	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
-</style>
-<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-<script>
-	$(function(){
-		$(".article-entry .gallery-item").fancybox();;
-	});
-</script>
-			
-			
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2328510744730535"
-     crossorigin="anonymous"></script>
-<!-- 1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="9239153975"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2018/spring-scheduling-tasks/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    spring定时任务调度
-                
-            </div>
-        </a>
-    
-    
-        <a href="/2017/rocketmq-01/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">RocketMQ 入门</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-	<div id="commentContainer"></div>
-</section>
-    
-
-</section>
-            
-                
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信/" style="font-size: 15px;">PC微信</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/ai/" style="font-size: 10px;">ai</a> <a href="/tags/android/" style="font-size: 13.75px;">android</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 11.25px;">c</a> <a href="/tags/c-c/" style="font-size: 15px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/chromedriver/" style="font-size: 10px;">chromedriver</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flutter/" style="font-size: 10px;">flutter</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/freeswitch/" style="font-size: 10px;">freeswitch</a> <a href="/tags/frida/" style="font-size: 13.75px;">frida</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kubernetes/" style="font-size: 12.5px;">kubernetes</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/license/" style="font-size: 10px;">license</a> <a href="/tags/linux/" style="font-size: 13.75px;">linux</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 11.25px;">mail</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/minio/" style="font-size: 11.25px;">minio</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis/" style="font-size: 11.25px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 11.25px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/n8n/" style="font-size: 10px;">n8n</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/opengauss/" style="font-size: 10px;">opengauss</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/paddle/" style="font-size: 10px;">paddle</a> <a href="/tags/paddlespeech/" style="font-size: 10px;">paddlespeech</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pyenv/" style="font-size: 10px;">pyenv</a> <a href="/tags/pyqt5/" style="font-size: 10px;">pyqt5</a> <a href="/tags/pyside2/" style="font-size: 10px;">pyside2</a> <a href="/tags/python/" style="font-size: 16.25px;">python</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12.5px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/seata/" style="font-size: 10px;">seata</a> <a href="/tags/selenium/" style="font-size: 10px;">selenium</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/signoz/" style="font-size: 11.25px;">signoz</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 17.5px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 16.25px;">spring-boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring-mvc</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/switchomega/" style="font-size: 10px;">switchomega</a> <a href="/tags/synchronize/" style="font-size: 10px;">synchronize</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tinyproxy/" style="font-size: 10px;">tinyproxy</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/ueditor/" style="font-size: 11.25px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xposed/" style="font-size: 10px;">xposed</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/可观测平台/" style="font-size: 10px;">可观测平台</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/微信/" style="font-size: 15px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 13.75px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/文件重命名/" style="font-size: 10px;">文件重命名</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/正则表达式/" style="font-size: 11.25px;">正则表达式</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">链接</h3>
-        <div class="widget">
-            <ul>
-                
-            </ul>
-        </div>
-    </div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- ad -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="6089417000"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
-            
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2025 xxzkid | 王也道长GO<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
-        </div>
-    </div>
-</footer>
-
-        
-    
-	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-	<script>
-		var id = window.location.pathname;
-		id = id.substring(1);
-		id = id.substring(id.indexOf('/') + 1, id.length - 1);
-		
-		var gitalk = new Gitalk({
-		  clientID: 'd0cfd49cb3019a36b6cd',
-		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
-		  repo: 'x-comment',
-		  owner: 'jsbxyyx',
-		  admin: ['jsbxyyx'],
-		  id: id,
-		  distractionFreeMode: false
-		});
-		
-		gitalk.render('commentContainer');
-	</script>
-	
-
-
-
-    
-    
-    
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.123571.xyz">Apache王也道长</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.123571.xyz/2017/rocketmq-02/">https://blog.123571.xyz/2017/rocketmq-02/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.123571.xyz" target="_blank">Apache王也道长</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/rocketmq/">rocketmq</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2018/spring-scheduling-tasks/" title="spring定时任务调度"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">spring定时任务调度</div></div><div class="info-2"><div class="info-item-1">本文将告诉你如何使用spring的任务调度。主要使用@Scheduled注解  需要会使用maven  第一步 pom.xml配置12345678910111213141516171819202122232425262728293031323334353637383940&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;    xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;    ...</div></div></div></a><a class="pagination-related" href="/2017/rocketmq-01/" title="RocketMQ 入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">RocketMQ 入门</div></div><div class="info-2"><div class="info-item-1">本文讲解前不久进入apache顶级项目的RocketMQ，几个简单的例子讲解如何搭建RocketMQ，以及发送消息，接受消息。  RocketMQ安装RocketMQ的安装需要自行编译，接下来编译源码(本文下载源码放在windows系统D:\softwares\目录下)  下载源码 1git clone -b develop https://github.com/apache/rocketmq.git  编译 12cd rocketmqmvn -Prelease-all -DskipTests clean install -U  启动rocketmq 12345678cd distribution\target\apache-rocketmqset ROCKETMQ_HOME=D:\softwares\rocketmq\distribution\target\apache-rocketmqbin\mqnamesrv.cmd# 再开启一个cmd窗口，进入到D:\softwares\rocketmq\distribution\target\apache-rocketmqd:cd D:...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2017/rocketmq-01/" title="RocketMQ 入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2017-11-03</div><div class="info-item-2">RocketMQ 入门</div></div><div class="info-2"><div class="info-item-1">本文讲解前不久进入apache顶级项目的RocketMQ，几个简单的例子讲解如何搭建RocketMQ，以及发送消息，接受消息。  RocketMQ安装RocketMQ的安装需要自行编译，接下来编译源码(本文下载源码放在windows系统D:\softwares\目录下)  下载源码 1git clone -b develop https://github.com/apache/rocketmq.git  编译 12cd rocketmqmvn -Prelease-all -DskipTests clean install -U  启动rocketmq 12345678cd distribution\target\apache-rocketmqset ROCKETMQ_HOME=D:\softwares\rocketmq\distribution\target\apache-rocketmqbin\mqnamesrv.cmd# 再开启一个cmd窗口，进入到D:\softwares\rocketmq\distribution\target\apache-rocketmqd:cd D:...</div></div></div></a><a class="pagination-related" href="/2022/spring-rocketmq-mysql-transaction-1/" title="Spring解决RocketMQ发消息与MySQL事务一致性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-23</div><div class="info-item-2">Spring解决RocketMQ发消息与MySQL事务一致性</div></div><div class="info-2"><div class="info-item-1">Spring解决RocketMQ发消息与MySQL事务一致性 场景 用户订单并支付 发送消息开通查看文章权限 123456789101112131415161718192021222324// 伪代码@Transactional(rollbackFor=Exception.class)public void pay(long uid, String orderNO) &#123;  Order order = orderService.selectOrder(uid, orderNO)  if (order != null) &#123;    String status = &quot;paid&quot;;    orderDao.updateStatus(uid, orderNo, status);        rocketMQTemplate.send(&quot;order:status&quot;, message(uid, orderNo, order.itemId, status));  &#125;&#125;public class OrderStatusA...</div></div></div></a><a class="pagination-related" href="/2020/leetcode-0004/" title="leetcode 0004 寻找两个有序数组的中位数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-14</div><div class="info-item-2">leetcode 0004 寻找两个有序数组的中位数</div></div><div class="info-2"><div class="info-item-1">给定两个大小为 m 和 n 的有序数组 nums1 和 nums2。 请你找出这两个有序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。 你可以假设 nums1 和 nums2 不会同时为空。示例 1:1234nums1 = [1, 3]nums2 = [2]则中位数是 2.0示例 2:1234nums1 = [1, 2]nums2 = [3, 4]则中位数是 (2 + 3)/2 = 2.5 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586/*解题思路：由于这两个数组都是有序数组，如果我们从下标为i的地方把nums1数组分为两半，左边的数肯定比nums1[i]小，右边比nums2[i]大同理把nums2数组从下标为j的地方分为两半left                        ...</div></div></div></a><a class="pagination-related" href="/2023/as-xposed-1/" title="Android Studio搭建Xposed项目"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-03</div><div class="info-item-2">Android Studio搭建Xposed项目</div></div><div class="info-2"><div class="info-item-1">添加依赖settings.gradle在dependencyResolutionManagement添加12345678910111213dependencyResolutionManagement &#123;    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)    repositories &#123;        google()        mavenCentral()		// **        maven &#123; url &#x27;https://maven.aliyun.com/nexus/content/groups/public/&#x27; &#125;        maven &#123; url &#x27;https://maven.aliyun.com/nexus/content/repositories/jcenter&#x27; &#125;        maven &#123; url &#x27;https://maven.aliyun.com/nex...</div></div></div></a><a class="pagination-related" href="/2024/decrypt-wechat-msg-1/" title="解密Android某信聊天记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-30</div><div class="info-item-2">解密Android某信聊天记录</div></div><div class="info-2"><div class="info-item-1">解密Android某信聊天记录 前置条件frida, frida-tools, adb 获取密码h.js12345678910111213141516171819202122232425console.log(&#x27;script loaded successfully&#x27;);function xx() &#123;    function strf(str, replacements) &#123;		return str.replace(/\$\&#123;\w+\&#125;/g, function(placeholderWithDelimiters) &#123;			var placeholderWithoutDelimiters = placeholderWithDelimiters.substring(2, placeholderWithDelimiters.length - 1);			var stringReplacement = replacements[placeholderWithoutDelimiters];			return stringR...</div></div></div></a><a class="pagination-related" href="/2020/mybatis-source-01/" title="mybatis3.5.x源码系列（1）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-20</div><div class="info-item-2">mybatis3.5.x源码系列（1）</div></div><div class="info-2"><div class="info-item-1"> 首先我们了解一下mybatis中的几个核心概念   Configuration 配置，可以理解为mybatis的大管家，管理一切 Environment 环境，这个主要负责数据源，事务管理器 MappedStatement mapper.xml对应的声明类，定义mapper中所有的标签，属性 Interceptor 拦截器，可以拦截Executor，ParameterHandler，ResultSetHandler，StatementHandler SqlSessionFactory SQL会话管理工厂类 SqlSession SQL会话，定义了增，删，改，查，提交，回滚，获取java.sql.Connection，获取mapper MapperProxy mapper代理类，生成接口代理对象 Executor 执行器，主要负责增，删，改，查，提交，回滚的执行 ParameterHandler 参数处理器，主要负责参数设置 ResultSetHandler 查询结果集处理器，用来封装ResultSet对应的结果 StatementHandler Statement处理器，用来执...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Apache王也道长</div><div class="author-info-description">喜欢写一点代码，喜欢折腾 | Apache王也道长</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">111</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" href="https://github.com/jsbxyyx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢就点个关注</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%9C%BA%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">单机搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E5%8C%85%E5%87%86%E5%A4%87"><span class="toc-number">1.1.</span> <span class="toc-text">1. 安装包准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">2. 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">3. 环境配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">集群搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E5%90%8C%E5%8D%95%E6%9C%BA%E4%B8%80%E6%A0%B7"><span class="toc-number">2.1.</span> <span class="toc-text">1, 2同单机一样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-1"><span class="toc-number">2.2.</span> <span class="toc-text">3.环境配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rocketmq-console%E6%90%AD%E5%BB%BA"><span class="toc-number">3.</span> <span class="toc-text">rocketmq-console搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E5%8C%85%E5%87%86%E5%A4%87-1"><span class="toc-number">3.1.</span> <span class="toc-text">1.安装包准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text">2. 启动脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%A7%E8%A1%8C%E8%84%9A%E6%9C%AC"><span class="toc-number">3.3.</span> <span class="toc-text">3. 执行脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%AA%8C%E8%AF%81%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="toc-number">3.4.</span> <span class="toc-text">4. 验证是否成功</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/minio-quickstart/" title="minio 快速搭建">minio 快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/n8n-quickstart/" title="n8n快速搭建">n8n快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/minio-data-migration/" title="minio数据迁移">minio数据迁移</a><time datetime="2025-11-27T08:00:00.000Z" title="发表于 2025-11-27 08:00:00">2025-11-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/opengauss-quickstart/" title="opengauss数据库快速开始">opengauss数据库快速开始</a><time datetime="2025-11-26T08:00:00.000Z" title="发表于 2025-11-26 08:00:00">2025-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/switchomega-config/" title="switchomega 配置">switchomega 配置</a><time datetime="2025-09-13T08:00:00.000Z" title="发表于 2025-09-13 08:00:00">2025-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Apache王也道长</span><span class="framework-info"><span>框架 </span><a href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/wechat-card.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

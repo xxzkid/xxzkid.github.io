@@ -1,279 +1,167 @@
-<!DOCTYPE html>
-<html lang=zh>
-<head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    
-    <title>深入理解JVM | xxzkid | 王也道长GO</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
-<meta name="keywords" content="java,jvm">
-<meta property="og:type" content="article">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>深入理解JVM | Apache王也道长</title><meta name="author" content="Apache王也道长"><meta name="copyright" content="Apache王也道长"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property="og:type" content="article">
 <meta property="og:title" content="深入理解JVM">
-<meta property="og:url" content="https://xxzkid.github.io/2019/深入理解JVM/index.html">
-<meta property="og:site_name" content="xxzkid | 王也道长GO">
+<meta property="og:url" content="https://blog.123571.xyz/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/index.html">
+<meta property="og:site_name" content="Apache王也道长">
 <meta property="og:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2025-12-09T05:22:56.854Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.123571.xyz/img/avatar.jpg">
+<meta property="article:published_time" content="2019-06-30T14:40:52.000Z">
+<meta property="article:modified_time" content="2026-04-04T11:49:44.763Z">
+<meta property="article:author" content="Apache王也道长">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="jvm">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解JVM">
-<meta name="twitter:description" content="类的加载，连接与初始化 加载：查找并加载类的二进制  连接  验证：确保被加载的类的正确性 准备：为类的静态变量分配内存，并将其初始化为默认值 解析：把类中的符号引用转为直接引用">
+<meta name="twitter:image" content="https://blog.123571.xyz/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "深入理解JVM",
+  "url": "https://blog.123571.xyz/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/",
+  "image": "https://blog.123571.xyz/img/avatar.jpg",
+  "datePublished": "2019-06-30T14:40:52.000Z",
+  "dateModified": "2026-04-04T11:49:44.763Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Apache王也道长",
+      "url": "https://blog.123571.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.123571.xyz/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
     
-
-    
-
-    
-        <link rel="icon" href="/css/images/favicon.ico" />
-    
-
-    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
-
-    <link rel="stylesheet" href="/css/style.css">
-
-    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
-    
-    
-    
-    
-    
-    
-
-
-
-<meta name="google-site-verification" content="ONG6kRgr17CtJdS2-ErQZkQyTItOz5sm9OgxB0QauXs" />
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?45b9df8a29658880761fe374a3d396a4";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<!-- google ads -->
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-2328510744730535",
-    enable_page_level_ads: true
-  });
-</script>
-<script async custom-element="amp-auto-ads"
-        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
-</script>
-<script>
-    $(function(){
-        $("img").each( (i,o) => {
-            var o = $(o);
-            // 判断图片的链接是否包含 sinaimg 关键字
-            if( o.attr("src").indexOf("sinaimg") > 0 ){
-                // 给这个标签加上 referrerPlicy 属性
-                o.attr("referrerpolicy","no-referrer");
-                // 备份图片的 src
-                var link = o.attr("src");
-                // 重新设置 src，让页面重新加载一次图片
-                o.attr("src",link);
-            }
-        });
-    });
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</head>
-
-<body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
-        <amp-auto-ads type="adsense"
-              data-ad-client="ca-pub-2328510744730535">
-</amp-auto-ads>
-<header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">xxzkid | 王也道长GO</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">归档</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
-
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
-
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">归档</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
-
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">xxzkid | 王也道长GO</h2>
-            <h3 id="title">哈哈，程序员一枚</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
-            <a id="follow" target="_blank" href="https://github.com/jsbxyyx">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                99
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                111
-                <span>标签</span>
-            </div>
-        </div>
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
         
-        <div class="profile-block social-links">
-            <table>
-                <tr>
-                    
-                    
-                    <td>
-                        <a href="http://github.com/jsbxyyx" target="_blank" title="github" class=tooltip>
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </td>
-                    
-                    <td>
-                        <a href="https://weibo.com/u/2948871357" target="_blank" title="weibo" class=tooltip>
-                            <i class="fa fa-weibo"></i>
-                        </a>
-                    </td>
-                    
-                </tr>
-            </table>
-        </div>
-        
-        
-        <div class="profile-block">
-          <div>QQ群: 551304760</div>
-          <div>淘宝优惠券微信：jsbxyyx</div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-深入理解JVM" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
-        <h1 class="article-title" itemprop="name">
-            深入理解JVM
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2019/深入理解JVM/">
-            <time datetime="2019-06-30T14:40:52.000Z" itemprop="datePublished">2019-06-30</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/jvm/">jvm</a>
-    </div>
-
-						
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h1 id="类的加载，连接与初始化"><a href="#类的加载，连接与初始化" class="headerlink" title="类的加载，连接与初始化"></a>类的加载，连接与初始化</h1><ul>
-<li><p>加载：查找并加载类的二进制</p>
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '深入理解JVM',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Apache王也道长</span></a><a class="nav-page-title" href="/"><span class="site-name">深入理解JVM</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">深入理解JVM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-06-30T14:40:52.000Z" title="发表于 2019-06-30 14:40:52">2019-06-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-04T11:49:44.763Z" title="更新于 2026-04-04 11:49:44">2026-04-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="类的加载，连接与初始化"><a href="#类的加载，连接与初始化" class="headerlink" title="类的加载，连接与初始化"></a>类的加载，连接与初始化</h1><ul>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><li><p>加载：查找并加载类的二进制</p>
 </li>
 <li><p>连接</p>
 <ul>
@@ -283,7 +171,7 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
-<a id="more"></a>
+<span id="more"></span>
 <ul>
 <li><p>初始化：为类的静态变量赋于正确的初始值</p>
 </li>
@@ -346,7 +234,7 @@ var _hmt = _hmt || [];
 <p>ClassLoader.getSystemClassLoader()</p>
 <p>获取调用者的ClassLoader</p>
 <p>sun.reflect.Relection.getCallerClass().getClassLoader()</p>
-<h1 id="类加载器的双亲委托机制"><a href="#类加载器的双亲委托机制" class="headerlink" title="类加载器的双亲委托机制"></a>类加载器的双亲委托机制</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader loader1 = <span class="keyword">new</span> MyClassLoader();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数loader1将作为loader2的父加载器</span></span><br><span class="line">ClassLoader loader2 = <span class="keyword">new</span> MyClassLoader(loader1);</span><br></pre></td></tr></table></figure>
+<h1 id="类加载器的双亲委托机制"><a href="#类加载器的双亲委托机制" class="headerlink" title="类加载器的双亲委托机制"></a>类加载器的双亲委托机制</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ClassLoader</span> <span class="variable">loader1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyClassLoader</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数loader1将作为loader2的父加载器</span></span><br><span class="line"><span class="type">ClassLoader</span> <span class="variable">loader2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyClassLoader</span>(loader1);</span><br></pre></td></tr></table></figure>
 <p>双亲委托机制的优点是能够提高软件系统的安全性。因此在此机制下，用户自定义的类加载器不可能加载应该由父加载器加载的可靠类，从而防止不可靠甚至恶意的代码替代父加载器加载的可靠代码，例如：java.lang.Object 类总是由根类加载器加载，其他任何用户自定义的类加载器都不可能加载包含有恶意代码的java.lang.Object类</p>
 <h1 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h1><ul>
 <li>每个类加载器都有自己的命名空间，命名空间由该加载器及所有父加载器所加载的类组成</li>
@@ -373,7 +261,7 @@ var _hmt = _hmt || [];
 </ul>
 <h1 id="完整的Java字节码结构"><a href="#完整的Java字节码结构" class="headerlink" title="完整的Java字节码结构"></a>完整的Java字节码结构</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ClassFile &#123;</span><br><span class="line">    u4 magic; <span class="comment">// 魔数</span></span><br><span class="line">    u2 minor_version; <span class="comment">// 次版本号</span></span><br><span class="line">    u2 major_version; <span class="comment">// 主版本号</span></span><br><span class="line">    u2 constant_pool_count; <span class="comment">// 常量池个数</span></span><br><span class="line">    constant_pool constant_pool_count - <span class="number">1</span>; <span class="comment">// 常量池表</span></span><br><span class="line">    u2 access_flag; <span class="comment">// 类的访问控制权限</span></span><br><span class="line">    u2 this_class; <span class="comment">// 类名</span></span><br><span class="line">    u2 super_class; <span class="comment">// 父类名</span></span><br><span class="line">    u2 interfaces_count; <span class="comment">// 接口数量</span></span><br><span class="line">    u2 interfaces; <span class="comment">// 接口个数</span></span><br><span class="line">    u2 fields_count; <span class="comment">// 字段个数</span></span><br><span class="line">    field_info fields; <span class="comment">// 字段表</span></span><br><span class="line">    u2 methods_count; <span class="comment">// 方法个数</span></span><br><span class="line">    method_info methods; <span class="comment">// 方法表</span></span><br><span class="line">    u2 attributes_count; <span class="comment">// 附加属性的个数</span></span><br><span class="line">    attribute_info attributes; <span class="comment">// 附加属性表</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>u1, u2, u4, u8 表示1个字节，2个字节，4个字节，8个字节</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">javap -verbose org.xxz.Test1 </span><br><span class="line">Classfile /Users/tt/IdeaProjects/demo/target/classes/org/xxz/Test1.class</span><br><span class="line">  Last modified <span class="number">2019</span>-<span class="number">6</span>-<span class="number">7</span>; size <span class="number">455</span> bytes</span><br><span class="line">  MD5 checksum cb0d025ecc8eb40b573008dd290ac668</span><br><span class="line">  Compiled from <span class="string">"Test1.java"</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">xxz</span>.<span class="title">Test1</span></span></span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: <span class="number">52</span></span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #4.#20         // java/lang/Object."&lt;init&gt;":()V</span><br><span class="line">   #2 = Fieldref           #3.#21         // org/xxz/Test1.a:I</span><br><span class="line">   #3 = Class              #22            // org/xxz/Test1</span><br><span class="line">   #4 = Class              #23            // java/lang/Object</span><br><span class="line">   #5 = Utf8               a</span><br><span class="line">   #6 = Utf8               I</span><br><span class="line">   #7 = Utf8               &lt;init&gt;</span><br><span class="line">   #8 = Utf8               ()V</span><br><span class="line">   #9 = Utf8               Code</span><br><span class="line">  #10 = Utf8               LineNumberTable</span><br><span class="line">  #11 = Utf8               LocalVariableTable</span><br><span class="line">  #12 = Utf8               this</span><br><span class="line">  #13 = Utf8               Lorg/xxz/Test1;</span><br><span class="line">  #14 = Utf8               getA</span><br><span class="line">  #15 = Utf8               ()I</span><br><span class="line">  #16 = Utf8               setA</span><br><span class="line">  #17 = Utf8               (I)V</span><br><span class="line">  #18 = Utf8               SourceFile</span><br><span class="line">  #19 = Utf8               Test1.java</span><br><span class="line">  #20 = NameAndType        #7:#8          // "&lt;init&gt;":()V</span><br><span class="line">  #21 = NameAndType        #5:#6          // a:I</span><br><span class="line">  #22 = Utf8               org/xxz/Test1</span><br><span class="line">  #23 = Utf8               java/lang/Object</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> org.xxz.Test1();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         1: invokespecial #1                  // Method java/lang/Object."&lt;init&gt;":()V</span><br><span class="line">         <span class="number">4</span>: aload_0</span><br><span class="line">         <span class="number">5</span>: iconst_1</span><br><span class="line">         6: putfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">9</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">6</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">4</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">10</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getA</span><span class="params">()</span></span>;</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         1: getfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">4</span>: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">11</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">5</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line">    descriptor: (I)V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">2</span>, args_size=<span class="number">2</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: iload_1</span><br><span class="line">         2: putfield      #2                  // Field a:I</span><br><span class="line">         <span class="number">5</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">15</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">16</span>: <span class="number">5</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">0</span>  <span class="keyword">this</span>   Lorg/xxz/Test1;</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">1</span>     a   I</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: <span class="string">"Test1.java"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">javap -verbose org.xxz.Test1 </span><br><span class="line">Classfile /Users/tt/IdeaProjects/demo/target/classes/org/xxz/Test1.<span class="keyword">class</span></span><br><span class="line">  <span class="title class_">Last</span> modified <span class="number">2019</span>-<span class="number">6</span>-<span class="number">7</span>; size <span class="number">455</span> bytes</span><br><span class="line">  MD5 checksum cb0d025ecc8eb40b573008dd290ac668</span><br><span class="line">  Compiled from <span class="string">&quot;Test1.java&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">org</span>.xxz.Test1</span><br><span class="line">  minor version: <span class="number">0</span></span><br><span class="line">  major version: <span class="number">52</span></span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #<span class="number">1</span> = Methodref          #<span class="number">4.</span>#<span class="number">20</span>         <span class="comment">// java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">   #<span class="number">2</span> = Fieldref           #<span class="number">3.</span>#<span class="number">21</span>         <span class="comment">// org/xxz/Test1.a:I</span></span><br><span class="line">   #<span class="number">3</span> = Class              #<span class="number">22</span>            <span class="comment">// org/xxz/Test1</span></span><br><span class="line">   #<span class="number">4</span> = Class              #<span class="number">23</span>            <span class="comment">// java/lang/Object</span></span><br><span class="line">   #<span class="number">5</span> = Utf8               a</span><br><span class="line">   #<span class="number">6</span> = Utf8               I</span><br><span class="line">   #<span class="number">7</span> = Utf8               &lt;init&gt;</span><br><span class="line">   #<span class="number">8</span> = Utf8               ()V</span><br><span class="line">   #<span class="number">9</span> = Utf8               Code</span><br><span class="line">  #<span class="number">10</span> = Utf8               LineNumberTable</span><br><span class="line">  #<span class="number">11</span> = Utf8               LocalVariableTable</span><br><span class="line">  #<span class="number">12</span> = Utf8               <span class="built_in">this</span></span><br><span class="line">  #<span class="number">13</span> = Utf8               Lorg/xxz/Test1;</span><br><span class="line">  #<span class="number">14</span> = Utf8               getA</span><br><span class="line">  #<span class="number">15</span> = Utf8               ()I</span><br><span class="line">  #<span class="number">16</span> = Utf8               setA</span><br><span class="line">  #<span class="number">17</span> = Utf8               (I)V</span><br><span class="line">  #<span class="number">18</span> = Utf8               SourceFile</span><br><span class="line">  #<span class="number">19</span> = Utf8               Test1.java</span><br><span class="line">  #<span class="number">20</span> = NameAndType        #<span class="number">7</span>:#<span class="number">8</span>          <span class="comment">// &quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">  #<span class="number">21</span> = NameAndType        #<span class="number">5</span>:#<span class="number">6</span>          <span class="comment">// a:I</span></span><br><span class="line">  #<span class="number">22</span> = Utf8               org/xxz/Test1</span><br><span class="line">  #<span class="number">23</span> = Utf8               java/lang/Object</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> org.xxz.Test1();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: invokespecial #<span class="number">1</span>                  <span class="comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">         <span class="number">4</span>: aload_0</span><br><span class="line">         <span class="number">5</span>: iconst_1</span><br><span class="line">         <span class="number">6</span>: putfield      #<span class="number">2</span>                  <span class="comment">// Field a:I</span></span><br><span class="line">         <span class="number">9</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">6</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">4</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">10</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getA</span><span class="params">()</span>;</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: getfield      #<span class="number">2</span>                  <span class="comment">// Field a:I</span></span><br><span class="line">         <span class="number">4</span>: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">11</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">5</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lorg/xxz/Test1;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setA</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    descriptor: (I)V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">2</span>, args_size=<span class="number">2</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: iload_1</span><br><span class="line">         <span class="number">2</span>: putfield      #<span class="number">2</span>                  <span class="comment">// Field a:I</span></span><br><span class="line">         <span class="number">5</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">15</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">16</span>: <span class="number">5</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lorg/xxz/Test1;</span><br><span class="line">            <span class="number">0</span>       <span class="number">6</span>     <span class="number">1</span>     a   I</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: <span class="string">&quot;Test1.java&quot;</span></span><br></pre></td></tr></table></figure>
 <p>常量池表，访问控制权限表</p>
 <p>jclasslib</p>
 <p>基于栈的指令集与基于寄存器的指令集之间的关系：</p>
@@ -391,295 +279,4 @@ var _hmt = _hmt || [];
 <p>方法区（Method Area）：存储元数据。永久代（Permanent Generation），从JDK1.8开始，已经彻底废弃了永久代，使用元空间（Meta Space）</p>
 <p>运行时常量池：方法区的一部分内容</p>
 <p>直接内存：Direct Memory</p>
-
-			
-			
-				<div id="donate" style="text-align:center">
-					<div class ="post-donate" style="margin-bottom: 30px;margin-top: 10px;">
-	<div>如果您觉得文章有用或对您有帮助，欢迎通过以下方式赞助我。 ♪(＾∀＾●)ﾉ</div>
-    <div id="donate_board" class="donate_bar center">
-        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
-        <span class="donate_txt">
-            <br>
-           
-        </span>
-        <br>
-      </div>  
-    <div id="donate_guide" class="donate_bar donate_bar2 center hidden" >
-		
-    </div>
-    
-    <script type="text/javascript">
-		var html = ['<div style="width:180px; height:180px; float:left; margin: 0% 1%;">',
-			'<img src="/public/images/zfb.png" id="zhifubao" title="支付宝 Alipay" alt="支付宝 Alipay">',
-			'<span>支付宝 Alipay</span>',
-			'</div>',
-			'<div style="width:180px; height:180px; float: left;">',
-			'<img src="/public/images/wx.png" title="微信 WeChat" id="weixin" alt="微信 WeChat">',
-			'<span>微信 WeChat</span>',
-			'</div>',
-      '<div style="clear:both;"></div>'].join('');
-        $('#weixin').hover()
-        document.getElementById('btn_donate').onclick = function(){
-            $('#donate_board').addClass('hidden');
-            $('#donate_guide').html(html).removeClass('hidden');
-        }
-    $('#donate_guide').html(html).removeClass('hidden');
-    </script>
-</div>
-<style>
-.donate_bar {
-    text-align: center;
-    margin-top: 3%;
-}
-.donate_bar2{
-    z-index: 9999;
-    text-align: center;
-    top: 50%;
-    left: 50%;
-    width: 660px;
-    height: 360px;
-    margin: -180px 0 30px -330px;
-    border-radius: 5px;
-    border: solid 2px #666;
-    background-color: #fff;
-    
-    box-shadow: 0 0 10px #666;
-}
-.donate_bar a.btn_donate {
-    display: inline-block;
-    width: 82px;
-    height: 82px;
-    margin-left: auto;
-    margin-right: auto;
-    background: url(/public/images/ds.jpg) no-repeat;
-    -webkit-transition: background 0s;
-    -moz-transition: background 0s;
-    -o-transition: background 0s;
-    -ms-transition: background 0s;
-    transition: background 0s
-}
-.donate_bar a.btn_donate:hover {
-    background-position: 0 -82px
-}
-.donate_bar .donate_txt {
-    display: block;
-    color: #9d9d9d;
-    font: 14px/2 "Microsoft Yahei"
-}
-.donate_bar.hidden{
-    display: none
-}
-.post-donate{
-    margin-top: 80px;
-}
-#donate_guide{
-    height: 235px;
-    max-width: 100%;
-    margin: 3% auto;
-    padding: 5px;
-}
-</style>
-
-				</div>
-			
-			
-				<div class="alert alert-success">
-	<div class="copyright-left">
-		<i class="fa fa-lightbulb-o"></i>
-		本文由 <a href="/" target="_blank" title="xxzkid | 王也道长GO">xxzkid | 王也道长GO</a>创作，采用
-		<a href="http://creativecommons.org/licenses/by/3.0/cn" target="_blank" rel="external">CC BY 3.0 CN协议</a> 进行许可。
-		可自由转载、引用，但需署名作者且注明文章出处。<br>
-		本文标题：<a href="/2019/深入理解JVM/" target="_blank" title="深入理解JVM">深入理解JVM</a><br>
-		本文链接：<a href="/2019/深入理解JVM/" target="_blank" title="深入理解JVM">https://xxzkid.github.io/2019/深入理解JVM/</a>
-	</div>
-	<div style="clear:both;height:0px;"></div>
-</div>
-
-
-<style>
-.alert {
-	width: 95%;
-    margin: 0 auto;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-.alert-success {
-    background-color: #f5f5f5;
-    padding: 7px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-@media (min-width: 768px)
-(index):495
-.copyright-left {
-    float: left;
-    width: 80%;
-}
-</style>
-				<style>
-	/*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */.fancybox-wrap,.fancybox-skin,.fancybox-outer,.fancybox-inner,.fancybox-image,.fancybox-wrap iframe,.fancybox-wrap object,.fancybox-nav,.fancybox-nav span,.fancybox-tmp{padding:0;margin:0;border:0;outline:0;vertical-align:top}.fancybox-wrap{position:absolute;top:0;left:0;z-index:8020}.fancybox-skin{position:relative;background:#f9f9f9;color:#444;text-shadow:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px}.fancybox-opened{z-index:8030}.fancybox-opened .fancybox-skin{-webkit-box-shadow:0 10px 25px rgba(0,0,0,.5);-moz-box-shadow:0 10px 25px rgba(0,0,0,.5);box-shadow:0 10px 25px rgba(0,0,0,.5)}.fancybox-outer,.fancybox-inner{position:relative}.fancybox-inner{overflow:hidden}.fancybox-type-iframe .fancybox-inner{-webkit-overflow-scrolling:touch}.fancybox-error{color:#444;font:14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;margin:0;padding:15px;white-space:nowrap}.fancybox-image,.fancybox-iframe{display:block;width:100%;height:100%}.fancybox-image{max-width:100%;max-height:100%}#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_sprite.png')}#fancybox-loading{position:fixed;top:50%;left:50%;margin-top:-22px;margin-left:-22px;background-position:0 -108px;opacity:.8;cursor:pointer;z-index:8060}#fancybox-loading div{width:44px;height:44px;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_loading.gif') center center no-repeat}.fancybox-close{position:absolute;top:-18px;right:-18px;width:36px;height:36px;cursor:pointer;z-index:8040}.fancybox-nav{position:absolute;top:0;width:40%;height:100%;cursor:pointer;text-decoration:none;background:transparent url(blank.gif);-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:8040}.fancybox-prev{left:0}.fancybox-next{right:0}.fancybox-nav span{position:absolute;top:50%;width:36px;height:34px;margin-top:-18px;cursor:pointer;z-index:8040;visibility:hidden}.fancybox-prev span{left:10px;background-position:0 -36px}.fancybox-next span{right:10px;background-position:0 -72px}.fancybox-nav:hover span{visibility:visible}.fancybox-tmp{position:absolute;top:-99999px;left:-99999px;visibility:hidden;max-width:99999px;max-height:99999px;overflow:visible!important}/*.fancybox-lock{overflow:hidden!important;width:auto}*/.fancybox-lock body{overflow:hidden!important}.fancybox-lock-test{overflow-y:hidden!important}.fancybox-overlay{position:absolute;top:0;left:0;overflow:hidden;display:none;z-index:8010;background:url('http://cdn.bootcss.com/fancybox/2.1.5/fancybox_overlay.png')}.fancybox-overlay-fixed{position:fixed;bottom:0;right:0}.fancybox-lock .fancybox-overlay{overflow:auto;overflow-y:scroll}.fancybox-title{visibility:hidden;font:400 13px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;text-shadow:none;z-index:8050}.fancybox-opened .fancybox-title{visibility:visible}.fancybox-title-float-wrap{position:absolute;bottom:0;right:50%;margin-bottom:-35px;z-index:8050;text-align:center}.fancybox-title-float-wrap .child{display:inline-block;margin-right:-100%;padding:2px 20px;background:transparent;background:rgba(0,0,0,.8);-webkit-border-radius:15px;-moz-border-radius:15px;border-radius:15px;text-shadow:0 1px 2px #222;color:#FFF;font-weight:700;line-height:24px;white-space:nowrap}.fancybox-title-outside-wrap{position:relative;margin-top:10px;color:#fff}.fancybox-title-inside-wrap{padding-top:10px}.fancybox-title-over-wrap{position:absolute;bottom:0;left:0;color:#fff;padding:10px;background:#000;background:rgba(0,0,0,.8)}@media only screen and (-webkit-min-device-pixel-ratio:1.5),only screen and (min--moz-device-pixel-ratio:1.5),only screen and (min-device-pixel-ratio:1.5){#fancybox-loading,.fancybox-close,.fancybox-prev span,.fancybox-next span{background-image:url(fancybox_sprite@2x.png);background-size:44px 152px}#fancybox-loading div{background-image:url(fancybox_loading@2x.gif);background-size:24px 24px}}
-</style>
-<script src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-<script>
-	$(function(){
-		$(".article-entry .gallery-item").fancybox();;
-	});
-</script>
-			
-			
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2328510744730535"
-     crossorigin="anonymous"></script>
-<!-- 1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="9239153975"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2019/seata-client-bootstrap/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    Seata 0.8.1~1.0.0客户端启动过程分析
-                
-            </div>
-        </a>
-    
-    
-        <a href="/2019/list-source/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">List接口源码分析</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-	<div id="commentContainer"></div>
-</section>
-    
-
-</section>
-            
-                
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/1000w/" style="font-size: 10px;">1000w</a> <a href="/tags/10进制/" style="font-size: 10px;">10进制</a> <a href="/tags/36进制/" style="font-size: 10px;">36进制</a> <a href="/tags/PC微信/" style="font-size: 15px;">PC微信</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/ai/" style="font-size: 10px;">ai</a> <a href="/tags/android/" style="font-size: 13.75px;">android</a> <a href="/tags/apache2/" style="font-size: 10px;">apache2</a> <a href="/tags/audio/" style="font-size: 10px;">audio</a> <a href="/tags/bigdecimal/" style="font-size: 10px;">bigdecimal</a> <a href="/tags/c/" style="font-size: 11.25px;">c</a> <a href="/tags/c-c/" style="font-size: 15px;">c/c++</a> <a href="/tags/canal/" style="font-size: 10px;">canal</a> <a href="/tags/centos/" style="font-size: 10px;">centos</a> <a href="/tags/chromedriver/" style="font-size: 10px;">chromedriver</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/cursor/" style="font-size: 10px;">cursor</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/flutter/" style="font-size: 10px;">flutter</a> <a href="/tags/form/" style="font-size: 10px;">form</a> <a href="/tags/freeswitch/" style="font-size: 10px;">freeswitch</a> <a href="/tags/frida/" style="font-size: 13.75px;">frida</a> <a href="/tags/gc/" style="font-size: 11.25px;">gc</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/hidden/" style="font-size: 10px;">hidden</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/httpclient/" style="font-size: 10px;">httpclient</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/javascript/" style="font-size: 18.75px;">javascript</a> <a href="/tags/jdbc/" style="font-size: 10px;">jdbc</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jquery/" style="font-size: 10px;">jquery</a> <a href="/tags/js/" style="font-size: 10px;">js</a> <a href="/tags/json/" style="font-size: 10px;">json</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kubernetes/" style="font-size: 12.5px;">kubernetes</a> <a href="/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/tags/license/" style="font-size: 10px;">license</a> <a href="/tags/linux/" style="font-size: 13.75px;">linux</a> <a href="/tags/lombok/" style="font-size: 10px;">lombok</a> <a href="/tags/mail/" style="font-size: 11.25px;">mail</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/minio/" style="font-size: 11.25px;">minio</a> <a href="/tags/ml/" style="font-size: 10px;">ml</a> <a href="/tags/mock/" style="font-size: 10px;">mock</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis/" style="font-size: 11.25px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 11.25px;">mysql</a> <a href="/tags/mysql-5-7-x/" style="font-size: 10px;">mysql-5.7.x</a> <a href="/tags/n8n/" style="font-size: 10px;">n8n</a> <a href="/tags/nacos/" style="font-size: 10px;">nacos</a> <a href="/tags/npm/" style="font-size: 10px;">npm</a> <a href="/tags/opengauss/" style="font-size: 10px;">opengauss</a> <a href="/tags/overflow/" style="font-size: 10px;">overflow</a> <a href="/tags/paddle/" style="font-size: 10px;">paddle</a> <a href="/tags/paddlespeech/" style="font-size: 10px;">paddlespeech</a> <a href="/tags/prototype/" style="font-size: 10px;">prototype</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/pyenv/" style="font-size: 10px;">pyenv</a> <a href="/tags/pyqt5/" style="font-size: 10px;">pyqt5</a> <a href="/tags/pyside2/" style="font-size: 10px;">pyside2</a> <a href="/tags/python/" style="font-size: 16.25px;">python</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/restful/" style="font-size: 10px;">restful</a> <a href="/tags/rocketmq/" style="font-size: 12.5px;">rocketmq</a> <a href="/tags/saga/" style="font-size: 10px;">saga</a> <a href="/tags/seata/" style="font-size: 10px;">seata</a> <a href="/tags/selenium/" style="font-size: 10px;">selenium</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/signoz/" style="font-size: 11.25px;">signoz</a> <a href="/tags/spider/" style="font-size: 10px;">spider</a> <a href="/tags/spring/" style="font-size: 17.5px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 16.25px;">spring-boot</a> <a href="/tags/spring-mvc/" style="font-size: 10px;">spring-mvc</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/switchomega/" style="font-size: 10px;">switchomega</a> <a href="/tags/synchronize/" style="font-size: 10px;">synchronize</a> <a href="/tags/test/" style="font-size: 10px;">test</a> <a href="/tags/tinyproxy/" style="font-size: 10px;">tinyproxy</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/ueditor/" style="font-size: 11.25px;">ueditor</a> <a href="/tags/unicode/" style="font-size: 10px;">unicode</a> <a href="/tags/xgboost/" style="font-size: 10px;">xgboost</a> <a href="/tags/xposed/" style="font-size: 10px;">xposed</a> <a href="/tags/xxzkid/" style="font-size: 10px;">xxzkid</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a> <a href="/tags/可执行jar/" style="font-size: 10px;">可执行jar</a> <a href="/tags/可观测平台/" style="font-size: 10px;">可观测平台</a> <a href="/tags/外键/" style="font-size: 10px;">外键</a> <a href="/tags/安装/" style="font-size: 10px;">安装</a> <a href="/tags/工具/" style="font-size: 11.25px;">工具</a> <a href="/tags/微信/" style="font-size: 15px;">微信</a> <a href="/tags/微信机器人/" style="font-size: 13.75px;">微信机器人</a> <a href="/tags/打包/" style="font-size: 10px;">打包</a> <a href="/tags/文件重命名/" style="font-size: 10px;">文件重命名</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/正则表达式/" style="font-size: 11.25px;">正则表达式</a> <a href="/tags/病毒/" style="font-size: 10px;">病毒</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/脚本/" style="font-size: 10px;">脚本</a> <a href="/tags/蓝桥杯/" style="font-size: 10px;">蓝桥杯</a> <a href="/tags/解码/" style="font-size: 10px;">解码</a> <a href="/tags/设备/" style="font-size: 10px;">设备</a> <a href="/tags/设计/" style="font-size: 10px;">设计</a> <a href="/tags/闭包/" style="font-size: 10px;">闭包</a> <a href="/tags/预览/" style="font-size: 10px;">预览</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap widget-list">
-        <h3 class="widget-title">链接</h3>
-        <div class="widget">
-            <ul>
-                
-            </ul>
-        </div>
-    </div>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- ad -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-2328510744730535"
-     data-ad-slot="6089417000"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
-            
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2025 xxzkid | 王也道长GO<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
-        </div>
-    </div>
-</footer>
-
-        
-    
-	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-	<script>
-		var id = window.location.pathname;
-		id = id.substring(1);
-		id = id.substring(id.indexOf('/') + 1, id.length - 1);
-		
-		var gitalk = new Gitalk({
-		  clientID: 'd0cfd49cb3019a36b6cd',
-		  clientSecret: 'f1939a27ac4515d77cd08fd85b3f8b093b72ec11',
-		  repo: 'x-comment',
-		  owner: 'jsbxyyx',
-		  admin: ['jsbxyyx'],
-		  id: id,
-		  distractionFreeMode: false
-		});
-		
-		gitalk.render('commentContainer');
-	</script>
-	
-
-
-
-    
-    
-    
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-    
-
-
-
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
-    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.123571.xyz">Apache王也道长</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.123571.xyz/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/">https://blog.123571.xyz/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.123571.xyz" target="_blank">Apache王也道长</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/jvm/">jvm</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2019/seata-client-bootstrap/" title="Seata 0.8.1~1.0.0客户端启动过程分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Seata 0.8.1~1.0.0客户端启动过程分析</div></div><div class="info-2"><div class="info-item-1">Seata 0.8.1~1.0.0客户端启动过程分析1. 加载registry配置transactionServiceGroup默认为${spring.application.name}-fescar-service-group可以通过spring.cloud.alibaba.seata.txServiceGroup指定  核心类：io.seata.config.ConfigurationFactory static {} 初始化CURRENT_FILE_INSTANCE  加载registry(环境隔离)  先从System.getProperty读取seata.config.name的value{seataConfigName}  如果seataConfigName为null再从System.getenv获取SEATA_CONFIG_NAME的value{seataConfigName}  如果{seataConfigName}为null，则{seataConfigName}为默认值registry  先从System.getProperty读取seataEnv的value{...</div></div></div></a><a class="pagination-related" href="/2019/list-source/" title="List接口源码分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">List接口源码分析</div></div><div class="info-2"><div class="info-item-1">了解基本数据结构在java中很是重要，今天在这里我们来常用的List接口，以及不同的实现。 ArrayList LinkedList Vector CopyOnWriteArrayList etc… 环境：JDK1.8  接口定义List接口定义分为：查询，修改，批量修改，比较和hash，位置访问，搜索，迭代，视图。 查询操作方法123456int size(); // 返回此列表元素数量boolean isEmpty(); // 返回此列表是否为空boolean contains(Object o); // 返回此列表是否包含o元素Iterator&lt;E&gt; iterator(); // 返回此列表迭代器Object[] toArray(); // 返回此列表转换后的数组&lt;T&gt; T[] toArray(T[] a); // 返回此列表转换后的数组范型 修改操作方法12boolean add(E e); // 添加元素到此列表中boolean remove(Object o); // 从此列表中移除指定元素 批量修改操作方法12345678boolean co...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2017/java-startup-arguments/" title="Java 启动参数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2017-09-06</div><div class="info-item-2">Java 启动参数</div></div><div class="info-2"><div class="info-item-1">这篇文章主要讲解 Java 启动参数在linux用jmeter做压力测试的时候，发现jmeter启动参数，记录一下： java -server -XX:+HeapDumpOnOutOfMemoryError -Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=250 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -jar xxxx.jar 解释一下上述参数意思：  -server 以Server模式启动，默认启动是以Client模式启动。JVM在client模式默认-Xms是1M，-Xmx是64M；JVM在Server模式默认-Xms是128M，-Xmx是1024M。我们可以通过运行:java -version来查看jvm默认工作在什么模式。 -XX:+HeapDumpOnOutOfMemoryError 设置堆栈内存溢出错误打印 -Xms512m 初始堆大小 -Xmx512m 最大堆大小 -XX:+UseG1GC 使用G1垃圾回收器 -XX:MaxG...</div></div></div></a><a class="pagination-related" href="/2020/jvm-create-thread/" title="JVM如何创建线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-20</div><div class="info-item-2">JVM如何创建线程</div></div><div class="info-2"><div class="info-item-1">1234567Thread t = new Thread(new Runnable() &#123;    @Override    public void run() &#123;            &#125;&#125;);t.start(); 上面这段代码在JVM中是如何实现的呢？   我们需要熟悉JNI    打开Thread.java 123456789publicclass Thread implements Runnable &#123;    /* Make sure registerNatives is the first thing &lt;clinit&gt; does. */    private static native void registerNatives();    static &#123;        registerNatives();    &#125;    // ...&#125;   了解过JNI，那么我们知道Thread.java一定会对应一个c或c++文件，那么在JVM中Thread.java对应的C文件是openjd...</div></div></div></a><a class="pagination-related" href="/2020/leetcode-0005/" title="leetcode 0005 最长回文子串"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-14</div><div class="info-item-2">leetcode 0005 最长回文子串</div></div><div class="info-2"><div class="info-item-1">给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。 示例 1：123输入: &quot;babad&quot;输出: &quot;bab&quot;注意: &quot;aba&quot; 也是一个有效答案。示例 2：12输入: &quot;cbbd&quot;输出: &quot;bb&quot;解题： 首先我们要了解回文是什么意思，举个例子相信大家就知道了12上海自来水来自海上大波美人鱼人美波大 发现没有，字符串是对称的，我们可以以某一个字符为中心，分别比较左右字符是否相等，找到最大长度 1234567891011121314151617181920212223242526272829303132class Solution &#123;    public String longestPalindrome(String s) &#123;        if (s == null) &#123;            throw new IllegalArgumentException(&quot;illegal argument&quot...</div></div></div></a><a class="pagination-related" href="/2014/html5-audio-file-stream-play/" title="html5 audio读取文件流播放音频"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2014-11-20</div><div class="info-item-2">html5 audio读取文件流播放音频</div></div><div class="info-2"><div class="info-item-1">最近要解决一个html5 播放音频的问题，在前台地址中不能直接写服务器中的音频文件地址。 在java中使用的springmvc来解决问题，先配置好springmvc的环境，拦截*.mp3的请求，写controller方法  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263package org.xxz.testaudio;import java.io.File;import java.io.FileInputStream;import java.io.OutputStream;import javax.servlet.http.HttpServletRequest;import javax.servlet.http.HttpServletResponse;import org.springframework.stereotype.Controller;import org.springframew...</div></div></div></a><a class="pagination-related" href="/2022/spring-rocketmq-mysql-transaction-1/" title="Spring解决RocketMQ发消息与MySQL事务一致性"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-23</div><div class="info-item-2">Spring解决RocketMQ发消息与MySQL事务一致性</div></div><div class="info-2"><div class="info-item-1">Spring解决RocketMQ发消息与MySQL事务一致性 场景 用户订单并支付 发送消息开通查看文章权限 123456789101112131415161718192021222324// 伪代码@Transactional(rollbackFor=Exception.class)public void pay(long uid, String orderNO) &#123;  Order order = orderService.selectOrder(uid, orderNO)  if (order != null) &#123;    String status = &quot;paid&quot;;    orderDao.updateStatus(uid, orderNo, status);        rocketMQTemplate.send(&quot;order:status&quot;, message(uid, orderNo, order.itemId, status));  &#125;&#125;public class OrderStatusA...</div></div></div></a><a class="pagination-related" href="/2014/java-regex-class/" title="正则表达式类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2014-12-22</div><div class="info-item-2">正则表达式类</div></div><div class="info-2"><div class="info-item-1">这篇文章主要讲解 正则表达式类 这个类包含了项目中绝大多数要使用的正则表达式，具体看代码：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210310410510610710810911011111211311411511611711811912012112212312412512612712812913013113213313413513613713813914014114214314414514614714814915015115215315415515615715815916016116216316416516616716816917017117217317417517617717817918018118218318418518618...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Apache王也道长</div><div class="author-info-description">喜欢写一点代码，喜欢折腾 | Apache王也道长</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">99</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">111</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" href="https://github.com/jsbxyyx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">喜欢就点个关注</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%8C%E8%BF%9E%E6%8E%A5%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">类的加载，连接与初始化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.</span> <span class="toc-text">类的加载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">类加载器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">类的初始化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%97%B6%E6%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">类的初始化时机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96ClassLoader%E7%9A%84%E9%80%94%E5%BE%84"><span class="toc-number">6.</span> <span class="toc-text">获取ClassLoader的途径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%89%98%E6%9C%BA%E5%88%B6"><span class="toc-number">7.</span> <span class="toc-text">类加载器的双亲委托机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="toc-number">8.</span> <span class="toc-text">命名空间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%8D%B8%E8%BD%BD"><span class="toc-number">9.</span> <span class="toc-text">类的卸载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E7%A0%81"><span class="toc-number">10.</span> <span class="toc-text">字节码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84Java%E5%AD%97%E8%8A%82%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">完整的Java字节码结构</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/minio-quickstart/" title="minio 快速搭建">minio 快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/n8n-quickstart/" title="n8n快速搭建">n8n快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/minio-data-migration/" title="minio数据迁移">minio数据迁移</a><time datetime="2025-11-27T08:00:00.000Z" title="发表于 2025-11-27 08:00:00">2025-11-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/opengauss-quickstart/" title="opengauss数据库快速开始">opengauss数据库快速开始</a><time datetime="2025-11-26T08:00:00.000Z" title="发表于 2025-11-26 08:00:00">2025-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/switchomega-config/" title="switchomega 配置">switchomega 配置</a><time datetime="2025-09-13T08:00:00.000Z" title="发表于 2025-09-13 08:00:00">2025-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By Apache王也道长</span><span class="framework-info"><span>框架 </span><a href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/wechat-card.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
