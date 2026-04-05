@@ -2090,11 +2090,11 @@
             
             <tag> java </tag>
             
-            <tag> redis </tag>
-            
             <tag> spring-boot </tag>
             
             <tag> spring </tag>
+            
+            <tag> redis </tag>
             
         </tags>
       
