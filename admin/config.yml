@@ -46,6 +46,12 @@ collections:
     name: pages
     delete: false
     files:
+      - name: 404.html
+        label: ''
+        file: source/404.html
+        editor:
+          preview: true
+        fields: *ref_0
       - name: js-wechat-card.js
         label: ''
         file: source/js/wechat-card.js
@@ -61,12 +67,6 @@ collections:
       - name: categories-index.md
         label: 分类
         file: source/categories/index.md
-        editor:
-          preview: true
-        fields: *ref_0
-      - name: 404.html
-        label: ''
-        file: source/404.html
         editor:
           preview: true
         fields: *ref_0
