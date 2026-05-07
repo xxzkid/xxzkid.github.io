@@ -52,12 +52,6 @@ collections:
         editor:
           preview: true
         fields: *ref_0
-      - name: categories-index.md
-        label: 分类
-        file: source/categories/index.md
-        editor:
-          preview: true
-        fields: *ref_0
       - name: js-wechat-card.js
         label: ''
         file: source/js/wechat-card.js
@@ -67,6 +61,12 @@ collections:
       - name: tags-index.md
         label: 标签
         file: source/tags/index.md
+        editor:
+          preview: true
+        fields: *ref_0
+      - name: categories-index.md
+        label: 分类
+        file: source/categories/index.md
         editor:
           preview: true
         fields: *ref_0
