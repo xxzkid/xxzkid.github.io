@@ -46,15 +46,15 @@ collections:
     name: pages
     delete: false
     files:
-      - name: categories-index.md
-        label: 分类
-        file: source/categories/index.md
-        editor:
-          preview: true
-        fields: *ref_0
       - name: 404.html
         label: ''
         file: source/404.html
+        editor:
+          preview: true
+        fields: *ref_0
+      - name: categories-index.md
+        label: 分类
+        file: source/categories/index.md
         editor:
           preview: true
         fields: *ref_0
