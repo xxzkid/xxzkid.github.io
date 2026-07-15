@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xxzkid.github.io/2025/switchomega-config/</loc>
+    <loc>https://xxzkid.github.io/2018/spring-scheduling-tasks/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2018/spring-scheduling-tasks/</loc>
+    <loc>https://xxzkid.github.io/2025/switchomega-config/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -29,10 +29,6 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2022/spring-rocketmq-mysql-transaction-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
     <loc>https://xxzkid.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
@@ -41,11 +37,11 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2017/redis-single-install/</loc>
+    <loc>https://xxzkid.github.io/2017/rocketmq-01/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2017/rocketmq-01/</loc>
+    <loc>https://xxzkid.github.io/2017/redis-single-install/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -65,7 +61,15 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
+    <loc>https://xxzkid.github.io/2023/signoz-quickstart/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
     <loc>https://xxzkid.github.io/2024/spring-boot-163qy-mail/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2016/spring-boot-build-restful-web-service/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -85,11 +89,15 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2023/signoz-quickstart/</loc>
+    <loc>https://xxzkid.github.io/2022/spring-rocketmq-mysql-transaction-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2016/spring-boot-build-restful-web-service/</loc>
+    <loc>https://xxzkid.github.io/2025/minio-data-migration/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2025/minio-quickstart/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -109,11 +117,15 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
+    <loc>https://xxzkid.github.io/2017/mysql-delete-or-update-foreign-key-data/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
     <loc>https://xxzkid.github.io/2016/mysql-5-7-x-install/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2017/mysql-delete-or-update-foreign-key-data/</loc>
+    <loc>https://xxzkid.github.io/2019/nacos-cluster-install-md/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -137,19 +149,11 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2024/paddlespeech-install-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
     <loc>https://xxzkid.github.io/2024/pcwechat-sqlite3-handle/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2024/python-adb-short-video/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2019/nacos-cluster-install-md/</loc>
+    <loc>https://xxzkid.github.io/2024/paddlespeech-install-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -157,11 +161,19 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
+    <loc>https://xxzkid.github.io/2024/pyside2-player-video-1/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2024/python-adb-short-video/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
     <loc>https://xxzkid.github.io/2017/python-simple-spider/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2024/pyside2-player-video-1/</loc>
+    <loc>https://xxzkid.github.io/2016/js-get-function-name/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -169,11 +181,11 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2015/js-unicode-hex/</loc>
+    <loc>https://xxzkid.github.io/2014/json-get-value-method/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2014/json-get-value-method/</loc>
+    <loc>https://xxzkid.github.io/2015/js-unicode-hex/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -181,15 +193,19 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2023/kubernetes-upadate-cert/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
     <loc>https://xxzkid.github.io/2020/leetcode-0001/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
+    <loc>https://xxzkid.github.io/2023/kubernetes-upadate-cert/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
     <loc>https://xxzkid.github.io/2020/leetcode-0002/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2020/leetcode-0003/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -201,7 +217,7 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2017/linux-restart-java-application/</loc>
+    <loc>https://xxzkid.github.io/2024/linux-find-large-file-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -209,15 +225,15 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2024/linux-find-large-file-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2020/leetcode-0003/</loc>
+    <loc>https://xxzkid.github.io/2017/linux-restart-java-application/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
     <loc>https://xxzkid.github.io/2019/list-source/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2016/maven-repository/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -229,15 +245,15 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2016/maven-repository/</loc>
+    <loc>https://xxzkid.github.io/2013/javascript-jiujiuchengfabiao/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2025/minio-quickstart/</loc>
+    <loc>https://xxzkid.github.io/2024/javascript-string-format-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2025/minio-data-migration/</loc>
+    <loc>https://xxzkid.github.io/2014/jquery-build-form/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -249,15 +265,19 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2016/js-get-function-name/</loc>
+    <loc>https://xxzkid.github.io/2014/java-checkcode/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2014/java-get-device-name/</loc>
+    <loc>https://xxzkid.github.io/2022/java-g1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
     <loc>https://xxzkid.github.io/2022/java-gc01/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2014/java-get-device-name/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -269,71 +289,11 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2013/javascript-jiujiuchengfabiao/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2024/javascript-string-format-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
     <loc>https://xxzkid.github.io/2017/java-startup-arguments/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2014/jquery-build-form/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2022/java-g1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2023/frida-wechat-get-msg-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2023/github-pull-request-step-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2023/how-to-check-project-license-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2017/httpclient-cookie/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2025/http-proxy-with-tinyproxy/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2024/ida-sqlite3-exec/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2018/java-agent-01/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2013/java-any-hex-convert/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2014/java-checkcode/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2017/how-to-fetch-1000w-from-db/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2014/html5-audio-file-stream-play/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2013/2012-lqb-java/</loc>
+    <loc>https://xxzkid.github.io/2025/apache-artemis-install/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -345,11 +305,11 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2016/centos7-apache2-config-https/</loc>
+    <loc>https://xxzkid.github.io/2018/canal-quickstart/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2018/canal-quickstart/</loc>
+    <loc>https://xxzkid.github.io/2016/centos7-apache2-config-https/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -357,19 +317,7 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2022/cs-float-store-1/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2025/apache-artemis-install/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
     <loc>https://xxzkid.github.io/2015/css-limit-hidden/</loc>
-    <lastmod>2026-07-15</lastmod>
-  </url>
-  <url>
-    <loc>https://xxzkid.github.io/2024/decrypt-wechat-msg-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -377,11 +325,23 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2013/first-virus/</loc>
+    <loc>https://xxzkid.github.io/2024/decrypt-wechat-msg-1/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2022/cs-float-store-1/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
     <loc>https://xxzkid.github.io/2025/file-rename-quickstart/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2013/first-virus/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2025/flutter-faq/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
@@ -397,7 +357,47 @@
     <lastmod>2026-07-15</lastmod>
   </url>
   <url>
-    <loc>https://xxzkid.github.io/2025/flutter-faq/</loc>
+    <loc>https://xxzkid.github.io/2023/frida-wechat-get-msg-1/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2023/github-pull-request-step-1/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2023/how-to-check-project-license-1/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2017/how-to-fetch-1000w-from-db/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2014/html5-audio-file-stream-play/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2025/http-proxy-with-tinyproxy/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2017/httpclient-cookie/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2024/ida-sqlite3-exec/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2013/java-any-hex-convert/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2018/java-agent-01/</loc>
+    <lastmod>2026-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://xxzkid.github.io/2013/2012-lqb-java/</loc>
     <lastmod>2026-07-15</lastmod>
   </url>
 </urlset> 
