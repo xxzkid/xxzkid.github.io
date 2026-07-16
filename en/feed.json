@@ -11,6 +11,10 @@
             "title": "Install OpenClaw and Connect a Feishu Bot",
             "summary": "Install OpenClaw, configure model authorization and its gateway, connect a Feishu bot, grant permissions, subscribe to events, and secure the deployment.",
             "date_modified": "2026-04-04T12:19:36.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "AI",
                 "OpenClaw",
@@ -25,6 +29,10 @@
             "title": "Deploy MinIO with Docker Compose: A Practical Quick Start",
             "summary": "Deploy MinIO with Docker Compose, persistent storage, a separate console port, secure credentials, health checks, TLS, backups, and production safeguards.",
             "date_modified": "2025-12-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "minio",
                 "java"
@@ -37,6 +45,10 @@
             "title": "Self-Host n8n with Docker Compose Securely",
             "summary": "Self-host n8n with Docker Compose, persistent data, encryption keys, correct webhook URLs, HTTPS reverse proxy settings, backups, and update practices.",
             "date_modified": "2025-12-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "n8n",
                 "ai",
@@ -50,6 +62,10 @@
             "title": "Migrate MinIO Data Safely with mc mirror",
             "summary": "Migrate MinIO buckets with mc mirror using full and incremental synchronization, validation, versioning checks, policy migration, and a low-downtime cutover plan.",
             "date_modified": "2025-11-27T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "minio",
                 "java"
@@ -62,6 +78,10 @@
             "title": "openGauss Database Quick Start",
             "summary": "Install openGauss, initialize an instance, create users and databases, enable controlled remote access, and run basic SQL.",
             "date_modified": "2025-11-26T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "opengauss",
                 "java"
@@ -74,6 +94,10 @@
             "title": "Configure Proxy Rules with SwitchOmega or ZeroOmega",
             "summary": "Configure SwitchOmega or ZeroOmega profiles, proxy servers, automatic switching rules, external rule lists, and common troubleshooting checks.",
             "date_modified": "2025-09-13T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "tools",
                 "switchomega"
@@ -86,6 +110,10 @@
             "title": "Build a Safe Batch File Renaming Tool in Java",
             "summary": "Rename files in batches with Java regular expressions while adding previews, collision checks, validation, and rollback-friendly behavior.",
             "date_modified": "2025-06-16T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "file-renaming",
                 "tools",
@@ -99,6 +127,10 @@
             "title": "npm install Hangs? A Systematic Troubleshooting Guide",
             "summary": "Diagnose npm install hangs using verbose logs, registry and proxy checks, cache verification, lockfile analysis, lifecycle script isolation, and Node.js compatibility.",
             "date_modified": "2025-05-29T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "npm",
                 "javascript"
@@ -111,6 +143,10 @@
             "title": "Build a FreeSWITCH Docker Image",
             "summary": "Build a FreeSWITCH container image with selected modules, mounted configuration, SIP and RTP ports, and audio-network troubleshooting.",
             "date_modified": "2025-05-12T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "freeswitch",
                 "docker"
@@ -123,6 +159,10 @@
             "title": "Set Up a Lightweight HTTP Proxy with Tinyproxy",
             "summary": "Install Tinyproxy, configure its listening port and access controls, run it in the foreground, and verify proxy traffic with curl.",
             "date_modified": "2025-05-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "proxy",
                 "tinyproxy",
@@ -136,6 +176,10 @@
             "title": "Run Specific Tests with Maven",
             "summary": "Run all tests, one test class, one method, patterns, and selected modules with Maven Surefire options.",
             "date_modified": "2025-04-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "maven",
                 "java"
@@ -148,6 +192,10 @@
             "title": "Common Flutter Development Problems and Fixes",
             "summary": "Troubleshoot Flutter SDK setup, dependency downloads, slow Gradle builds, mirror configuration, and project creation.",
             "date_modified": "2025-03-31T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "flutter",
                 "android"
@@ -160,6 +208,10 @@
             "title": "Install ChromeDriver and Match It with Chrome",
             "summary": "Install ChromeDriver, match browser and driver versions, configure PATH, use Selenium Manager, and troubleshoot Chrome startup failures.",
             "date_modified": "2025-03-15T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "chromedriver",
                 "selenium",
@@ -173,6 +225,10 @@
             "title": "Install Apache ActiveMQ Artemis",
             "summary": "Install and start Apache ActiveMQ Artemis, create a broker instance, configure JVM memory, expose the management console, and verify ports and persistence.",
             "date_modified": "2025-02-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "activemq",
                 "java"
@@ -185,6 +241,10 @@
             "title": "Install MySQL 8 from a Binary Tarball on Linux",
             "summary": "Install MySQL 8 from an official Linux binary tarball with a dedicated user, data directory, initialization, my.cnf, systemd service, and security checks.",
             "date_modified": "2024-09-10T00:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "linux",
                 "mysql"
@@ -197,6 +257,10 @@
             "title": "Send Email Through NetEase Enterprise Mail with Spring Boot",
             "summary": "Configure Spring Boot SMTP for NetEase enterprise mail with TLS, authorization credentials, timeouts, and authentication troubleshooting.",
             "date_modified": "2024-08-03T00:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "java",
                 "spring-boot",
@@ -211,6 +275,10 @@
             "title": "Automate Android Screenshots and Swipes with Python ADB",
             "summary": "Control your own Android test device with Python and adbutils to capture screenshots, pull files, perform swipes, and add essential safety checks.",
             "date_modified": "2024-07-25T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "python",
                 "android"
@@ -223,6 +291,10 @@
             "title": "Secure File Uploads with Spring Boot",
             "summary": "Implement secure Spring Boot file uploads with MultipartFile, size limits, generated filenames, path validation, content checks, safe downloads, storage isolation, and cleanup.",
             "date_modified": "2024-07-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "spring-boot",
                 "spring",
@@ -236,6 +308,10 @@
             "title": "Find a SQLite Database Handle in an Authorized Windows Debugging Lab",
             "summary": "Trace SQLite calls and inspect registers to identify a database connection handle in an authorized Windows test process.",
             "date_modified": "2024-05-08T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "c-cpp",
                 "windows",
@@ -249,6 +325,10 @@
             "title": "Locate sqlite3_exec in a Windows Application with IDA",
             "summary": "Use IDA string references, call graphs, signatures, module bases, and offsets to locate sqlite3_exec in an authorized Windows analysis target.",
             "date_modified": "2024-04-30T08:00:00.000Z",
+            "author": {
+                "name": "Apache Wangye",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "c-cpp",
                 "windows",

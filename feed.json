@@ -11,6 +11,10 @@
             "title": "手把手教你安装配置 OpenClaw + 飞书机器人，打造专属 AI 办公助手（超详细教程）",
             "summary": "OpenClaw 接入飞书机器人的完整教程，涵盖安装、模型授权、网关、权限、事件和安全配置。",
             "date_modified": "2026-04-04T12:19:36.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "AI",
                 "OpenClaw",
@@ -25,6 +29,10 @@
             "title": "minio 快速搭建",
             "summary": "MinIO 快速搭建教程，包含服务启动、数据目录、控制台、客户端别名、Bucket 和安全配置。",
             "date_modified": "2025-12-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "minio",
                 "java"
@@ -37,6 +45,10 @@
             "title": "n8n快速搭建",
             "summary": "n8n 快速搭建教程，介绍 Docker 启动、持久化、反向代理、Webhook、认证和备份。",
             "date_modified": "2025-12-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "n8n",
                 "ai",
@@ -50,6 +62,10 @@
             "title": "minio数据迁移",
             "summary": "MinIO 数据迁移教程，介绍 mc mirror、增量同步、校验、版本对象、权限和切换方案。",
             "date_modified": "2025-11-27T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "minio",
                 "java"
@@ -62,6 +78,10 @@
             "title": "opengauss数据库快速开始",
             "summary": "openGauss 数据库快速入门，介绍安装、实例启动、用户创建、远程连接和常用 SQL。",
             "date_modified": "2025-11-26T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "opengauss",
                 "java"
@@ -74,6 +94,10 @@
             "title": "switchomega 配置",
             "summary": "SwitchOmega 与 ZeroOmega 代理规则配置教程，介绍情景模式、自动切换、规则列表和排错。",
             "date_modified": "2025-09-13T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "工具",
                 "switchomega"
@@ -86,6 +110,10 @@
             "title": "文件重命名工具",
             "summary": "文件批量重命名工具的设计与使用，包含命名规则、冲突检测、预览、回滚和 Java 实现要点。",
             "date_modified": "2025-06-16T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "文件重命名",
                 "工具",
@@ -99,6 +127,10 @@
             "title": "npm install卡住",
             "summary": "系统排查 npm install 卡住或安装速度慢的问题，包括 verbose 日志、网络与代理检查、缓存验证、registry 配置、锁文件和 Node.js 版本处理。",
             "date_modified": "2025-05-29T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "npm",
                 "js"
@@ -111,6 +143,10 @@
             "title": "freeswitch制作docker镜像",
             "summary": "FreeSWITCH Docker 镜像制作教程，说明编译依赖、模块选择、配置挂载、端口和音频网络问题。",
             "date_modified": "2025-05-12T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "freeswitch",
                 "docker"
@@ -123,6 +159,10 @@
             "title": "快速搭建HTTP代理服务器",
             "summary": "Tinyproxy 快速搭建 HTTP 代理服务器，包含安装、Allow 访问控制、端口、防火墙和日志排查。",
             "date_modified": "2025-05-09T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "proxy",
                 "tinyproxy",
@@ -136,6 +176,10 @@
             "title": "maven测试指定测试方法",
             "summary": "整理 Maven 运行全部测试、指定测试类、指定测试方法及多模块项目测试的常用命令，并说明 -Dtest、-pl、-am 等参数。",
             "date_modified": "2025-04-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "maven",
                 "java"
@@ -148,6 +192,10 @@
             "title": "flutter开发常见问题",
             "summary": "Flutter 开发常见问题汇总，涵盖环境配置、依赖下载、构建失败、设备连接和缓存处理。",
             "date_modified": "2025-03-31T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "flutter",
                 "android"
@@ -160,6 +208,10 @@
             "title": "chrome-driver安装",
             "summary": "ChromeDriver 安装与版本匹配教程，介绍浏览器版本确认、驱动下载、PATH 配置和 Selenium 启动排错。",
             "date_modified": "2025-03-15T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "chromedriver",
                 "selenium",
@@ -173,6 +225,10 @@
             "title": "Apache Artemis安装",
             "summary": "Apache ActiveMQ Artemis 安装与启动教程，包含目录结构、启动命令、管理控制台、端口检查和常见问题。",
             "date_modified": "2025-02-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "activemq",
                 "java"
@@ -185,6 +241,10 @@
             "title": "Linux安装mysql8压缩包版本",
             "summary": "Linux 使用压缩包安装 MySQL 8 的步骤，包括用户目录、初始化、配置、systemd 和安全设置。",
             "date_modified": "2024-09-10T00:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "linux",
                 "mysql"
@@ -197,6 +257,10 @@
             "title": "spring boot网易企业邮箱发邮件",
             "summary": "Spring Boot 使用网易企业邮箱发送邮件，介绍 SMTP、TLS、授权码、配置和常见认证错误。",
             "date_modified": "2024-08-03T00:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "java",
                 "spring-boot",
@@ -211,6 +275,10 @@
             "title": "5行代码带你自动刷短视频小姐姐截图",
             "summary": "Python 调用 ADB 控制 Android 设备并截图的示例，介绍设备连接、命令执行、超时和图片保存。",
             "date_modified": "2024-07-25T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "python",
                 "android"
@@ -223,6 +291,10 @@
             "title": "spring boot 文件上传与访问",
             "summary": "Spring Boot 文件上传与访问教程，介绍 MultipartFile、大小限制、存储路径、下载和安全校验。",
             "date_modified": "2024-07-17T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "spring-boot",
                 "spring",
@@ -236,6 +308,10 @@
             "title": "查找PC微信数据库句柄",
             "summary": "调试 PC 应用 SQLite 数据库句柄的分析记录，介绍调用链、寄存器观察、基址和偏移。",
             "date_modified": "2024-05-08T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "c/c++",
                 "微信",
@@ -250,6 +326,10 @@
             "title": "IDA定位PC微信sqlite3_exec",
             "summary": "使用 IDA 通过字符串引用和调用关系定位 sqlite3_exec 的分析思路，包含基址与偏移计算。",
             "date_modified": "2024-04-30T08:00:00.000Z",
+            "author": {
+                "name": "Apache王也道长",
+                "url": "https://github.com/jsbxyyx"
+            },
             "tags": [
                 "c/c++",
                 "微信",

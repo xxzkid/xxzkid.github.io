@@ -53,6 +53,10 @@
 <p>Monitor callback errors, model latency, token use, failed replies, duplicate events, and provider outages. Add a circuit breaker or fallback response so a model failure does not overload Feishu retries.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-production-checklist">7. Production checklist<a href="https://xxzkid.github.io/en/2026/openclaw-start/#7-production-checklist" class="hash-link" aria-label="Direct link to 7. Production checklist" title="Direct link to 7. Production checklist" translate="no">​</a></h2>
 <p>Before rollout, complete a small pilot with synthetic or low-sensitivity data. Document the bot's scope, supported commands, escalation path, model limitations, and data policy. Test secret rotation, service restart, network interruption, duplicate delivery, and rollback of the OpenClaw configuration.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="AI" term="AI"/>
         <category label="OpenClaw" term="OpenClaw"/>
         <category label="Claude" term="Claude"/>
@@ -96,6 +100,10 @@
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-problems">Common problems<a href="https://xxzkid.github.io/en/2025/minio-quickstart/#common-problems" class="hash-link" aria-label="Direct link to Common problems" title="Direct link to Common problems" translate="no">​</a></h2>
 <p>If the container exits immediately, check directory ownership and <code>docker compose logs</code>. If S3 requests work locally but fail through a proxy, verify forwarded headers, the public server URL, TLS configuration, and request-size limits. Clock drift can also break signed S3 requests, so keep the host synchronized with NTP.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="minio" term="minio"/>
         <category label="java" term="java"/>
     </entry>
@@ -136,6 +144,10 @@
 <p>Pull and recreate the service after reviewing breaking changes:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">docker compose pull</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">docker compose up -d</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">docker compose logs --tail=100 n8n</span><br></div></code></pre></div></div>
 <p>For important workflows, rehearse upgrades against a restored backup before updating production.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="n8n" term="n8n"/>
         <category label="ai" term="ai"/>
         <category label="java" term="java"/>
@@ -179,6 +191,10 @@
 <p>Confirm how the client version you use handles object versions and delete markers. If legal retention, object lock, or historical versions matter, test the complete behavior with representative data before migrating production. For very large or continuously changing datasets, MinIO replication may be a better fit than repeated mirroring.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rollback-plan">Rollback plan<a href="https://xxzkid.github.io/en/2025/minio-data-migration/#rollback-plan" class="hash-link" aria-label="Direct link to Rollback plan" title="Direct link to Rollback plan" translate="no">​</a></h2>
 <p>Do not delete the source immediately. Define a rollback window, preserve DNS or endpoint settings, and document how writes will be reconciled if traffic must return to the old cluster. A successful migration ends only after monitoring confirms normal error rates, latency, permissions, and object integrity.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="minio" term="minio"/>
         <category label="java" term="java"/>
     </entry>
@@ -194,6 +210,10 @@
 <p>For remote access, update the listening address and host-based authentication rules, then restrict the database port with a firewall. Test with:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">gsql -d app_db -U app_user -h 127.0.0.1 -p 5432</span><br></div></code></pre></div></div>
 <p>Before production use, configure TLS, backups, archive or replication strategy, resource limits, monitoring, and tested restore procedures.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="opengauss" term="opengauss"/>
         <category label="java" term="java"/>
     </entry>
@@ -229,6 +249,10 @@
 <li class="">Verify that another VPN, system proxy, or browser policy is not overriding the extension.</li>
 <li class="">Review DNS behavior, authentication errors, and the proxy server logs.</li>
 </ol>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="tools" term="tools"/>
         <category label="switchomega" term="switchomega"/>
     </entry>
@@ -253,6 +277,10 @@
 <li class="">Apply moves only after validation succeeds.</li>
 </ol>
 <p>Also decide explicitly whether symbolic links, hidden files, directories, and recursive traversal are allowed.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="file-renaming" term="file-renaming"/>
         <category label="tools" term="tools"/>
         <category label="java" term="java"/>
@@ -301,6 +329,10 @@
 <p>After preserving the original error, a controlled local retry is:</p>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">rm -rf node_modules</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">npm cache verify</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">npm ci --verbose</span><br></div></code></pre></div></div>
 <p>Keep the lockfile unless you intentionally want to update dependencies. In CI, add explicit timeouts and cache keys based on the lockfile so a stalled registry request cannot block a runner indefinitely.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="npm" term="npm"/>
         <category label="javascript" term="javascript"/>
     </entry>
@@ -315,6 +347,10 @@
 <p>Mount configuration, recordings, certificates, and persistent databases deliberately rather than hiding important state inside the container filesystem.</p>
 <p>SIP signaling commonly uses ports such as <code>5060</code> and <code>5080</code>, while RTP requires a configured UDP range. Publishing only the SIP port is not enough for two-way audio. Ensure the container, host firewall, cloud security group, NAT, and FreeSWITCH external IP settings agree on the RTP range.</p>
 <p>For production, avoid host networking unless justified, protect the event socket and management interfaces, rate-limit unauthenticated traffic, monitor registrations and call quality, and test one-way-audio, codec negotiation, and NAT traversal from external networks.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="freeswitch" term="freeswitch"/>
         <category label="docker" term="docker"/>
     </entry>
@@ -340,6 +376,10 @@
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verify-the-proxy">Verify the proxy<a href="https://xxzkid.github.io/en/2025/http-proxy-with-tinyproxy/#verify-the-proxy" class="hash-link" aria-label="Direct link to Verify the proxy" title="Direct link to Verify the proxy" translate="no">​</a></h2>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">export PROXY_IP=203.0.113.10</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">curl --proxy "http://$PROXY_IP:8888" https://httpbin.org/ip</span><br></div></code></pre></div></div>
 <p>The response should show the proxy server's public address. If it fails, inspect the Tinyproxy log, firewall, cloud security group, <code>Allow</code> rules, and whether the proxy can resolve DNS and reach the destination.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="proxy" term="proxy"/>
         <category label="tinyproxy" term="tinyproxy"/>
         <category label="http" term="http"/>
@@ -368,6 +408,10 @@
 <li class=""><code>-Dmaven.test.skip=true</code> skips both test compilation and execution.</li>
 </ul>
 <p>Integration tests commonly run through Maven Failsafe during <code>integration-test</code> and <code>verify</code>, so use the plugin's include properties and lifecycle rather than assuming <code>mvn test</code> runs them.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="maven" term="maven"/>
         <category label="java" term="java"/>
     </entry>
@@ -397,6 +441,10 @@
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-a-project">Create a project<a href="https://xxzkid.github.io/en/2025/flutter-faq/#create-a-project" class="hash-link" aria-label="Direct link to Create a project" title="Direct link to Create a project" translate="no">​</a></h2>
 <div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">flutter create my_app</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">cd my_app</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">flutter run</span><br></div></code></pre></div></div>
 <p>Keep Flutter, Android Gradle Plugin, Gradle, Kotlin, and Java versions compatible rather than upgrading them independently.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="flutter" term="flutter"/>
         <category label="android" term="android"/>
     </entry>
@@ -428,6 +476,10 @@
 <li class=""><strong>Driver executable not found:</strong> fix <code>PATH</code>, file permissions, or the <code>Service</code> path.</li>
 <li class=""><strong>Browser exits immediately:</strong> inspect ChromeDriver logs, sandbox restrictions, display availability, and container shared-memory limits.</li>
 </ul>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="chromedriver" term="chromedriver"/>
         <category label="selenium" term="selenium"/>
         <category label="java" term="java"/>
@@ -464,6 +516,10 @@
 <div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">broker/etc/bootstrap.xml</span><br></div></code></pre></div></div>
 <div class="language-xml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-xml codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token tag punctuation" style="color:rgb(199, 146, 234)">&lt;</span><span class="token tag" style="color:rgb(255, 85, 114)">binding</span><span class="token tag" style="color:rgb(255, 85, 114)"> </span><span class="token tag attr-name" style="color:rgb(255, 203, 107)">name</span><span class="token tag attr-value punctuation attr-equals" style="color:rgb(199, 146, 234)">=</span><span class="token tag attr-value punctuation" style="color:rgb(199, 146, 234)">"</span><span class="token tag attr-value" style="color:rgb(255, 85, 114)">artemis</span><span class="token tag attr-value punctuation" style="color:rgb(199, 146, 234)">"</span><span class="token tag" style="color:rgb(255, 85, 114)"> </span><span class="token tag attr-name" style="color:rgb(255, 203, 107)">uri</span><span class="token tag attr-value punctuation attr-equals" style="color:rgb(199, 146, 234)">=</span><span class="token tag attr-value punctuation" style="color:rgb(199, 146, 234)">"</span><span class="token tag attr-value" style="color:rgb(255, 85, 114)">http://0.0.0.0:8161</span><span class="token tag attr-value punctuation" style="color:rgb(199, 146, 234)">"</span><span class="token tag punctuation" style="color:rgb(199, 146, 234)">&gt;</span><br></div></code></pre></div></div>
 <p>Expose port <code>8161</code> only to trusted networks and protect it with authentication and firewall rules.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="activemq" term="activemq"/>
         <category label="java" term="java"/>
     </entry>
@@ -499,6 +555,10 @@
 <p>Remove anonymous accounts and test databases, review root access, configure backups, and monitor disk capacity and replication if used. Add <code>/opt/mysql/bin</code> to a system-wide PATH only after confirming it cannot be modified by untrusted users.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrades-and-rollback">Upgrades and rollback<a href="https://xxzkid.github.io/en/2024/linux-install-mysql8-zip/#upgrades-and-rollback" class="hash-link" aria-label="Direct link to Upgrades and rollback" title="Direct link to Upgrades and rollback" translate="no">​</a></h2>
 <p>Never replace the symlink and start a new MySQL binary without reading that release's upgrade procedure. Take a tested backup, stop cleanly, preserve the old binaries, and rehearse the change on a copy of the data. Package-managed installations are usually easier to patch; use tarballs only when their control is worth the additional maintenance.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="linux" term="linux"/>
         <category label="mysql" term="mysql"/>
     </entry>
@@ -513,6 +573,10 @@
 <p>A basic send operation:</p>
 <div class="language-java codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-java codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">SimpleMailMessage message = new SimpleMailMessage();</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">message.setFrom("user@example.com");</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">message.setTo("receiver@example.com");</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">message.setSubject("Test message");</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">message.setText("Mail sent by Spring Boot");</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">mailSender.send(message);</span><br></div></code></pre></div></div>
 <p>Some accounts require an app-specific authorization code rather than the login password. Authentication failures can also result from an incorrect sender address, blocked SMTP service, TLS/port mismatch, DNS, firewall rules, or provider rate limits. Keep credentials outside source control.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="java" term="java"/>
         <category label="spring-boot" term="spring-boot"/>
         <category label="spring" term="spring"/>
@@ -533,6 +597,10 @@
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="https://xxzkid.github.io/en/2024/python-adb-short-video/#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h2>
 <div class="language-python codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-python codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token keyword" style="font-style:italic">import</span><span class="token plain"> time</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token keyword" style="font-style:italic">from</span><span class="token plain"> datetime </span><span class="token keyword" style="font-style:italic">import</span><span class="token plain"> datetime</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token keyword" style="font-style:italic">import</span><span class="token plain"> adbutils</span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token keyword" style="font-style:italic">def</span><span class="token plain"> </span><span class="token function" style="color:rgb(130, 170, 255)">main</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(137, 221, 255)">-</span><span class="token operator" style="color:rgb(137, 221, 255)">&gt;</span><span class="token plain"> </span><span class="token boolean" style="color:rgb(255, 88, 116)">None</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    devices </span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token plain"> adbutils</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">adb</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">device_list</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    </span><span class="token keyword" style="font-style:italic">if</span><span class="token plain"> </span><span class="token keyword" style="font-style:italic">not</span><span class="token plain"> devices</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">        </span><span class="token keyword" style="font-style:italic">raise</span><span class="token plain"> RuntimeError</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string" style="color:rgb(195, 232, 141)">"No authorized Android device is connected"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    device </span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token plain"> devices</span><span class="token punctuation" style="color:rgb(199, 146, 234)">[</span><span class="token number" style="color:rgb(247, 140, 108)">0</span><span class="token punctuation" style="color:rgb(199, 146, 234)">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    </span><span class="token keyword" style="font-style:italic">try</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">        </span><span class="token keyword" style="font-style:italic">while</span><span class="token plain"> </span><span class="token boolean" style="color:rgb(255, 88, 116)">True</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            filename </span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token plain"> datetime</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">now</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">strftime</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string" style="color:rgb(195, 232, 141)">"%Y%m%d%H%M%S"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(137, 221, 255)">+</span><span class="token plain"> </span><span class="token string" style="color:rgb(195, 232, 141)">".png"</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            remote_path </span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token plain"> </span><span class="token string" style="color:rgb(195, 232, 141)">"/sdcard/DCIM/screenshot.png"</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            device</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">shell</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string-interpolation string" style="color:rgb(195, 232, 141)">f"screencap -p </span><span class="token string-interpolation interpolation punctuation" style="color:rgb(199, 146, 234)">{</span><span class="token string-interpolation interpolation">remote_path</span><span class="token string-interpolation interpolation punctuation" style="color:rgb(199, 146, 234)">}</span><span class="token string-interpolation string" style="color:rgb(195, 232, 141)">"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">,</span><span class="token plain"> encoding</span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token boolean" style="color:rgb(255, 88, 116)">None</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            device</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">sync</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">pull_file</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token plain">remote_path</span><span class="token punctuation" style="color:rgb(199, 146, 234)">,</span><span class="token plain"> filename</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            </span><span class="token keyword" style="font-style:italic">print</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string-interpolation string" style="color:rgb(195, 232, 141)">f"screenshot: </span><span class="token string-interpolation interpolation punctuation" style="color:rgb(199, 146, 234)">{</span><span class="token string-interpolation interpolation">filename</span><span class="token string-interpolation interpolation punctuation" style="color:rgb(199, 146, 234)">}</span><span class="token string-interpolation string" style="color:rgb(195, 232, 141)">"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            device</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">shell</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string" style="color:rgb(195, 232, 141)">"input swipe 760 1600 760 800 200"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">            time</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token plain">sleep</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token number" style="color:rgb(247, 140, 108)">2</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    </span><span class="token keyword" style="font-style:italic">except</span><span class="token plain"> KeyboardInterrupt</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">        </span><span class="token keyword" style="font-style:italic">print</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token string" style="color:rgb(195, 232, 141)">"Stopped"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token keyword" style="font-style:italic">if</span><span class="token plain"> __name__ </span><span class="token operator" style="color:rgb(137, 221, 255)">==</span><span class="token plain"> </span><span class="token string" style="color:rgb(195, 232, 141)">"__main__"</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">    main</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><br></div></code></pre></div></div>
 <p>The swipe coordinates depend on the screen resolution and orientation. For a reusable script, query the display size first, calculate coordinates proportionally, check command results, and use a bounded loop instead of <code>while True</code>.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="python" term="python"/>
         <category label="android" term="android"/>
     </entry>
@@ -567,6 +635,10 @@
 <li class="">Test filename encoding, concurrent uploads, disk-full behavior, and interrupted requests.</li>
 </ul>
 <p>A correct upload controller is only one layer. Reverse-proxy limits, storage permissions, authentication, antivirus policy, observability, and retention rules complete the security model.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="spring-boot" term="spring-boot"/>
         <category label="spring" term="spring"/>
         <category label="java" term="java"/>
@@ -582,6 +654,10 @@
 <p>Follow the handle from the open call's output into later query calls. Validate it through repeated use and expected SQLite return codes rather than assuming any pointer to database-like memory is correct.</p>
 <p>ASLR changes absolute addresses, so record module-relative offsets and the exact binary hash. Application and SQLite updates can change wrappers, signatures, and data flow.</p>
 <p>Do not dereference arbitrary pointers or modify live database state. Use synthetic records, copies of test databases, and an isolated environment. Avoid logging credentials, keys, or real message content.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="c-cpp" term="c-cpp"/>
         <category label="windows" term="windows"/>
         <category label="sqlite" term="sqlite"/>
@@ -598,6 +674,10 @@
 <p>When the target uses ASLR, distinguish the module-relative virtual address from the runtime absolute address:</p>
 <div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#bfc7d5;--prism-background-color:#292d3e"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#bfc7d5;background-color:#292d3e"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#bfc7d5"><span class="token plain">runtime address = module base + relative offset</span><br></div></code></pre></div></div>
 <p>Validate the candidate in an isolated test build with synthetic data and a debugger. Record the exact application hash, architecture, module version, image base, and offset. Never reuse an offset across versions without revalidation, and avoid collecting or modifying real user data.</p>]]></content>
+        <author>
+            <name>Apache Wangye</name>
+            <uri>https://github.com/jsbxyyx</uri>
+        </author>
         <category label="c-cpp" term="c-cpp"/>
         <category label="windows" term="windows"/>
         <category label="sqlite" term="sqlite"/>
