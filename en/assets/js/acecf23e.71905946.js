@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkxxzkid_docusaurus=self.webpackChunkxxzkid_docusaurus||[]).push([[1903],{1912(s){s.exports=JSON.parse('{"blogBasePath":"/en/","blogTitle":"Apache Wangye","authorsListPath":"/en/authors"}')}}]);

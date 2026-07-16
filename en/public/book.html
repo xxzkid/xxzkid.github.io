@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>book search</title>
+
+    <style>
+        .text-bold { font-weight: bold; }
+        .mb-50 {margin-bottom: 50px;}
+        .m5 {margin: 5px;}
+        .item-left { float: left; }
+    </style>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MPC7L9FC');</script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body>
+    <div>
+        <input type="text" id="keyword">
+        <button onclick="search()">搜索</button>
+    </div>
+    <div id="loading"></div>
+    <div id="result">
+
+    </div>
+
+    <script>
+        function search() {
+            var q = document.querySelector('#keyword').value;
+            if (q == null || q == '') {
+                alert('请输入关键词');
+                return;
+            }
+            var body = {
+                "method": "GET",
+                "url": "/s/" + encodeURIComponent(q),
+                "headers": {
+                    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                }
+            };
+            var loadingNode = document.querySelector('#loading');
+            loadingNode.innerText = '正在搜索...';
+            fetch('https://http2.idingdang.org/xbook', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(body)
+            }).then((res) => res.text()).then((resp) => {
+                loadingNode.innerText = '搜索完成';
+                var response = JSON.parse(resp);
+                var resultNode = document.querySelector('#result');
+                if (response.data && response.data.list && response.data.list.length > 0) {
+                    var list = response.data.list;
+                    var html = '';
+                    for (let idx in list) {
+                        let item = list[idx];
+                        html += `<div class="mb-50">
+                            <div class="item-left m5">
+                            <img src="${item.coverImage}">
+                            </div>
+                            <div class="item-right">
+                            <div><span>书名：</span><span class="text-bold">${item.title}</span></div>
+                            <div><span>作者：</span><span class="text-bold">${item.author}</span></div>
+                            <div><span>出版社：</span><span class="text-bold">${item.publisher}</span></div>
+                            <div><span>ISBN: </span><span class="text-bold">${item.isbn}</span></div>
+                            <div><span>格式：</span><span class="text-bold">${item.file}</span></div>
+                            <div><span>语言：</span><span class="text-bold">${item.language}</span></div>
+                            <div><button onclick="download('${item.detailUrl}')">下载</button></div>
+                            </div>
+                        </div>`
+                    }
+                    resultNode.innerHTML = html;
+                } else {
+                    resultNode.innerHTML = "<div>未搜索到结果</div>"
+                }
+                
+            });
+        }
+        
+        function download(detailUrl) {
+            alert("下载功能暂未实现。联系QQ群：551 304 760");
+        }
+    </script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2328510744730535"
+     crossorigin="anonymous"></script>
+    <!-- 1 -->
+    <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-2328510744730535"
+       data-ad-slot="9239153975"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+    <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MPC7L9FC"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?45b9df8a29658880761fe374a3d396a4";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+</body>
+
+</html>

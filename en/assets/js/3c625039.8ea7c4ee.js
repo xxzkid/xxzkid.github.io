@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkxxzkid_docusaurus=self.webpackChunkxxzkid_docusaurus||[]).push([[8026],{8444(e){e.exports=JSON.parse('{"metadata":{"permalink":"/en/","page":1,"postsPerPage":10,"totalPages":1,"totalCount":10,"blogDescription":"Practical notes on Java, Linux, databases, cloud native technologies, and software engineering.","blogTitle":"Apache Wangye"}}')}}]);

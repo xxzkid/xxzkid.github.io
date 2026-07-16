@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>QRCode</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.8/dayjs.min.js"></script>
+  <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+</head>
+<body>
+  <h3>qrcode</h3>  
+  <div>
+    <input id="qrcode-input" type="text"/>
+  </div>
+  <div id="qrcode-output" style="margin: 20px;"></div>
+
+  <h3>qrcode parse</h3>
+  <div>
+    <input type="file" id="qrcode-parse-picture"/>
+    <canvas id="qrcode-parse-canvas" style="display:none;"></canvas>
+  </div>
+  <div id="qrcode-parse-output" style="margin: 20px;"></div>
+  
+  <h3>timestamp</h3>
+  <div>
+    <p>
+      <input id="timestamp-input" type="text" />
+      <input id="timestamp-output" type="text" />
+    </p>
+    <p>
+      <button onclick="getTimestamp()">GET TIMESTAMP</button>
+      <button onclick="convertTimestamp()">CONVERT TIMESTAMP</button>
+    </p>
+  </div>
+  <div id="timestamp-output" style="margin: 20px"></div>
+
+  <p><a href="https://1drv.ms/u/s!AiNWfQlr4yYGgdMMpo5gxQXzdLzyWw?e=c0RswE">WeChat_8.0.2.apk</a> x86</p>
+  <script>
+  jQuery(function(){
+    document.getElementById("qrcode-input").addEventListener("input", function(e) {
+      document.getElementById("qrcode-output").innerHTML = '';
+      qrcode(toUtf8(e.target.value));
+    });
+  });
+
+  function toUtf8(str) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for (i = 0; i < len; i++) {
+      c = str.charCodeAt(i);
+      if ((c >= 0x0001) && (c <= 0x007F)) {
+        out += str.charAt(i);
+      } else if (c > 0x07FF) {
+        out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+        out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+        out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+      } else {
+        out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+        out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+      }
+    }
+    return out;
+  }
+	  
+  function qrcode(text) {
+    jQuery('#qrcode-output').qrcode({
+      text: text
+    });
+    var canvas = $('#qrcode-output canvas');
+    var img = canvas.get(0).toDataURL("image/png");
+    document.getElementById("qrcode-output").innerHTML = '<img src="' + img + '"/>';
+  }
+  </script>
+
+  <script>
+    $("#qrcode-parse-picture").change(function (e) {
+			var file = e.target.files[0];
+			if(window.FileReader) {
+				var fr = new FileReader();
+				fr.readAsDataURL(file);
+				fr.onloadend = function(e) {
+					var base64Data = e.target.result;
+					base64ToQR(base64Data);
+				}
+			}
+		});
+    function base64ToQR(data) {
+			var c = document.getElementById("qrcode-parse-canvas");
+			var ctx = c.getContext("2d");
+	
+			var img = new Image();
+			img.src = data;
+			img.onload = function() {
+				$("#qrcode-parse-canvas").attr("width", img.width)
+				$("#qrcode-parse-canvas").attr("height", img.height)
+				ctx.drawImage(img, 0, 0, img.width, img.height);
+				var imageData = ctx.getImageData(0, 0, img.width, img.height);
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: "dontInvert",
+				});
+				if(code){
+					$('#qrcode-parse-output').text(code.data);
+				}else{
+					$('#qrcode-parse-output').text("parse error");
+				}
+			};
+    }
+  </script>
+  
+  <script>
+    var timestamp_input = document.getElementById("timestamp-input");
+    var timestamp_output = document.getElementById("timestamp-output");
+    function getTimestamp() {
+      var ts = new Date().getTime();
+      timestamp_input.value = ts;
+    }
+    function convertTimestamp() {
+      var input_value = timestamp_input.value;
+      timestamp_output.value = new Date(parseInt(timestamp_input.value)).toString();
+    }
+  </script>
+  
+</body>
+</html>

@@ -1,296 +1,282 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java垃圾收集基础 | Apache王也道长</title><meta name="author" content="Apache王也道长"><meta name="copyright" content="Apache王也道长"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java 垃圾收集基础教程，讲解对象存活判断、分代、GC Roots、常见收集器和日志分析。">
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta property="og:type" content="article">
-<meta property="og:title" content="Java垃圾收集基础">
-<meta property="og:url" content="https://xxzkid.github.io/2022/java-gc01/index.html">
-<meta property="og:site_name" content="Apache王也道长">
-<meta property="og:description" content="Java 垃圾收集基础教程，讲解对象存活判断、分代、GC Roots、常见收集器和日志分析。">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xxzkid.github.io/img/top2.jpg">
-<meta property="article:published_time" content="2022-07-22T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-15T14:40:05.262Z">
-<meta property="article:author" content="Apache王也道长">
-<meta property="article:tag" content="gc">
-<meta property="article:tag" content="java">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xxzkid.github.io/img/top2.jpg"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Java垃圾收集基础",
-  "url": "https://xxzkid.github.io/2022/java-gc01/",
-  "image": "https://xxzkid.github.io/img/top2.jpg",
-  "datePublished": "2022-07-22T00:00:00.000Z",
-  "dateModified": "2026-07-15T14:40:05.262Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "Apache王也道长",
-      "url": "https://xxzkid.github.io"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://xxzkid.github.io/2022/java-gc01/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
+<!doctype html>
+<html lang="zh-CN" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.2">
+<title data-rh="true">Java垃圾收集基础 | Apache王也道长</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://xxzkid.github.io/img/top2.jpg"><meta data-rh="true" name="twitter:image" content="https://xxzkid.github.io/img/top2.jpg"><meta data-rh="true" property="og:url" content="https://xxzkid.github.io/2022/java-gc01/"><meta data-rh="true" property="og:locale" content="zh_CN"><meta data-rh="true" property="og:locale:alternate" content="en"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" name="keywords" content="Java,Linux,数据库,云原生,Docker,Kubernetes,软件工程"><meta data-rh="true" property="og:title" content="Java垃圾收集基础 | Apache王也道长"><meta data-rh="true" name="description" content="Java 垃圾收集基础教程，讲解对象存活判断、分代、GC Roots、常见收集器和日志分析。"><meta data-rh="true" property="og:description" content="Java 垃圾收集基础教程，讲解对象存活判断、分代、GC Roots、常见收集器和日志分析。"><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2022-07-22T00:00:00.000Z"><meta data-rh="true" property="article:tag" content="java,gc"><link data-rh="true" rel="icon" href="/favicon.ico"><link data-rh="true" rel="canonical" href="https://xxzkid.github.io/2022/java-gc01/"><link data-rh="true" rel="alternate" href="https://xxzkid.github.io/2022/java-gc01/" hreflang="zh-CN"><link data-rh="true" rel="alternate" href="https://xxzkid.github.io/en/2022/java-gc01/" hreflang="en"><link data-rh="true" rel="alternate" href="https://xxzkid.github.io/2022/java-gc01/" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://xxzkid.github.io/2022/java-gc01/","mainEntityOfPage":"https://xxzkid.github.io/2022/java-gc01/","url":"https://xxzkid.github.io/2022/java-gc01/","headline":"Java垃圾收集基础","name":"Java垃圾收集基础","description":"Java 垃圾收集基础教程，讲解对象存活判断、分代、GC Roots、常见收集器和日志分析。","datePublished":"2022-07-22T00:00:00.000Z","dateModified":"2026-07-16T02:34:24.000Z","author":[],"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://xxzkid.github.io/","name":"Apache王也道长"}}</script><link rel="alternate" type="application/rss+xml" href="/rss.xml" title="Apache Wangye RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Apache Wangye Atom Feed">
+<link rel="alternate" type="application/json" href="/feed.json" title="Apache Wangye JSON Feed">
 
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
 
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
 
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
-  google_ad_client: 'ca-pub-2328510744730535',
-  enable_page_level_ads: 'true'
-});</script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: '复制成功',
-    error: '复制失败',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
-    buttonText: '加载更多'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'Java垃圾收集基础',
-  isHighlightShrink: false,
-  isToc: true,
-  pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.1.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">115</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">18</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/en/"><i class="fa-fw fas fa-language"></i><span> English</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Apache王也道长</span></a><a class="nav-page-title" href="/"><span class="site-name">Java垃圾收集基础</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/en/"><i class="fa-fw fas fa-language"></i><span> English</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java垃圾收集基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-22T00:00:00.000Z" title="发表于 2022-07-22 00:00:00">2022-07-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-15T14:40:05.262Z" title="更新于 2026-07-15 14:40:05">2026-07-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。<br>理解 GC 应先区分对象是否可达、何时触发回收以及收集器如何移动对象。实际优化的第一步是采集日志和指标，而不是盲目增大堆内存。</p>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><span id="more"></span>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能的介绍。接下来的学生将获得关于垃圾收集如何在 JVM 中工作的分步指南。接下来为学习者提供了一个动手活动，以试用 Java JDK 中提供的一些监控工具，并将他们刚刚学到的关于垃圾收集的知识付诸实践。最后，提供了一节介绍 Hotspot JVM 中可用的垃圾收集方案选项。</p>
-<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><ul>
-<li>JDK7 <a href="https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html">jdk7</a></li>
-</ul>
-<h1 id="Java技术与JVM"><a href="#Java技术与JVM" class="headerlink" title="Java技术与JVM"></a>Java技术与JVM</h1><h2 id="Java概览"><a href="#Java概览" class="headerlink" title="Java概览"></a>Java概览</h2><p>Java 是 Sun Microsystems 于 1995 年首次发布的一种编程语言和计算平台。它是支持 Java 程序（包括实用程序、游戏和业务应用程序）的底层技术。 Java 在全球超过 8.5 亿台个人计算机和全球数十亿台设备上运行，包括移动设备和电视设备。 Java 由许多关键组件组成，它们作为一个整体创建了 Java 平台</p>
-<h2 id="JRE-Java-Runtime-Edition"><a href="#JRE-Java-Runtime-Edition" class="headerlink" title="JRE (Java Runtime Edition)"></a>JRE (Java Runtime Edition)</h2><p>下载 Java 时，您将获得 Java 运行时环境 (JRE)。 JRE 由 Java 虚拟机 (JVM)、Java 平台核心类和支持 Java 平台库组成。这三个都是在您的计算机上运行 Java 应用程序所必需的。在 Java 7 中，Java 应用程序作为操作系统中的桌面应用程序运行，作为桌面应用程序运行，但使用 Java Web Start 从 Web 安装，或者作为浏览器中的 Web 嵌入式应用程序（使用 JavaFX）运行。</p>
-<h2 id="Java编程语言-Java-Programming-Language"><a href="#Java编程语言-Java-Programming-Language" class="headerlink" title="Java编程语言 (Java Programming Language)"></a>Java编程语言 (Java Programming Language)</h2><p>Java 是一种面向对象的编程语言，包括以下特性。</p>
+
+
+<meta name="google-adsense-account" content="ca-pub-2328510744730535">
+<script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2328510744730535" async crossorigin="anonymous"></script><link rel="stylesheet" href="/assets/css/styles.bb7a8808.css">
+<script src="/assets/js/runtime~main.5af1574f.js" defer="defer"></script>
+<script src="/assets/js/main.3afce90d.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/avatar.jpg"><div role="region" aria-label="跳到主要内容"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">跳到主要内容</a></div><nav aria-label="主导航" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="切换导航栏" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/avatar.jpg" alt="Apache王也道长" class="themedComponent_mlkZ themedComponent--light_NVdE" height="34" width="34"><img src="/img/avatar.jpg" alt="Apache王也道长" class="themedComponent_mlkZ themedComponent--dark_xIcU" height="34" width="34"></div><b class="navbar__title text--truncate">Apache王也道长</b></a><a class="navbar__item navbar__link" href="/archive/">归档</a><a class="navbar__item navbar__link" href="/tags/">标签</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a href="#" aria-haspopup="true" aria-expanded="false" role="button" class="navbar__link"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" class="iconLanguage_nlXk"><path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"></path></svg>简体中文</a><ul class="dropdown__menu"><li><a href="/2022/java-gc01/" target="_self" rel="noopener noreferrer" class="dropdown__link dropdown__link--active" lang="zh-CN">简体中文</a></li><li><a href="/en/2022/java-gc01/" target="_self" rel="noopener noreferrer" class="dropdown__link" lang="en">English</a></li></ul></div><a href="https://github.com/jsbxyyx" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="切换浅色/暗黑模式（当前为system mode）"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="搜索" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class="row"><main class="col col--9 col--offset-1"><article class=""><header><h1 class="title_f1Hy">Java垃圾收集基础</h1><div class="container_mt6G margin-vert--md"><time datetime="2022-07-22T00:00:00.000Z">2022年7月22日</time> · <!-- -->阅读需 21 分钟</div></header><div id="__blog-post-container" class="markdown"><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="目的">目的<a href="#目的" class="hash-link" aria-label="目的的直接链接" title="目的的直接链接" translate="no">​</a></h2>
+<p>本教程介绍垃圾收集如何与 Hotspot JVM 配合使用的基础知识。了解垃圾收集器的功能后，了解如何使用 Visual VM 监控垃圾收集过程。最后，了解 Java SE 7 Hotspot JVM 中可用的垃圾收集器。
+理解 GC 应先区分对象是否可达、何时触发回收以及收集器如何移动对象。实际优化的第一步是采集日志和指标，而不是盲目增大堆内存。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="简介">简介<a href="#简介" class="hash-link" aria-label="简介的直接链接" title="简介的直接链接" translate="no">​</a></h2>
+<p>本 OBE 涵盖了 Java 中的 Java 虚拟机 (JVM) 垃圾收集 (GC) 的基础知识。在 OBE 的第一部分中，提供了 JVM 的概述以及垃圾收集和性能的介绍。接下来的学生将获得关于垃圾收集如何在 JVM 中工作的分步指南。接下来为学习者提供了一个动手活动，以试用 Java JDK 中提供的一些监控工具，并将他们刚刚学到的关于垃圾收集的知识付诸实践。最后，提供了一节介绍 Hotspot JVM 中可用的垃圾收集方案选项。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="前提条件">前提条件<a href="#前提条件" class="hash-link" aria-label="前提条件的直接链接" title="前提条件的直接链接" translate="no">​</a></h2>
 <ul>
-<li>平台独立性——Java 应用程序被编译成字节码，存储在class文件中并加载到 JVM 中。由于应用程序在 JVM 中运行，因此它们可以在许多不同的操作系统和设备上运行。</li>
-<li>面向对象——Java 是一种面向对象的语言，它采用了 C 和 C++ 的许多特性并对其进行了改进。</li>
-<li>自动垃圾收集 - Java 自动分配和释放内存，因此程序不会承担该任务。</li>
-<li>丰富的标准库 - Java 包含大量可用于执行诸如输入/输出、网络和日期操作等任务的预制对象。</li>
+<li class="">JDK7 <a href="https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html" target="_blank" rel="noopener noreferrer" class="">jdk7</a></li>
 </ul>
-<h2 id="JDK-Java-Development-Kit"><a href="#JDK-Java-Development-Kit" class="headerlink" title="JDK (Java Development Kit)"></a>JDK (Java Development Kit)</h2><p>Java Development Kit (JDK) 是一组用于开发 Java 应用程序的工具。使用 JDK，您可以编译用 Java 编程语言编写的程序并在 JVM 中运行它们。此外，JDK 提供了用于打包和分发应用程序的工具。</p>
+<h1>Java技术与JVM</h1>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="java概览">Java概览<a href="#java概览" class="hash-link" aria-label="Java概览的直接链接" title="Java概览的直接链接" translate="no">​</a></h2>
+<p>Java 是 Sun Microsystems 于 1995 年首次发布的一种编程语言和计算平台。它是支持 Java 程序（包括实用程序、游戏和业务应用程序）的底层技术。 Java 在全球超过 8.5 亿台个人计算机和全球数十亿台设备上运行，包括移动设备和电视设备。 Java 由许多关键组件组成，它们作为一个整体创建了 Java 平台</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="jre-java-runtime-edition">JRE (Java Runtime Edition)<a href="#jre-java-runtime-edition" class="hash-link" aria-label="JRE (Java Runtime Edition)的直接链接" title="JRE (Java Runtime Edition)的直接链接" translate="no">​</a></h2>
+<p>下载 Java 时，您将获得 Java 运行时环境 (JRE)。 JRE 由 Java 虚拟机 (JVM)、Java 平台核心类和支持 Java 平台库组成。这三个都是在您的计算机上运行 Java 应用程序所必需的。在 Java 7 中，Java 应用程序作为操作系统中的桌面应用程序运行，作为桌面应用程序运行，但使用 Java Web Start 从 Web 安装，或者作为浏览器中的 Web 嵌入式应用程序（使用 JavaFX）运行。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="java编程语言-java-programming-language">Java编程语言 (Java Programming Language)<a href="#java编程语言-java-programming-language" class="hash-link" aria-label="Java编程语言 (Java Programming Language)的直接链接" title="Java编程语言 (Java Programming Language)的直接链接" translate="no">​</a></h2>
+<p>Java 是一种面向对象的编程语言，包括以下特性。</p>
+<ul>
+<li class="">平台独立性——Java 应用程序被编译成字节码，存储在class文件中并加载到 JVM 中。由于应用程序在 JVM 中运行，因此它们可以在许多不同的操作系统和设备上运行。</li>
+<li class="">面向对象——Java 是一种面向对象的语言，它采用了 C 和 C++ 的许多特性并对其进行了改进。</li>
+<li class="">自动垃圾收集 - Java 自动分配和释放内存，因此程序不会承担该任务。</li>
+<li class="">丰富的标准库 - Java 包含大量可用于执行诸如输入/输出、网络和日期操作等任务的预制对象。</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="jdk-java-development-kit">JDK (Java Development Kit)<a href="#jdk-java-development-kit" class="hash-link" aria-label="JDK (Java Development Kit)的直接链接" title="JDK (Java Development Kit)的直接链接" translate="no">​</a></h2>
+<p>Java Development Kit (JDK) 是一组用于开发 Java 应用程序的工具。使用 JDK，您可以编译用 Java 编程语言编写的程序并在 JVM 中运行它们。此外，JDK 提供了用于打包和分发应用程序的工具。</p>
 <p>JDK 和 JRE 共享 Java 应用程序编程接口 (Java API)。 Java API 是开发人员用来创建 Java 应用程序的预打包库的集合。 Java API 通过提供工具来完成许多常见的编程任务，包括字符串操作、日期/时间处理、网络和实现数据结构（例如，列表、映射、堆栈和队列），从而使开发更容易。</p>
-<h2 id="JAVA虚拟机-Java-Virtual-Machine"><a href="#JAVA虚拟机-Java-Virtual-Machine" class="headerlink" title="JAVA虚拟机(Java Virtual Machine)"></a>JAVA虚拟机(Java Virtual Machine)</h2><p>Java 虚拟机 (JVM) 是一种抽象计算机。 JVM 是一个程序，对于编写在其中执行的程序来说，它看起来就像一台机器。通过这种方式，Java 程序被写入同一组接口和库。特定操作系统的每个 JVM 实现都将 Java 编程指令转换为在本地操作系统上运行的指令和命令。这样，Java 程序就实现了平台独立性。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="java虚拟机java-virtual-machine">JAVA虚拟机(Java Virtual Machine)<a href="#java虚拟机java-virtual-machine" class="hash-link" aria-label="JAVA虚拟机(Java Virtual Machine)的直接链接" title="JAVA虚拟机(Java Virtual Machine)的直接链接" translate="no">​</a></h2>
+<p>Java 虚拟机 (JVM) 是一种抽象计算机。 JVM 是一个程序，对于编写在其中执行的程序来说，它看起来就像一台机器。通过这种方式，Java 程序被写入同一组接口和库。特定操作系统的每个 JVM 实现都将 Java 编程指令转换为在本地操作系统上运行的指令和命令。这样，Java 程序就实现了平台独立性。</p>
 <p>Java 虚拟机的第一个原型实现由 Sun Microsystems, Inc. 完成，它在类似于当代个人数字助理 (PDA) 的手持设备托管的软件中模拟 Java 虚拟机指令集。 Oracle 当前的实现在移动、桌面和服务器设备上模拟 Java 虚拟机，但 Java 虚拟机不采用任何特定的实现技术、主机硬件或主机操作系统。它本身不是解释的，但也可以通过将其指令集编译为硅 CPU 的指令集来实现。它也可以用微码或直接用硅实现。</p>
 <p>Java 虚拟机对 Java 编程语言一无所知，只知道一种特定的二进制格式，即class文件格式。class文件包含 Java 虚拟机指令（或字节码）和符号表，以及其他辅助信息。</p>
 <p>为了安全起见，Java 虚拟机对类文件中的代码施加了强大的句法和结构约束。但是，任何具有可以用有效类文件表示的功能的语言都可以由 Java 虚拟机托管。被一个普遍可用的、独立于机器的平台所吸引，其他语言的实现者可以将 Java 虚拟机作为他们语言的交付工具。</p>
-<h1 id="探索JVM架构"><a href="#探索JVM架构" class="headerlink" title="探索JVM架构"></a>探索JVM架构</h1><h2 id="Hotspot-架构"><a href="#Hotspot-架构" class="headerlink" title="Hotspot 架构"></a>Hotspot 架构</h2><p>HotSpot JVM 的架构支持强大的特性和能力基础，并支持实现高性能和大规模可扩展性的能力。例如，HotSpot JVM JIT 编译器生成动态优化。换句话说，它们在 Java 应用程序运行时做出优化决策，并生成针对底层系统架构的高性能本机机器指令。此外，通过其运行时环境和多线程垃圾收集器的成熟演变和持续工程，HotSpot JVM 即使在最大的可用计算机系统上也能产生高可扩展性。<br><img src="https://img-blog.csdnimg.cn/img_convert/981d16663b2f9adfab10c60da32948d5.png" alt="HotSpot 架构"><br>JVM 的主要组件包括类加载器、运行时数据区和执行引擎。</p>
-<h2 id="关键Hotspot组件"><a href="#关键Hotspot组件" class="headerlink" title="关键Hotspot组件"></a>关键Hotspot组件</h2><p>下图中突出显示了与性能相关的 JVM 关键组件。<br><img src="https://img-blog.csdnimg.cn/img_convert/981d16663b2f9adfab10c60da32948d5.png" alt="image.png"></p>
+<h1>探索JVM架构</h1>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hotspot-架构">Hotspot 架构<a href="#hotspot-架构" class="hash-link" aria-label="Hotspot 架构的直接链接" title="Hotspot 架构的直接链接" translate="no">​</a></h2>
+<p>HotSpot JVM 的架构支持强大的特性和能力基础，并支持实现高性能和大规模可扩展性的能力。例如，HotSpot JVM JIT 编译器生成动态优化。换句话说，它们在 Java 应用程序运行时做出优化决策，并生成针对底层系统架构的高性能本机机器指令。此外，通过其运行时环境和多线程垃圾收集器的成熟演变和持续工程，HotSpot JVM 即使在最大的可用计算机系统上也能产生高可扩展性。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/981d16663b2f9adfab10c60da32948d5.png" alt="HotSpot 架构" class="img_ev3q">
+JVM 的主要组件包括类加载器、运行时数据区和执行引擎。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="关键hotspot组件">关键Hotspot组件<a href="#关键hotspot组件" class="hash-link" aria-label="关键Hotspot组件的直接链接" title="关键Hotspot组件的直接链接" translate="no">​</a></h2>
+<p>下图中突出显示了与性能相关的 JVM 关键组件。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/981d16663b2f9adfab10c60da32948d5.png" alt="image.png" class="img_ev3q"></p>
 <p>JVM 的三个组件在调优性能时需要重点关注。堆是存储对象数据的地方。然后，该区域由启动时选择的垃圾收集器管理。大多数调整选项都与堆大小和为您的情况选择最合适的垃圾收集器有关。 JIT 编译器对性能也有很大影响，但很少需要使用较新版本的 JVM 进行调整。</p>
-<h1 id="性能基础"><a href="#性能基础" class="headerlink" title="性能基础"></a>性能基础</h1><p>通常，在调整 Java 应用程序时，重点是两个主要目标之一：响应性或吞吐量。随着教程的进行，我们将参考这些概念。</p>
-<h2 id="响应能力-Responsiveness"><a href="#响应能力-Responsiveness" class="headerlink" title="响应能力 (Responsiveness)"></a>响应能力 (Responsiveness)</h2><p>响应性是指应用程序或系统响应请求的数据的速度。示例包括：</p>
+<h1>性能基础</h1>
+<p>通常，在调整 Java 应用程序时，重点是两个主要目标之一：响应性或吞吐量。随着教程的进行，我们将参考这些概念。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="响应能力-responsiveness">响应能力 (Responsiveness)<a href="#响应能力-responsiveness" class="hash-link" aria-label="响应能力 (Responsiveness)的直接链接" title="响应能力 (Responsiveness)的直接链接" translate="no">​</a></h2>
+<p>响应性是指应用程序或系统响应请求的数据的速度。示例包括：</p>
 <ul>
-<li>桌面 UI 响应事件的速度</li>
-<li>网站返回页面的速度</li>
-<li>返回数据库查询的速度</li>
+<li class="">桌面 UI 响应事件的速度</li>
+<li class="">网站返回页面的速度</li>
+<li class="">返回数据库查询的速度</li>
 </ul>
 <p>对于专注于响应能力的应用程序，大的暂停时间是不可接受的。重点是在短时间内做出反应</p>
-<h2 id="吞吐量-Throughput"><a href="#吞吐量-Throughput" class="headerlink" title="吞吐量 (Throughput)"></a>吞吐量 (Throughput)</h2><p>吞吐量侧重于在特定时间段内最大化应用程序的工作量。如何衡量吞吐量的示例包括：</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="吞吐量-throughput">吞吐量 (Throughput)<a href="#吞吐量-throughput" class="hash-link" aria-label="吞吐量 (Throughput)的直接链接" title="吞吐量 (Throughput)的直接链接" translate="no">​</a></h2>
+<p>吞吐量侧重于在特定时间段内最大化应用程序的工作量。如何衡量吞吐量的示例包括：</p>
 <ul>
-<li>在给定时间内完成的事务数。</li>
-<li>批处理程序在一小时内可以完成的作业数。</li>
-<li>一个小时内可以完成的数据库查询数。</li>
+<li class="">在给定时间内完成的事务数。</li>
+<li class="">批处理程序在一小时内可以完成的作业数。</li>
+<li class="">一个小时内可以完成的数据库查询数。</li>
 </ul>
 <p>对于专注于吞吐量的应用程序来说，较长的暂停时间是可以接受的。由于高吞吐量应用程序在较长时间内专注于基准测试，因此无需考虑快速响应时间。</p>
-<h1 id="描述垃圾收集"><a href="#描述垃圾收集" class="headerlink" title="描述垃圾收集"></a>描述垃圾收集</h1><h2 id="什么是自动垃圾收集？"><a href="#什么是自动垃圾收集？" class="headerlink" title="什么是自动垃圾收集？"></a>什么是自动垃圾收集？</h2><p>自动垃圾回收是查看堆内存，识别哪些对象正在使用，哪些没有，并删除未使用的对象的过程。使用中的对象或引用的对象意味着程序的某些部分仍然维护指向该对象的指针。程序的任何部分都不再引用未使用的对象或未引用的对象。因此可以回收未引用对象使用的内存。</p>
+<h1>描述垃圾收集</h1>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="什么是自动垃圾收集">什么是自动垃圾收集？<a href="#什么是自动垃圾收集" class="hash-link" aria-label="什么是自动垃圾收集？的直接链接" title="什么是自动垃圾收集？的直接链接" translate="no">​</a></h2>
+<p>自动垃圾回收是查看堆内存，识别哪些对象正在使用，哪些没有，并删除未使用的对象的过程。使用中的对象或引用的对象意味着程序的某些部分仍然维护指向该对象的指针。程序的任何部分都不再引用未使用的对象或未引用的对象。因此可以回收未引用对象使用的内存。</p>
 <p>在像 C 这样的编程语言中，分配和释放内存是一个手动过程。在 Java 中，释放内存的过程由垃圾收集器自动处理。基本过程可以描述如下。</p>
-<h3 id="第-1-步：标记"><a href="#第-1-步：标记" class="headerlink" title="第 1 步：标记"></a>第 1 步：标记</h3><p>该过程的第一步称为标记。这是垃圾收集器识别哪些内存正在使用，哪些没有使用的地方。<br><img src="https://img-blog.csdnimg.cn/img_convert/deca5128353d7f008d580c084be55768.png" alt="Marking"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-1-步标记">第 1 步：标记<a href="#第-1-步标记" class="hash-link" aria-label="第 1 步：标记的直接链接" title="第 1 步：标记的直接链接" translate="no">​</a></h3>
+<p>该过程的第一步称为标记。这是垃圾收集器识别哪些内存正在使用，哪些没有使用的地方。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/deca5128353d7f008d580c084be55768.png" alt="Marking" class="img_ev3q"></p>
 <p>引用的对象以蓝色显示。未引用的对象以金色显示。在标记阶段扫描所有对象以做出此决定。如果必须扫描系统中的所有对象，这可能是一个非常耗时的过程。</p>
-<h3 id="第-2-步：正常删除"><a href="#第-2-步：正常删除" class="headerlink" title="第 2 步：正常删除"></a>第 2 步：正常删除</h3><p>正常删除删除未引用的对象，留下引用的对象和指向可用空间的指针。<br><img src="https://img-blog.csdnimg.cn/img_convert/8b5db23985e26206b82188f497e05fa8.png" alt="Normal Deletion"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-2-步正常删除">第 2 步：正常删除<a href="#第-2-步正常删除" class="hash-link" aria-label="第 2 步：正常删除的直接链接" title="第 2 步：正常删除的直接链接" translate="no">​</a></h3>
+<p>正常删除删除未引用的对象，留下引用的对象和指向可用空间的指针。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/8b5db23985e26206b82188f497e05fa8.png" alt="Normal Deletion" class="img_ev3q"></p>
 <p>内存分配器保存对可以分配新对象的可用空间块的引用。</p>
-<h3 id="步骤-2a：使用压缩删除"><a href="#步骤-2a：使用压缩删除" class="headerlink" title="步骤 2a：使用压缩删除"></a>步骤 2a：使用压缩删除</h3><p>为了进一步提高性能，除了删除未引用的对象外，还可以压缩剩余的引用对象。通过将引用的对象一起移动，这使得新的内存分配更加容易和快捷。<br><img src="https://img-blog.csdnimg.cn/img_convert/0a8bd96736e5a74f3ea2dbc685023644.png" alt="Deletion with Compacting"></p>
-<h4 id="为什么要进行分代垃圾收集？"><a href="#为什么要进行分代垃圾收集？" class="headerlink" title="为什么要进行分代垃圾收集？"></a>为什么要进行分代垃圾收集？</h4><p>如前所述，必须标记和压缩 JVM 中的所有对象是低效的。随着越来越多的对象被分配，对象列表越来越多，导致垃圾收集时间越来越长。然而，应用的经验分析表明，大多数对象都是短暂的。</p>
-<p>这是此类数据的示例。 Y 轴显示分配的字节数，X 访问显示随时间分配的字节数。<br><img src="https://img-blog.csdnimg.cn/img_convert/b9d1e27dd5e1d3cc9866fd99f5cb1927.png" alt="Byte allocated"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="步骤-2a使用压缩删除">步骤 2a：使用压缩删除<a href="#步骤-2a使用压缩删除" class="hash-link" aria-label="步骤 2a：使用压缩删除的直接链接" title="步骤 2a：使用压缩删除的直接链接" translate="no">​</a></h3>
+<p>为了进一步提高性能，除了删除未引用的对象外，还可以压缩剩余的引用对象。通过将引用的对象一起移动，这使得新的内存分配更加容易和快捷。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/0a8bd96736e5a74f3ea2dbc685023644.png" alt="Deletion with Compacting" class="img_ev3q"></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="为什么要进行分代垃圾收集">为什么要进行分代垃圾收集？<a href="#为什么要进行分代垃圾收集" class="hash-link" aria-label="为什么要进行分代垃圾收集？的直接链接" title="为什么要进行分代垃圾收集？的直接链接" translate="no">​</a></h4>
+<p>如前所述，必须标记和压缩 JVM 中的所有对象是低效的。随着越来越多的对象被分配，对象列表越来越多，导致垃圾收集时间越来越长。然而，应用的经验分析表明，大多数对象都是短暂的。</p>
+<p>这是此类数据的示例。 Y 轴显示分配的字节数，X 访问显示随时间分配的字节数。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/b9d1e27dd5e1d3cc9866fd99f5cb1927.png" alt="Byte allocated" class="img_ev3q"></p>
 <p>如您所见，随着时间的推移，分配的对象越来越少。事实上，大多数对象的寿命都很短，如图左侧的较高值所示。</p>
-<h2 id="JVM堆分代"><a href="#JVM堆分代" class="headerlink" title="JVM堆分代"></a>JVM堆分代</h2><p>从对象分配行为中学到的信息可以用来增强 JVM 的性能。因此，堆被分解成更小的部分或代。堆部分是：年轻代(Young Generation), 老年代(Old or Tenured Generation), 和永久代(Permanent Generation)<br><img src="https://img-blog.csdnimg.cn/img_convert/3b33b1a38ccf56fae53eacb76e58ea97.png" alt="Hotspot Heap Structure"></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="jvm堆分代">JVM堆分代<a href="#jvm堆分代" class="hash-link" aria-label="JVM堆分代的直接链接" title="JVM堆分代的直接链接" translate="no">​</a></h2>
+<p>从对象分配行为中学到的信息可以用来增强 JVM 的性能。因此，堆被分解成更小的部分或代。堆部分是：年轻代(Young Generation), 老年代(Old or Tenured Generation), 和永久代(Permanent Generation)
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/3b33b1a38ccf56fae53eacb76e58ea97.png" alt="Hotspot Heap Structure" class="img_ev3q"></p>
 <p>年轻代是所有新对象被分配和老化的地方。当年轻代填满时，这会导致Minor GC。假设对象死亡率很高，可以优化次要集合。一个充满死亡对象的年轻代很快就会被收集起来。一些幸存的对象被老化并最终移动到老年代。</p>
 <p>Stop the World Event——所有Minor GC都是“STW”事件。这意味着所有应用程序线程都将停止，直到操作完成。Minor GC始终是 STW 事件。</p>
 <p>老年代用于存储长期存活的对象。通常，为年轻代对象设置一个阈值，当满足该年龄时，该对象将移动到老年代。最终需要收集老年代。此事件称为Major GC。</p>
 <p>Major GC也是 STW 事件。通常一个Major GC要慢得多，因为它涉及所有活动对象。因此，对于响应式应用程序，应尽量减少Major GC。另请注意，Major GC的 STW 事件的长度受用于老年代空间的垃圾收集器类型的影响。</p>
 <p>永久代包含 JVM 所需的元数据，用于描述应用程序中使用的类和方法。 JVM 在运行时根据应用程序使用的类填充永久代。此外，Java SE 库类和方法可能存储在这里。</p>
 <p>如果 JVM 发现不再需要这些类并且其他类可能需要空间，则这些类可能会被收集（卸载）。永久代包含在完整的垃圾收集中。</p>
-<h1 id="分代垃圾收集过程"><a href="#分代垃圾收集过程" class="headerlink" title="分代垃圾收集过程"></a>分代垃圾收集过程</h1><p>现在您了解了为什么堆被分成不同的代，是时候看看这些空间究竟是如何相互作用的了。下面的图片介绍了 JVM 中的对象分配和老化过程。</p>
+<h1>分代垃圾收集过程</h1>
+<p>现在您了解了为什么堆被分成不同的代，是时候看看这些空间究竟是如何相互作用的了。下面的图片介绍了 JVM 中的对象分配和老化过程。</p>
 <ol>
-<li><p>首先，任何新对象都被分配到伊甸园空间。两个幸存者空间一开始都是空的。<br><img src="https://img-blog.csdnimg.cn/img_convert/b604e4ca588de8c1b0c7d7a6c62853ad.png" alt="Object Allocation"></p>
+<li class="">
+<p>首先，任何新对象都被分配到伊甸园空间。两个幸存者空间一开始都是空的。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/b604e4ca588de8c1b0c7d7a6c62853ad.png" alt="Object Allocation" class="img_ev3q"></p>
 </li>
-<li><p>当Eden空间填满时，会触发minor GC。<br><img src="https://img-blog.csdnimg.cn/img_convert/556642656cd1142005b7e77375ad2bcd.png" alt="Filling the Eden Space"></p>
+<li class="">
+<p>当Eden空间填满时，会触发minor GC。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/556642656cd1142005b7e77375ad2bcd.png" alt="Filling the Eden Space" class="img_ev3q"></p>
 </li>
-<li><p>被引用的对象被移动到第一个Survivor空间。当Eden空间被清除时，未引用的对象将被删除。<br><img src="https://img-blog.csdnimg.cn/img_convert/0902a269f8853ac169923a6146f6de6d.png" alt="Copying Referenced Objects"></p>
+<li class="">
+<p>被引用的对象被移动到第一个Survivor空间。当Eden空间被清除时，未引用的对象将被删除。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/0902a269f8853ac169923a6146f6de6d.png" alt="Copying Referenced Objects" class="img_ev3q"></p>
 </li>
-<li><p>在下一次minor GC 中，同样的事情发生在Eden空间。未引用的对象被删除，被引用的对象被移动到survivor空间。然而，在这种情况下，它们被移动到第二个Survivor空间（S1）。此外，来自第一个survivor空间 (S0) 上的最后一次minor  GC 的对象的年龄增加并被移动到 S1。一旦所有幸存的对象都被移动到 S1，S0 和 eden 都将被清除。请注意，我们现在在survivor空间中有不同年龄的对象。<br><img src="https://img-blog.csdnimg.cn/img_convert/b3cf3eaf1f36262fe68dcf7ed61951e7.png" alt="Object Aging"></p>
+<li class="">
+<p>在下一次minor GC 中，同样的事情发生在Eden空间。未引用的对象被删除，被引用的对象被移动到survivor空间。然而，在这种情况下，它们被移动到第二个Survivor空间（S1）。此外，来自第一个survivor空间 (S0) 上的最后一次minor  GC 的对象的年龄增加并被移动到 S1。一旦所有幸存的对象都被移动到 S1，S0 和 eden 都将被清除。请注意，我们现在在survivor空间中有不同年龄的对象。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/b3cf3eaf1f36262fe68dcf7ed61951e7.png" alt="Object Aging" class="img_ev3q"></p>
 </li>
 </ol>
-<p>5.在下一次minor GC 中，重复相同的过程。然而，这一次survivor空间切换。被引用的对象被移动到 S0。幸存的物体会老化。 Eden 和 S1 被清除。<br><img src="https://img-blog.csdnimg.cn/img_convert/f9ba5638b8c31898df43827c09d5fdb5.png" alt="Additional Aging"></p>
-<ol>
-<li><p>在一次 minor GC 之后，当老化对象达到某个年龄阈值（本例中为 8）时，它们会从年轻代提升到老年代。<br><img src="https://img-blog.csdnimg.cn/img_convert/fb573a5699026c4b84752db60336c334.png" alt="Promotion"></p>
+<p>5.在下一次minor GC 中，重复相同的过程。然而，这一次survivor空间切换。被引用的对象被移动到 S0。幸存的物体会老化。 Eden 和 S1 被清除。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/f9ba5638b8c31898df43827c09d5fdb5.png" alt="Additional Aging" class="img_ev3q"></p>
+<ol start="6">
+<li class="">
+<p>在一次 minor GC 之后，当老化对象达到某个年龄阈值（本例中为 8）时，它们会从年轻代提升到老年代。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/fb573a5699026c4b84752db60336c334.png" alt="Promotion" class="img_ev3q"></p>
 </li>
-<li><p>随着 Minor GC 的不断发生，对象将继续被提升到老年代空间。<br><img src="https://img-blog.csdnimg.cn/img_convert/4b65067ce7e38bc499cd698dd48e0cc2.png" alt="Promotion 2"></p>
+<li class="">
+<p>随着 Minor GC 的不断发生，对象将继续被提升到老年代空间。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/4b65067ce7e38bc499cd698dd48e0cc2.png" alt="Promotion 2" class="img_ev3q"></p>
 </li>
-<li><p>所以这几乎涵盖了年轻一代的整个过程。最终，将在老年代执行一次major GC，清理并压缩该空间。<br><img src="https://img-blog.csdnimg.cn/img_convert/e934cf0d694a7b38a63b7ac73452709b.png" alt="GC Process Summary"></p>
+<li class="">
+<p>所以这几乎涵盖了年轻一代的整个过程。最终，将在老年代执行一次major GC，清理并压缩该空间。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/e934cf0d694a7b38a63b7ac73452709b.png" alt="GC Process Summary" class="img_ev3q"></p>
 </li>
 </ol>
-<h1 id="进行自己的观察"><a href="#进行自己的观察" class="headerlink" title="进行自己的观察"></a>进行自己的观察</h1><h2 id="概览-1"><a href="#概览-1" class="headerlink" title="概览"></a>概览</h2><p>您已经使用一系列图片看到了垃圾收集过程。现在是时候现场体验和探索这个过程了。在本活动中，您将运行 Java 应用程序并使用 Visual VM 分析垃圾收集过程。 Visual VM 程序包含在 JDK 中，允许开发人员监控正在运行的 JVM 的各个方面。</p>
-<h2 id="动手活动"><a href="#动手活动" class="headerlink" title="动手活动"></a>动手活动</h2><h3 id="第-1-步：初始设置"><a href="#第-1-步：初始设置" class="headerlink" title="第 1 步：初始设置"></a>第 1 步：初始设置</h3><p>下载demo</p>
-<h3 id="第-2-步：启动演示应用程序"><a href="#第-2-步：启动演示应用程序" class="headerlink" title="第 2 步：启动演示应用程序"></a>第 2 步：启动演示应用程序</h3><p>安装 Java JDK 和演示后，您现在可以运行将在本活动中分析的演示应用程序。对于此示例，演示安装在 c:\javademos 中。</p>
-<p>演示应用程序是一个 2D 图形演示。要执行它，请键入：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code><br><img src="https://img-blog.csdnimg.cn/img_convert/bf7309bfb7239f5b618907ad30105e0e.png" alt="2D Demo"></p>
-<h3 id="第-3-步：启动-VisualVM"><a href="#第-3-步：启动-VisualVM" class="headerlink" title="第 3 步：启动 VisualVM"></a>第 3 步：启动 VisualVM</h3><p>要启动 Visual VM，请使用 C:\Program Files\Java\jdk1.7.0_XX\bin 目录中的 jvisualvm 可执行文件。我建议您将此目录添加到您的路径中。在 Windows 7 上，步骤如下：Start -&gt; Computer -&gt; System Properties -&gt; Advanced System Settings -&gt; Environment Variables.然后在系统变量下选择路径并添加 C:\Program Files\Java\jdk1.7.0_XX\bin;到路径（其中 XX 是 JDK 的当前版本）。单击确定几次，然后关闭对话框。</p>
+<h1>进行自己的观察</h1>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="概览">概览<a href="#概览" class="hash-link" aria-label="概览的直接链接" title="概览的直接链接" translate="no">​</a></h2>
+<p>您已经使用一系列图片看到了垃圾收集过程。现在是时候现场体验和探索这个过程了。在本活动中，您将运行 Java 应用程序并使用 Visual VM 分析垃圾收集过程。 Visual VM 程序包含在 JDK 中，允许开发人员监控正在运行的 JVM 的各个方面。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="动手活动">动手活动<a href="#动手活动" class="hash-link" aria-label="动手活动的直接链接" title="动手活动的直接链接" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-1-步初始设置">第 1 步：初始设置<a href="#第-1-步初始设置" class="hash-link" aria-label="第 1 步：初始设置的直接链接" title="第 1 步：初始设置的直接链接" translate="no">​</a></h3>
+<p>下载demo</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-2-步启动演示应用程序">第 2 步：启动演示应用程序<a href="#第-2-步启动演示应用程序" class="hash-link" aria-label="第 2 步：启动演示应用程序的直接链接" title="第 2 步：启动演示应用程序的直接链接" translate="no">​</a></h3>
+<p>安装 Java JDK 和演示后，您现在可以运行将在本活动中分析的演示应用程序。对于此示例，演示安装在 c:\javademos 中。</p>
+<p>演示应用程序是一个 2D 图形演示。要执行它，请键入：
+<code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code>
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/bf7309bfb7239f5b618907ad30105e0e.png" alt="2D Demo" class="img_ev3q"></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-3-步启动-visualvm">第 3 步：启动 VisualVM<a href="#第-3-步启动-visualvm" class="hash-link" aria-label="第 3 步：启动 VisualVM的直接链接" title="第 3 步：启动 VisualVM的直接链接" translate="no">​</a></h3>
+<p>要启动 Visual VM，请使用 C:\Program Files\Java\jdk1.7.0_XX\bin 目录中的 jvisualvm 可执行文件。我建议您将此目录添加到您的路径中。在 Windows 7 上，步骤如下：Start -&gt; Computer -&gt; System Properties -&gt; Advanced System Settings -&gt; Environment Variables.然后在系统变量下选择路径并添加 C:\Program Files\Java\jdk1.7.0_XX\bin;到路径（其中 XX 是 JDK 的当前版本）。单击确定几次，然后关闭对话框。</p>
 <p>完成此操作后，您应该能够打开命令提示符窗口并键入 jvisualvm。</p>
-<p>Visual VM 第一次运行时，它会对您的系统进行校准。您将看到如下消息：<br><img src="https://img-blog.csdnimg.cn/img_convert/9a84734e9fa8fa96cad3cfdcb4659e3c.png" alt=""></p>
-<p>然后是这样的消息：<br><img src="https://img-blog.csdnimg.cn/img_convert/03d9300391e82c91293b120780a0dc5f.png" alt=""></p>
+<p>Visual VM 第一次运行时，它会对您的系统进行校准。您将看到如下消息：
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/9a84734e9fa8fa96cad3cfdcb4659e3c.png" alt="" class="img_ev3q"></p>
+<p>然后是这样的消息：
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/03d9300391e82c91293b120780a0dc5f.png" alt="" class="img_ev3q"></p>
 <p>最后加载主用户界面。</p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/2d2d9f6fdfb4676deb08c6f32d34415a.png" alt=""></p>
+<p><img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/2d2d9f6fdfb4676deb08c6f32d34415a.png" alt="" class="img_ev3q"></p>
 <p>从这里，我们可以监控正在运行的 JVM。但是，对于这个活动，我们需要添加 VisualGC 插件。</p>
-<h3 id="第-4-步：安装-Visual-GC"><a href="#第-4-步：安装-Visual-GC" class="headerlink" title="第 4 步：安装 Visual GC"></a>第 4 步：安装 Visual GC</h3><p>Visual VM 的 Visual GC 插件提供了 JVM 中垃圾收集器活动的图形表示。它是免费的，可以按照以下步骤添加到您的安装中。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-4-步安装-visual-gc">第 4 步：安装 Visual GC<a href="#第-4-步安装-visual-gc" class="hash-link" aria-label="第 4 步：安装 Visual GC的直接链接" title="第 4 步：安装 Visual GC的直接链接" translate="no">​</a></h3>
+<p>Visual VM 的 Visual GC 插件提供了 JVM 中垃圾收集器活动的图形表示。它是免费的，可以按照以下步骤添加到您的安装中。</p>
 <ol>
-<li>要安装 Visual GC，请从菜单中选择Tools —&gt; Plugins。您应该得到以下对话框。<br><img src="https://img-blog.csdnimg.cn/img_convert/ab74d445b5f9bd3f90b354714f14ba96.png" alt=""><br>2.选择 Visual GC，然后选择安装按钮。<br><img src="https://img-blog.csdnimg.cn/img_convert/413d999e82f5c33851f9df965144718e.png" alt=""><br>3.插件安装程序启动。点击下一步。<br><img src="https://img-blog.csdnimg.cn/img_convert/28068ed012fb3c7e2d150830fc0041ca.png" alt=""></li>
-<li>阅读并接受许可协议。单击安装。现在将安装插件。<br><img src="https://img-blog.csdnimg.cn/img_convert/04421c4b825e0a8cd5eba3dd3a15ff3c.png" alt=""><br>5.该插件现已安装。单击完成以完成安装。<br><img src="https://img-blog.csdnimg.cn/img_convert/1ff2d568ef712ee9a069cfbef199dfc5.png" alt=""><br>6.单击关闭按钮关闭插件对话框。<br>安装了 VisualGC。现在我们可以检查 Java2Demo 以了解正在发生的事情。</li>
+<li class="">要安装 Visual GC，请从菜单中选择Tools --&gt; Plugins。您应该得到以下对话框。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/ab74d445b5f9bd3f90b354714f14ba96.png" alt="" class="img_ev3q">
+2.选择 Visual GC，然后选择安装按钮。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/413d999e82f5c33851f9df965144718e.png" alt="" class="img_ev3q">
+3.插件安装程序启动。点击下一步。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/28068ed012fb3c7e2d150830fc0041ca.png" alt="" class="img_ev3q"></li>
+<li class="">阅读并接受许可协议。单击安装。现在将安装插件。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/04421c4b825e0a8cd5eba3dd3a15ff3c.png" alt="" class="img_ev3q">
+5.该插件现已安装。单击完成以完成安装。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/1ff2d568ef712ee9a069cfbef199dfc5.png" alt="" class="img_ev3q">
+6.单击关闭按钮关闭插件对话框。
+安装了 VisualGC。现在我们可以检查 Java2Demo 以了解正在发生的事情。</li>
 </ol>
-<h3 id="第-5-步：分析-Java2Demo"><a href="#第-5-步：分析-Java2Demo" class="headerlink" title="第 5 步：分析 Java2Demo"></a>第 5 步：分析 Java2Demo</h3><p>是时候分析我们在第 2 步中启动的应用程序了。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="第-5-步分析-java2demo">第 5 步：分析 Java2Demo<a href="#第-5-步分析-java2demo" class="hash-link" aria-label="第 5 步：分析 Java2Demo的直接链接" title="第 5 步：分析 Java2Demo的直接链接" translate="no">​</a></h3>
+<p>是时候分析我们在第 2 步中启动的应用程序了。</p>
 <ol>
-<li>首先，在 Applications 选项卡的 Local applications 列表中右键单击 Java2Demo 应用程序。选择打开。<br><img src="https://img-blog.csdnimg.cn/img_convert/879dfa3d9076eb223b996ce0bed907a9.png" alt=""></li>
-<li>应用程序被加载到 Visual VM 中。请注意，界面右侧加载了许多选项卡。单击可视 GC 选项卡。<br><img src="https://img-blog.csdnimg.cn/img_convert/47d31ee5532ba4cb3fde448792cce24a.png" alt=""><br>3.Visual GC 选项卡显示垃圾收集器中正在进行的所有活动。您可以看到 Eden 空间被填满，数据在两个survivor空间 S1 和 S0 之间移动。此外，右侧显示了与垃圾收集器相关的图表和统计信息。<br><img src="https://img-blog.csdnimg.cn/img_convert/1ab0185c3b653bc5c2e8ecf9e38c432b.png" alt=""><br>随意尝试其他选项卡并查看有关 JVM 的信息。此外，您可以尝试更改示例应用程序中显示的字符串或图像的数量，以了解这对垃圾收集过程有何影响。</li>
+<li class="">首先，在 Applications 选项卡的 Local applications 列表中右键单击 Java2Demo 应用程序。选择打开。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/879dfa3d9076eb223b996ce0bed907a9.png" alt="" class="img_ev3q"></li>
+<li class="">应用程序被加载到 Visual VM 中。请注意，界面右侧加载了许多选项卡。单击可视 GC 选项卡。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/47d31ee5532ba4cb3fde448792cce24a.png" alt="" class="img_ev3q">
+3.Visual GC 选项卡显示垃圾收集器中正在进行的所有活动。您可以看到 Eden 空间被填满，数据在两个survivor空间 S1 和 S0 之间移动。此外，右侧显示了与垃圾收集器相关的图表和统计信息。
+<img decoding="async" loading="lazy" src="https://img-blog.csdnimg.cn/img_convert/1ab0185c3b653bc5c2e8ecf9e38c432b.png" alt="" class="img_ev3q">
+随意尝试其他选项卡并查看有关 JVM 的信息。此外，您可以尝试更改示例应用程序中显示的字符串或图像的数量，以了解这对垃圾收集过程有何影响。</li>
 </ol>
-<h1 id="Java-垃圾收集器"><a href="#Java-垃圾收集器" class="headerlink" title="Java 垃圾收集器"></a>Java 垃圾收集器</h1><p>您现在了解了垃圾收集的基础知识，并且已经观察了垃圾收集器在示例应用程序中的作用。在本节中，您将了解可用于 Java 的垃圾收集器以及选择它们所需的命令行开关。</p>
-<h2 id="常见的堆相关开关"><a href="#常见的堆相关开关" class="headerlink" title="常见的堆相关开关"></a>常见的堆相关开关</h2><p>Java 可以使用许多不同的命令行开关。本节介绍了本 OBE 中也使用的一些更常用的开关。<br>| 开关   |  描述   |<br>| — | — |<br>|  -Xms  |  设置 JVM 启动时的初始堆大小。   |<br>|  -Xmx  |  设置最大堆大小。   |<br>|  -Xmn  |  设置年轻代的大小。   |<br>|  -XX:PermSize  |  设置永久代的起始大小。   |<br>|  -XX:MaxPermSize  |  设置永久代的最大大小。   | </p>
-<h2 id="串行收集器-Serial-GC"><a href="#串行收集器-Serial-GC" class="headerlink" title="串行收集器(Serial GC)"></a>串行收集器(Serial GC)</h2><p>串行收集器是 Java SE 5 和 6 中客户端样式机器的默认设置。使用串行收集器，次要和主要垃圾收集都是串行完成的（使用单个虚拟 CPU）。此外，它使用了一种标记紧凑的收集方法。此方法将较旧的内存移动到堆的开头，以便在堆的末尾将新的内存分配变成一个连续的内存块。这种内存压缩可以更快地将新的内存块分配给堆。</p>
-<h3 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h3><p>对于大多数对暂停时间要求不高且在客户端式机器上运行的应用程序来说，串行 GC 是首选的垃圾收集器。它仅利用单个虚拟处理器进行垃圾收集工作（因此，它的名字）。尽管如此，在今天的硬件上，串行 GC 可以有效地管理大量具有几百 MB Java 堆的重要应用程序，并且在最坏情况下的暂停时间相对较短（完全垃圾收集大约需要几秒钟）。</p>
+<h1>Java 垃圾收集器</h1>
+<p>您现在了解了垃圾收集的基础知识，并且已经观察了垃圾收集器在示例应用程序中的作用。在本节中，您将了解可用于 Java 的垃圾收集器以及选择它们所需的命令行开关。</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="常见的堆相关开关">常见的堆相关开关<a href="#常见的堆相关开关" class="hash-link" aria-label="常见的堆相关开关的直接链接" title="常见的堆相关开关的直接链接" translate="no">​</a></h2>
+<p>Java 可以使用许多不同的命令行开关。本节介绍了本 OBE 中也使用的一些更常用的开关。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>开关</th><th>描述</th></tr></thead><tbody><tr><td>-Xms</td><td>设置 JVM 启动时的初始堆大小。</td></tr><tr><td>-Xmx</td><td>设置最大堆大小。</td></tr><tr><td>-Xmn</td><td>设置年轻代的大小。</td></tr><tr><td>-XX:PermSize</td><td>设置永久代的起始大小。</td></tr><tr><td>-XX:MaxPermSize</td><td>设置永久代的最大大小。</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="串行收集器serial-gc">串行收集器(Serial GC)<a href="#串行收集器serial-gc" class="hash-link" aria-label="串行收集器(Serial GC)的直接链接" title="串行收集器(Serial GC)的直接链接" translate="no">​</a></h2>
+<p>串行收集器是 Java SE 5 和 6 中客户端样式机器的默认设置。使用串行收集器，次要和主要垃圾收集都是串行完成的（使用单个虚拟 CPU）。此外，它使用了一种标记紧凑的收集方法。此方法将较旧的内存移动到堆的开头，以便在堆的末尾将新的内存分配变成一个连续的内存块。这种内存压缩可以更快地将新的内存块分配给堆。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="使用案例">使用案例<a href="#使用案例" class="hash-link" aria-label="使用案例的直接链接" title="使用案例的直接链接" translate="no">​</a></h3>
+<p>对于大多数对暂停时间要求不高且在客户端式机器上运行的应用程序来说，串行 GC 是首选的垃圾收集器。它仅利用单个虚拟处理器进行垃圾收集工作（因此，它的名字）。尽管如此，在今天的硬件上，串行 GC 可以有效地管理大量具有几百 MB Java 堆的重要应用程序，并且在最坏情况下的暂停时间相对较短（完全垃圾收集大约需要几秒钟）。</p>
 <p>Serial GC 的另一个流行用途是在同一台机器上运行大量 JVM 的环境中（在某些情况下，JVM 比可用处理器多！）。在这样的环境中，当 JVM 进行垃圾收集时，最好只使用一个处理器来最大限度地减少对剩余 JVM 的干扰，即使垃圾收集可能会持续更长时间。串行 GC 非常适合这种权衡。</p>
 <p>最后，随着具有最小内存和少数内核的嵌入式硬件的普及，串行 GC 可能会卷土重来。</p>
-<h3 id="命令行开关"><a href="#命令行开关" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用串行收集器，请使用：<code>-XX:+UseSerialGC</code><br>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h2 id="并行垃圾收集器-Parallel-GC"><a href="#并行垃圾收集器-Parallel-GC" class="headerlink" title="并行垃圾收集器(Parallel GC)"></a>并行垃圾收集器(Parallel GC)</h2><p>并行垃圾收集器使用多个线程来执行年轻代垃圾收集。默认情况下，在具有 N 个 CPU 的主机上，并行垃圾收集器在收集中使用 N 个垃圾收集器线程。垃圾收集器线程的数量可以通过命令行选项控制：</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="命令行开关">命令行开关<a href="#命令行开关" class="hash-link" aria-label="命令行开关的直接链接" title="命令行开关的直接链接" translate="no">​</a></h3>
+<p>要启用串行收集器，请使用：<code>-XX:+UseSerialGC</code>
+下面是启动 Java2Demo 的示例命令行：
+<code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseSerialGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="并行垃圾收集器parallel-gc">并行垃圾收集器(Parallel GC)<a href="#并行垃圾收集器parallel-gc" class="hash-link" aria-label="并行垃圾收集器(Parallel GC)的直接链接" title="并行垃圾收集器(Parallel GC)的直接链接" translate="no">​</a></h2>
+<p>并行垃圾收集器使用多个线程来执行年轻代垃圾收集。默认情况下，在具有 N 个 CPU 的主机上，并行垃圾收集器在收集中使用 N 个垃圾收集器线程。垃圾收集器线程的数量可以通过命令行选项控制：</p>
 <p>-XX:ParallelGCThreads=&lt;所需数量&gt;</p>
 <p>在具有单个 CPU 的主机上，即使已请求并行垃圾收集器，也会使用默认垃圾收集器。在具有两个 CPU 的主机上，并行垃圾收集器的性能通常与默认垃圾收集器一样好，并且可以预期在具有两个以上 CPU 的主机上减少年轻代垃圾收集器的暂停时间。 Parallel GC 有两种风格。</p>
-<h3 id="使用案例-1"><a href="#使用案例-1" class="headerlink" title="使用案例"></a>使用案例</h3><p>并行收集器也称为吞吐量收集器。因为它可以使用多个 CPU 来加快应用程序的吞吐量。当需要完成大量工作并且可以接受长时间的停顿时，应该使用此收集器。例如，打印报告或账单或执行大量数据库查询等批处理。</p>
-<h3 id="XX-UseParallelGC"><a href="#XX-UseParallelGC" class="headerlink" title="-XX:+UseParallelGC"></a>-XX:+UseParallelGC</h3><p>使用此命令行选项，您将获得一个多线程年轻代收集器和一个单线程老年代收集器。该选项还对老年代进行单线程压缩。</p>
-<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h3 id="XX-UseParallelOldGC"><a href="#XX-UseParallelOldGC" class="headerlink" title="-XX:+UseParallelOldGC"></a>-XX:+UseParallelOldGC</h3><p>使用 -XX:+UseParallelOldGC 选项，GC 既是多线程年轻代收集器，也是多线程老年代收集器。它也是一个多线程压缩收集器。 HotSpot 只在老年代进行压缩。 HotSpot 中的年轻代被认为是一个副本收集器；因此，不需要压缩。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="使用案例-1">使用案例<a href="#使用案例-1" class="hash-link" aria-label="使用案例的直接链接" title="使用案例的直接链接" translate="no">​</a></h3>
+<p>并行收集器也称为吞吐量收集器。因为它可以使用多个 CPU 来加快应用程序的吞吐量。当需要完成大量工作并且可以接受长时间的停顿时，应该使用此收集器。例如，打印报告或账单或执行大量数据库查询等批处理。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-xxuseparallelgc">-XX:+UseParallelGC<a href="#-xxuseparallelgc" class="hash-link" aria-label="-XX:+UseParallelGC的直接链接" title="-XX:+UseParallelGC的直接链接" translate="no">​</a></h3>
+<p>使用此命令行选项，您将获得一个多线程年轻代收集器和一个单线程老年代收集器。该选项还对老年代进行单线程压缩。</p>
+<p>下面是启动 Java2Demo 的示例命令行：
+<code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-xxuseparalleloldgc">-XX:+UseParallelOldGC<a href="#-xxuseparalleloldgc" class="hash-link" aria-label="-XX:+UseParallelOldGC的直接链接" title="-XX:+UseParallelOldGC的直接链接" translate="no">​</a></h3>
+<p>使用 -XX:+UseParallelOldGC 选项，GC 既是多线程年轻代收集器，也是多线程老年代收集器。它也是一个多线程压缩收集器。 HotSpot 只在老年代进行压缩。 HotSpot 中的年轻代被认为是一个副本收集器；因此，不需要压缩。</p>
 <p>压缩描述了以对象之间没有孔的方式移动对象的行为。垃圾收集扫描后，活动对象之间可能会留下空洞。压实移动对象，以便没有剩余的孔。垃圾收集器可能是非压缩收集器。因此，并行收集器和并行压缩收集器之间的区别可能是后者在垃圾收集扫描后压缩空间。前者不会。</p>
-<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelOldGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h2 id="并发标记扫描收集器-CMS"><a href="#并发标记扫描收集器-CMS" class="headerlink" title="并发标记扫描收集器 (CMS)"></a>并发标记扫描收集器 (CMS)</h2><p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集老年代。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
+<p>下面是启动 Java2Demo 的示例命令行：
+<code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseParallelOldGC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="并发标记扫描收集器-cms">并发标记扫描收集器 (CMS)<a href="#并发标记扫描收集器-cms" class="hash-link" aria-label="并发标记扫描收集器 (CMS)的直接链接" title="并发标记扫描收集器 (CMS)的直接链接" translate="no">​</a></h2>
+<p>Concurrent Mark Sweep (CMS) 收集器（也称为并发低暂停收集器）收集老年代。它试图通过与应用程序线程同时进行大部分垃圾收集工作来最小化由于垃圾收集而导致的暂停。通常并发低暂停收集器不会复制或压缩活动对象。垃圾收集是在不移动活动对象的情况下完成的。如果碎片成为问题，请分配更大的堆。</p>
 <p>注意：年轻代的 CMS 收集器使用与并行收集器相同的算法。</p>
-<h3 id="使用案例-2"><a href="#使用案例-2" class="headerlink" title="使用案例"></a>使用案例</h3><p>CMS 收集器应该用于需要低暂停时间并且可以与垃圾收集器共享资源的应用程序。示例包括响应事件的桌面 UI 应用程序、响应请求的 Web 服务器或响应查询的数据库。</p>
-<h3 id="命令行开关-1"><a href="#命令行开关-1" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用 CMS 收集器，请使用：<br><code>-XX:+UseConcMarkSweepGC</code><br>并设置线程数使用：<br><code>-XX:ParallelCMSThreads=&lt;n&gt;</code></p>
-<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseConcMarkSweepGC -XX:ParallelCMSThreads=2 -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h3 id="G1-垃圾收集器"><a href="#G1-垃圾收集器" class="headerlink" title="G1 垃圾收集器"></a>G1 垃圾收集器</h3><p>Garbage First 或 G1 垃圾收集器在 Java 7 中可用，旨在长期替代 CMS 收集器。 G1 收集器是一个并行、并发和增量压缩的低暂停垃圾收集器，它的布局与前面描述的其他垃圾收集器完全不同。但是，详细讨论超出了本 OBE 的范围。</p>
-<h3 id="命令行开关-2"><a href="#命令行开关-2" class="headerlink" title="命令行开关"></a>命令行开关</h3><p>要启用 G1 收集器，请使用：<br><code>-XX:+UseG1GC</code></p>
-<p>下面是启动 Java2Demo 的示例命令行：<br><code>java -Xmx12m -Xms3m -XX:+UseG1GC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本 OBE 中，您将了解 Java JVM 上的垃圾收集系统。首先，您了解了堆和垃圾收集器如何成为任何 Java JVM 的关键部分。自动垃圾收集是使用分代垃圾收集方法完成的。一旦你了解了这个过程，你就可以使用 Visual VM 工具观察它。最后，您查看了 Java Hospot JVM 中可用的垃圾收集器。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="使用案例-2">使用案例<a href="#使用案例-2" class="hash-link" aria-label="使用案例的直接链接" title="使用案例的直接链接" translate="no">​</a></h3>
+<p>CMS 收集器应该用于需要低暂停时间并且可以与垃圾收集器共享资源的应用程序。示例包括响应事件的桌面 UI 应用程序、响应请求的 Web 服务器或响应查询的数据库。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="命令行开关-1">命令行开关<a href="#命令行开关-1" class="hash-link" aria-label="命令行开关的直接链接" title="命令行开关的直接链接" translate="no">​</a></h3>
+<p>要启用 CMS 收集器，请使用：
+<code>-XX:+UseConcMarkSweepGC</code>
+并设置线程数使用：
+<code>-XX:ParallelCMSThreads=&lt;n&gt;</code></p>
+<p>下面是启动 Java2Demo 的示例命令行：
+<code>java -Xmx12m -Xms3m -Xmn1m -XX:PermSize=20m -XX:MaxPermSize=20m -XX:+UseConcMarkSweepGC -XX:ParallelCMSThreads=2 -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="g1-垃圾收集器">G1 垃圾收集器<a href="#g1-垃圾收集器" class="hash-link" aria-label="G1 垃圾收集器的直接链接" title="G1 垃圾收集器的直接链接" translate="no">​</a></h3>
+<p>Garbage First 或 G1 垃圾收集器在 Java 7 中可用，旨在长期替代 CMS 收集器。 G1 收集器是一个并行、并发和增量压缩的低暂停垃圾收集器，它的布局与前面描述的其他垃圾收集器完全不同。但是，详细讨论超出了本 OBE 的范围。</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="命令行开关-2">命令行开关<a href="#命令行开关-2" class="hash-link" aria-label="命令行开关的直接链接" title="命令行开关的直接链接" translate="no">​</a></h3>
+<p>要启用 G1 收集器，请使用：
+<code>-XX:+UseG1GC</code></p>
+<p>下面是启动 Java2Demo 的示例命令行：
+<code>java -Xmx12m -Xms3m -XX:+UseG1GC -jar c:\javademos\demo\jfc\Java2D\Java2demo.jar</code></p>
+<h1>总结</h1>
+<p>在本 OBE 中，您将了解 Java JVM 上的垃圾收集系统。首先，您了解了堆和垃圾收集器如何成为任何 Java JVM 的关键部分。自动垃圾收集是使用分代垃圾收集方法完成的。一旦你了解了这个过程，你就可以使用 Visual VM 工具观察它。最后，您查看了 Java Hospot JVM 中可用的垃圾收集器。</p>
 <p>在本教程中，您学习了：</p>
 <ul>
-<li>Java JVM 的组件</li>
-<li>自动垃圾收集的工作原理</li>
-<li>分代垃圾收集过程</li>
-<li>如何使用 Visual VM 监控 JVM</li>
-<li>JVM 上可用的垃圾收集器类型</li>
-</ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://xxzkid.github.io">Apache王也道长</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://xxzkid.github.io/2022/java-gc01/">https://xxzkid.github.io/2022/java-gc01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://xxzkid.github.io" target="_blank">Apache王也道长</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/gc/">gc</a></div><div class="post-share"><div class="social-share" data-image="/img/top2.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wx.png" target="_blank"><img class="post-qr-code-img" src="/img/wx.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="ads-wrap"><amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-2328510744730535" data-ad-slot="6675736283" data-auto-format="rspv" data-full-width=""><div overflow=""></div></amp-ad></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/java-g1/" title="G1 垃圾收集器"><img class="cover" src="/img/top2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">G1 垃圾收集器</div></div><div class="info-2"><div class="info-item-1">G1 垃圾收集器Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：  可以与 CMS 收集器等应用程序线程同时操作。 紧凑的可用空间，没有冗长的 GC 引起的暂停时间。 需要更多可预测的 GC 暂停持续时间。 不想牺牲很多吞吐量性能。 不需要更大的 Java 堆。G1 的目标是在吞吐量与可预测停顿之间取得平衡。分析问题时应基于 GC 日志、对象分配速率和停顿原因，不应只凭单个 JVM 参数判断效果。   G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G1 与 CMS 进行比较，G1 是一个更好的解决方案。一个区别是 G1 是一个压缩收集器。 G1 充分压缩以完全避免使用细粒度的空闲列表进行分配，而是依赖于区域。这大大简化了收集器的各个部分，并且主要消除了潜在的碎片问题。此外，G1 提供比...</div></div></div></a><a class="pagination-related" href="/2021/ubuntu2004-kubernetes-quickstart/" title="Ubuntu20.04安装Kubernetes"><img class="cover" src="/img/top2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Ubuntu20.04安装Kubernetes</div></div><div class="info-2"><div class="info-item-1">ubuntu20.04 快速安装kubernetesUbuntu 20.04 和文中 Kubernetes 版本可能已进入旧维护阶段，命令不能直接套用于所有新版本。部署前应核对版本兼容矩阵，并为控制平面和 etcd 制定备份方案。  配置多台主机hosts123vim /etc/hosts192.168.1.10 master192.168.1.11 node1 192.168.1.101hostnamectl set-hostname master --static 192.168.1.111hostnamectl set-hostname node1 --static 关闭 swap 内存12sudo vi /etc/fstab#/swap 重启1reboot 安装 docker12apt-cache madison docker-ce #查看支持的docker版本apt-get install docker-ce docker-ce-cli containerd.io docker 的配置12345678910cat &lt;&lt;EOF &gt;/etc/docker/...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/java-g1/" title="G1 垃圾收集器"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-23</div><div class="info-item-2">G1 垃圾收集器</div></div><div class="info-2"><div class="info-item-1">G1 垃圾收集器Garbage-First (G1) 收集器是一种服务器式垃圾收集器，针对具有大内存的多处理器机器。它以高概率满足垃圾收集 (GC) 暂停时间目标，同时实现高吞吐量。 Oracle JDK 7 update 4 及更高版本完全支持 G1 垃圾收集器。 G1 收集器专为以下应用而设计：  可以与 CMS 收集器等应用程序线程同时操作。 紧凑的可用空间，没有冗长的 GC 引起的暂停时间。 需要更多可预测的 GC 暂停持续时间。 不想牺牲很多吞吐量性能。 不需要更大的 Java 堆。G1 的目标是在吞吐量与可预测停顿之间取得平衡。分析问题时应基于 GC 日志、对象分配速率和停顿原因，不应只凭单个 JVM 参数判断效果。   G1 计划作为 Concurrent Mark-Sweep Collector (CMS) 的长期替代品。将 G1 与 CMS 进行比较，G1 是一个更好的解决方案。一个区别是 G1 是一个压缩收集器。 G1 充分压缩以完全避免使用细粒度的空闲列表进行分配，而是依赖于区域。这大大简化了收集器的各个部分，并且主要消除了潜在的碎片问题。此外，G1 提供比...</div></div></div></a><a class="pagination-related" href="/2019/list-source/" title="List接口源码分析"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-14</div><div class="info-item-2">List接口源码分析</div></div><div class="info-2"><div class="info-item-1">了解基本数据结构在java中很是重要，今天在这里我们来常用的List接口，以及不同的实现。 ArrayList LinkedList Vector CopyOnWriteArrayList etc… 环境：JDK1.8 阅读 List 源码应围绕随机访问、插入删除、迭代和并发修改展开。不同实现没有绝对优劣，选择时需要结合访问模式、数据规模和线程安全要求。  接口定义List接口定义分为：查询，修改，批量修改，比较和hash，位置访问，搜索，迭代，视图。 查询操作方法123456int size(); // 返回此列表元素数量boolean isEmpty(); // 返回此列表是否为空boolean contains(Object o); // 返回此列表是否包含o元素Iterator&lt;E&gt; iterator(); // 返回此列表迭代器Object[] toArray(); // 返回此列表转换后的数组&lt;T&gt; T[] toArray(T[] a); // 返回此列表转换后的数组范型 修改操作方法12boolean add(E e); // 添加元素到此列...</div></div></div></a><a class="pagination-related" href="/2020/leetcode-0003/" title="leetcode 0003 无重复字符的最长子串"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-14</div><div class="info-item-2">leetcode 0003 无重复字符的最长子串</div></div><div class="info-2"><div class="info-item-1">给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。暴力枚举会重复检查大量子串，滑动窗口可以让左右边界只向前移动。遇到重复字符时，左边界不能后退，应跳到该字符上次出现位置的下一位。  示例 1:123输入: &quot;abcabcbb&quot;输出: 3 解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。 示例 2:123输入: &quot;bbbbb&quot;输出: 1解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。 示例 3:1234输入: &quot;pwwkew&quot;输出: 3解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。 解题：12345678910111213141516171819202122232425class Solution &#123;    public int lengthOfLongestSubstring(Str...</div></div></div></a><a class="pagination-related" href="/2017/spring-redis-question/" title="谈谈spring-data-redis遇到的问题"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2017-07-20</div><div class="info-item-2">谈谈spring-data-redis遇到的问题</div></div><div class="info-2"><div class="info-item-1">[TOC] 1. key序列化问题使用spring-data-redis中的redisTemplate存储key-value，然后使用redis-cli去查询时查询不到相应的key。使用keys *时发现redis中key的前缀多了一些字符Redis 问题经常表现为乱码、类型转换失败、连接耗尽或缓存数据不一致。排查时应先确认 key/value 序列化器、客户端版本、超时配置和实际写入数据。  \xac\xed\x00\x05t\x00\x0e  问题关键使用spring-data-redis，默认情况下使用的是org.springframework.data.redis.serializer.JdkSerializationRedisSerializer来进行序列化key 我们看看关键代码 RedisTemplate 123456789101112131415161718192021222324252627282930313233343536373839404142public void afterPropertiesSet() &#123;        super.afte...</div></div></div></a><a class="pagination-related" href="/2014/java-get-device-name/" title="java 获取设备信息"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2014-12-10</div><div class="info-item-2">java 获取设备信息</div></div><div class="info-2"><div class="info-item-1">这篇文章主要讲解 java 获取设备信息 // \b 是单词边界(连着的两个(字母字符 与 非字母字符) 之间的逻辑上的间隔),// 字符串在编译时会被转码一次,所以是 “\b”// \B 是单词内部逻辑间隔(连着的两个字母字符之间的逻辑上的间隔)HTTP 请求通常无法可靠获取用户真实设备名称，只能根据 User-Agent 等信息推断系统和浏览器。经过代理时还需正确处理可信代理头，并避免把推断结果用于安全认证。  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758static String phoneReg = &quot;\\b(ip(hone|od)|android|opera m(ob|in)i&quot; + &quot;|windows (phone|ce)|blackberry&quot; + &quot;|s(ymbian|eries60|amsung)|p(laybook|alm|rofile/mid...</div></div></div></a><a class="pagination-related" href="/2018/spring-scheduling-tasks/" title="spring定时任务调度"><img class="cover" src="/img/top2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2018-01-03</div><div class="info-item-2">spring定时任务调度</div></div><div class="info-2"><div class="info-item-1">本文将告诉你如何使用spring的任务调度。主要使用@Scheduled注解默认定时任务配置可能由单线程串行执行，一个长任务会阻塞后续任务。生产环境还要处理异常、超时、重复执行、错过执行和多实例竞争。   需要会使用maven  第一步 pom.xml配置12345678910111213141516171819202122232425262728293031323334353637383940&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;    xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Apache王也道长</div><div class="author-info-description">喜欢写一点代码，喜欢折腾 | Apache王也道长</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">100</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">115</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">18</div></a></div><a id="card-info-btn" href="https://github.com/jsbxyyx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://mp.weixin.qq.com/s/D-zv44ahFnRjoApTBRIxKA" target="_blank" title="公众号"><i class="fab fa-weixin" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">🔧 <a href="https://123571.xyz/json-tool.html" target="_blank">JSON工具</a> | <a href="https://123571.xyz/qrcode.html" target="_blank">二维码生成</a> | <a href="https://123571.xyz/translate.html" target="_blank">在线翻译</a><br></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E7%9A%84"><span class="toc-number">1.1.</span> <span class="toc-text">目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">前提条件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java%E6%8A%80%E6%9C%AF%E4%B8%8EJVM"><span class="toc-number">2.</span> <span class="toc-text">Java技术与JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E6%A6%82%E8%A7%88"><span class="toc-number">2.1.</span> <span class="toc-text">Java概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JRE-Java-Runtime-Edition"><span class="toc-number">2.2.</span> <span class="toc-text">JRE (Java Runtime Edition)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80-Java-Programming-Language"><span class="toc-number">2.3.</span> <span class="toc-text">Java编程语言 (Java Programming Language)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK-Java-Development-Kit"><span class="toc-number">2.4.</span> <span class="toc-text">JDK (Java Development Kit)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JAVA%E8%99%9A%E6%8B%9F%E6%9C%BA-Java-Virtual-Machine"><span class="toc-number">2.5.</span> <span class="toc-text">JAVA虚拟机(Java Virtual Machine)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2JVM%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">探索JVM架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hotspot-%E6%9E%B6%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">Hotspot 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AEHotspot%E7%BB%84%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text">关键Hotspot组件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%9F%BA%E7%A1%80"><span class="toc-number">4.</span> <span class="toc-text">性能基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E8%83%BD%E5%8A%9B-Responsiveness"><span class="toc-number">4.1.</span> <span class="toc-text">响应能力 (Responsiveness)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%9E%E5%90%90%E9%87%8F-Throughput"><span class="toc-number">4.2.</span> <span class="toc-text">吞吐量 (Throughput)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86"><span class="toc-number">5.</span> <span class="toc-text">描述垃圾收集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%87%AA%E5%8A%A8%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">什么是自动垃圾收集？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E6%A0%87%E8%AE%B0"><span class="toc-number">5.1.1.</span> <span class="toc-text">第 1 步：标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E6%AD%A3%E5%B8%B8%E5%88%A0%E9%99%A4"><span class="toc-number">5.1.2.</span> <span class="toc-text">第 2 步：正常删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2a%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%8E%8B%E7%BC%A9%E5%88%A0%E9%99%A4"><span class="toc-number">5.1.3.</span> <span class="toc-text">步骤 2a：使用压缩删除</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%9B%E8%A1%8C%E5%88%86%E4%BB%A3%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%EF%BC%9F"><span class="toc-number">5.1.3.1.</span> <span class="toc-text">为什么要进行分代垃圾收集？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM%E5%A0%86%E5%88%86%E4%BB%A3"><span class="toc-number">5.2.</span> <span class="toc-text">JVM堆分代</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E4%BB%A3%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">分代垃圾收集过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%B7%B1%E7%9A%84%E8%A7%82%E5%AF%9F"><span class="toc-number">7.</span> <span class="toc-text">进行自己的观察</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A7%88-1"><span class="toc-number">7.1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%89%8B%E6%B4%BB%E5%8A%A8"><span class="toc-number">7.2.</span> <span class="toc-text">动手活动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-1-%E6%AD%A5%EF%BC%9A%E5%88%9D%E5%A7%8B%E8%AE%BE%E7%BD%AE"><span class="toc-number">7.2.1.</span> <span class="toc-text">第 1 步：初始设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-2-%E6%AD%A5%EF%BC%9A%E5%90%AF%E5%8A%A8%E6%BC%94%E7%A4%BA%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">7.2.2.</span> <span class="toc-text">第 2 步：启动演示应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-3-%E6%AD%A5%EF%BC%9A%E5%90%AF%E5%8A%A8-VisualVM"><span class="toc-number">7.2.3.</span> <span class="toc-text">第 3 步：启动 VisualVM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-4-%E6%AD%A5%EF%BC%9A%E5%AE%89%E8%A3%85-Visual-GC"><span class="toc-number">7.2.4.</span> <span class="toc-text">第 4 步：安装 Visual GC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC-5-%E6%AD%A5%EF%BC%9A%E5%88%86%E6%9E%90-Java2Demo"><span class="toc-number">7.2.5.</span> <span class="toc-text">第 5 步：分析 Java2Demo</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">8.</span> <span class="toc-text">Java 垃圾收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%A0%86%E7%9B%B8%E5%85%B3%E5%BC%80%E5%85%B3"><span class="toc-number">8.1.</span> <span class="toc-text">常见的堆相关开关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E6%94%B6%E9%9B%86%E5%99%A8-Serial-GC"><span class="toc-number">8.2.</span> <span class="toc-text">串行收集器(Serial GC)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">8.2.1.</span> <span class="toc-text">使用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BC%80%E5%85%B3"><span class="toc-number">8.2.2.</span> <span class="toc-text">命令行开关</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8-Parallel-GC"><span class="toc-number">8.3.</span> <span class="toc-text">并行垃圾收集器(Parallel GC)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B-1"><span class="toc-number">8.3.1.</span> <span class="toc-text">使用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XX-UseParallelGC"><span class="toc-number">8.3.2.</span> <span class="toc-text">-XX:+UseParallelGC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XX-UseParallelOldGC"><span class="toc-number">8.3.3.</span> <span class="toc-text">-XX:+UseParallelOldGC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E6%A0%87%E8%AE%B0%E6%89%AB%E6%8F%8F%E6%94%B6%E9%9B%86%E5%99%A8-CMS"><span class="toc-number">8.4.</span> <span class="toc-text">并发标记扫描收集器 (CMS)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B-2"><span class="toc-number">8.4.1.</span> <span class="toc-text">使用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BC%80%E5%85%B3-1"><span class="toc-number">8.4.2.</span> <span class="toc-text">命令行开关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G1-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">8.4.3.</span> <span class="toc-text">G1 垃圾收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BC%80%E5%85%B3-2"><span class="toc-number">8.4.4.</span> <span class="toc-text">命令行开关</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/openclaw-start/" title="手把手教你安装配置 OpenClaw + 飞书机器人，打造专属 AI 办公助手（超详细教程）"><img src="/img/top2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="手把手教你安装配置 OpenClaw + 飞书机器人，打造专属 AI 办公助手（超详细教程）"/></a><div class="content"><a class="title" href="/2026/openclaw-start/" title="手把手教你安装配置 OpenClaw + 飞书机器人，打造专属 AI 办公助手（超详细教程）">手把手教你安装配置 OpenClaw + 飞书机器人，打造专属 AI 办公助手（超详细教程）</a><time datetime="2026-04-04T12:19:36.000Z" title="发表于 2026-04-04 12:19:36">2026-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/minio-quickstart/" title="minio 快速搭建"><img src="/img/top2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="minio 快速搭建"/></a><div class="content"><a class="title" href="/2025/minio-quickstart/" title="minio 快速搭建">minio 快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/n8n-quickstart/" title="n8n快速搭建"><img src="/img/top2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="n8n快速搭建"/></a><div class="content"><a class="title" href="/2025/n8n-quickstart/" title="n8n快速搭建">n8n快速搭建</a><time datetime="2025-12-09T08:00:00.000Z" title="发表于 2025-12-09 08:00:00">2025-12-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/minio-data-migration/" title="minio数据迁移"><img src="/img/top2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="minio数据迁移"/></a><div class="content"><a class="title" href="/2025/minio-data-migration/" title="minio数据迁移">minio数据迁移</a><time datetime="2025-11-27T08:00:00.000Z" title="发表于 2025-11-27 08:00:00">2025-11-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/opengauss-quickstart/" title="opengauss数据库快速开始"><img src="/img/top2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="opengauss数据库快速开始"/></a><div class="content"><a class="title" href="/2025/opengauss-quickstart/" title="opengauss数据库快速开始">opengauss数据库快速开始</a><time datetime="2025-11-26T08:00:00.000Z" title="发表于 2025-11-26 08:00:00">2025-11-26</time></div></div></div></div><div class="card-widget ads-wrap"><amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-2328510744730535" data-ad-slot="6675736283" data-auto-format="rspv" data-full-width=""><div overflow=""></div></amp-ad></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2013 - 2026 By Apache王也道长</span><span class="framework-info"><span>框架 </span><a href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script src="/js/wechat-card.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
+<li class="">Java JVM 的组件</li>
+<li class="">自动垃圾收集的工作原理</li>
+<li class="">分代垃圾收集过程</li>
+<li class="">如何使用 Visual VM 监控 JVM</li>
+<li class="">JVM 上可用的垃圾收集器类型</li>
+</ul></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><b>标签：</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/java/">java</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/gc/">gc</a></li></ul></div></div><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class="theme-last-updated">最后<!-- -->于 <b><time datetime="2026-07-16T02:34:24.000Z" itemprop="dateModified">2026年7月16日</time></b> <!-- -->更新</span></div></div></footer></article><div class="site-enhancements"><div class="site-ad" aria-label="Advertisement"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2328510744730535" data-ad-slot="6675736283" data-ad-format="auto" data-full-width-responsive="true"></ins></div><p class="site-post-views" id="busuanzi_container_page_pv">本文阅读量：<strong id="busuanzi_value_page_pv">--</strong></p></div><nav class="pagination-nav docusaurus-mt-lg" aria-label="博文分页导航"><a class="pagination-nav__link pagination-nav__link--prev" href="/2022/java-g1/"><div class="pagination-nav__sublabel">较新一篇</div><div class="pagination-nav__label">G1 垃圾收集器</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/2021/ubuntu2004-kubernetes-quickstart/"><div class="pagination-nav__sublabel">较旧一篇</div><div class="pagination-nav__label">Ubuntu20.04安装Kubernetes</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#目的" class="table-of-contents__link toc-highlight">目的</a></li><li><a href="#简介" class="table-of-contents__link toc-highlight">简介</a></li><li><a href="#前提条件" class="table-of-contents__link toc-highlight">前提条件</a></li><li><a href="#java概览" class="table-of-contents__link toc-highlight">Java概览</a></li><li><a href="#jre-java-runtime-edition" class="table-of-contents__link toc-highlight">JRE (Java Runtime Edition)</a></li><li><a href="#java编程语言-java-programming-language" class="table-of-contents__link toc-highlight">Java编程语言 (Java Programming Language)</a></li><li><a href="#jdk-java-development-kit" class="table-of-contents__link toc-highlight">JDK (Java Development Kit)</a></li><li><a href="#java虚拟机java-virtual-machine" class="table-of-contents__link toc-highlight">JAVA虚拟机(Java Virtual Machine)</a></li><li><a href="#hotspot-架构" class="table-of-contents__link toc-highlight">Hotspot 架构</a></li><li><a href="#关键hotspot组件" class="table-of-contents__link toc-highlight">关键Hotspot组件</a></li><li><a href="#响应能力-responsiveness" class="table-of-contents__link toc-highlight">响应能力 (Responsiveness)</a></li><li><a href="#吞吐量-throughput" class="table-of-contents__link toc-highlight">吞吐量 (Throughput)</a></li><li><a href="#什么是自动垃圾收集" class="table-of-contents__link toc-highlight">什么是自动垃圾收集？</a><ul><li><a href="#第-1-步标记" class="table-of-contents__link toc-highlight">第 1 步：标记</a></li><li><a href="#第-2-步正常删除" class="table-of-contents__link toc-highlight">第 2 步：正常删除</a></li><li><a href="#步骤-2a使用压缩删除" class="table-of-contents__link toc-highlight">步骤 2a：使用压缩删除</a></li></ul></li><li><a href="#jvm堆分代" class="table-of-contents__link toc-highlight">JVM堆分代</a></li><li><a href="#概览" class="table-of-contents__link toc-highlight">概览</a></li><li><a href="#动手活动" class="table-of-contents__link toc-highlight">动手活动</a><ul><li><a href="#第-1-步初始设置" class="table-of-contents__link toc-highlight">第 1 步：初始设置</a></li><li><a href="#第-2-步启动演示应用程序" class="table-of-contents__link toc-highlight">第 2 步：启动演示应用程序</a></li><li><a href="#第-3-步启动-visualvm" class="table-of-contents__link toc-highlight">第 3 步：启动 VisualVM</a></li><li><a href="#第-4-步安装-visual-gc" class="table-of-contents__link toc-highlight">第 4 步：安装 Visual GC</a></li><li><a href="#第-5-步分析-java2demo" class="table-of-contents__link toc-highlight">第 5 步：分析 Java2Demo</a></li></ul></li><li><a href="#常见的堆相关开关" class="table-of-contents__link toc-highlight">常见的堆相关开关</a></li><li><a href="#串行收集器serial-gc" class="table-of-contents__link toc-highlight">串行收集器(Serial GC)</a><ul><li><a href="#使用案例" class="table-of-contents__link toc-highlight">使用案例</a></li><li><a href="#命令行开关" class="table-of-contents__link toc-highlight">命令行开关</a></li></ul></li><li><a href="#并行垃圾收集器parallel-gc" class="table-of-contents__link toc-highlight">并行垃圾收集器(Parallel GC)</a><ul><li><a href="#使用案例-1" class="table-of-contents__link toc-highlight">使用案例</a></li><li><a href="#-xxuseparallelgc" class="table-of-contents__link toc-highlight">-XX:+UseParallelGC</a></li><li><a href="#-xxuseparalleloldgc" class="table-of-contents__link toc-highlight">-XX:+UseParallelOldGC</a></li></ul></li><li><a href="#并发标记扫描收集器-cms" class="table-of-contents__link toc-highlight">并发标记扫描收集器 (CMS)</a><ul><li><a href="#使用案例-2" class="table-of-contents__link toc-highlight">使用案例</a></li><li><a href="#命令行开关-1" class="table-of-contents__link toc-highlight">命令行开关</a></li><li><a href="#g1-垃圾收集器" class="table-of-contents__link toc-highlight">G1 垃圾收集器</a></li><li><a href="#命令行开关-2" class="table-of-contents__link toc-highlight">命令行开关</a></li></ul></li></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">内容</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/archive/">文章归档</a></li><li class="footer__item"><a class="footer__link-item" href="/tags/">标签</a></li><li class="footer__item"><a href="https://xxzkid.github.io/rss.xml" target="_blank" rel="noopener noreferrer" class="footer__link-item">RSS<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">个人链接</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/jsbxyyx" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://mp.weixin.qq.com/s/D-zv44ahFnRjoApTBRIxKA" target="_blank" rel="noopener noreferrer" class="footer__link-item">微信公众号<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">站点</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://xxzkid.github.io/policy.txt" target="_blank" rel="noopener noreferrer" class="footer__link-item">隐私政策<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://xxzkid.github.io/ads.txt" target="_blank" rel="noopener noreferrer" class="footer__link-item">ads.txt<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 Apache王也道长</div></div></div></footer><div class="site-stats"><span id="busuanzi_container_site_pv">总访问量 <strong id="busuanzi_value_site_pv">--</strong></span> · <span id="busuanzi_container_site_uv">访客数 <strong id="busuanzi_value_site_uv">--</strong></span></div></div>
+</body>
+</html>
